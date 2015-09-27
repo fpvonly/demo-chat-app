@@ -1,0 +1,68 @@
+<section class="content_part">		
+		<p class="info">If you have anything in your mind, fill in the form and send your thoughts!</p>
+		
+		<div id="contact_area">	 		
+		 <form id="contact_form" action="#" method="POST" enctype="application/x-www-form-urlencoded">			
+				<input type="text" name="contact_name" id="contact_name" placeholder="Your name"  maxlength="128"/>
+				<input type="text" name="contact_email" id="contact_email" placeholder="E-mail" maxlength="40" />			
+				<textarea name="contact_message" id="contact_message" placeholder="Message"></textarea>				
+				<input type="button" value="Send" id="contact_btn" />
+					
+			<div class="clear"></div>			
+		 </form>
+	  </div>  		 
+</section>	  
+
+<script>
+	$( document ).ready( function() {	
+		$('#contact_btn').click(function(e) {
+			e.preventDefault();
+			
+			var contact_form = $('#contact_form');
+			
+			$('#contact_name').css({'border':'0'});
+			$('#contact_message').css({'border':'0'});
+			$('#contact_email').css({'border':'0'});
+			
+			if( $.trim( contact_form.find('#contact_name').val() ) != '' && $.trim( contact_form.find('#contact_message').val() ) != '' && isValidEmailAddress( contact_form.find('#contact_email').val()  ) )
+			{				
+				var form_data = new FormData( );
+				form_data.append('contact_name', contact_form.find('#contact_name').val() );
+				form_data.append('contact_email', contact_form.find('#contact_email').val() );
+				form_data.append('contact_message', contact_form.find('#contact_message').val() );
+							
+				$.ajax({ 
+					method: 'POST',
+					url: '/datasend/contact/', 
+					data: { 'contact_name':contact_form.find('#contact_name').val(), 'contact_email':contact_form.find('#contact_email').val(), 'contact_message':contact_form.find('#contact_message').val()  },
+					cache:false,
+					success: function( result ) {
+						if( result.indexOf( 'datasend_success' ) != -1)
+						{
+							contact_form.find('input, textarea').hide();
+							$('.content_part p.info').hide();
+							contact_form.append('<p style="padding-top:2em;">Thank you for you message!<p>');
+						}						
+				}});
+			}
+			else
+			{
+				if( $.trim( contact_form.find('#contact_name').val() ) == '' )
+				{
+					$('#contact_name').css({'border':'1px solid red'});
+				}
+				if( $.trim( contact_form.find('#contact_message').val() ) == '' )
+				{
+					$('#contact_message').css({'border':'1px solid red'});
+				}
+				if( !isValidEmailAddress( contact_form.find('#contact_email').val() ) )
+				{
+					$('#contact_email').css({'border':'1px solid red'});
+				}
+			
+				
+			}
+		});		
+
+	});  
+</script> 

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+   <head>
+	  <meta name="keywords" content="web, developer, node.js">
+	  <meta name="description" content="Web Developer - Ari Petäjäjärvi">
+	  <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <link rel="stylesheet" href="assets/css/styles.css">
+	  <script src="assets/js/jquery-2.1.4.min.js"></script>
+	  <script src="assets/js/chat_ws.js"></script>
+	
+	  <script type="text/javascript">
+	  	   $( document ).ready( function() {	
+				$('.main_link').click(function(e) {
+					if( $(this).hasClass('ext') == false )
+					{
+						e.preventDefault();
+						
+						$('.main_link').removeClass('main_link_active');
+						$( this ).addClass('main_link_active' );
+						
+						var action = $( this ).attr('data-target');
+						$.ajax({ 
+							method: 'GET',
+							url: '/dataload/'+action, 
+							cache:false,
+							success: function( result ) {
+								$('#page_load_content').animate({opacity:0}, 0);
+								$('#page_load_content').html( result );
+								$('#page_load_content').css({'display':'block'});							
+								$('#page_load_content').animate({opacity:1}, 1500);
+								
+						}});
+					}
+				});
+				
+				$( 'img' ).removeAttr( 'width height' );			
+				// init chat							
+				$('#chat_form').chat();			
+
+				
+				
+		   });  
+		   
+		   function isValidEmailAddress( emailAddress ) {
+				var pattern = new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i);
+				return pattern.test( emailAddress );
+			};
+	  </script>
+	</head>
+	<body>
+	
+		<header class="full_header">
+			<div class="wrapper_navi">
+				<div class="main_logo">
+					<a href="http://128.199.45.96/">
+						<img src="assets/images/logo.png" alt="Web developer - Ari Petäjäjärvi" />						
+					</a>				
+				</div>
+				<nav id="navigation">
+					<ul>
+						<li class="navi_list_element"><a class="main_link" data-target="contact" href="#">Contact</a></li>
+						<li class="navi_list_element"><a class="main_link" data-target="info" href="#">Info</a></li>
+						<li class="navi_list_element"><a class="main_link ext" target="_blank" href="https://fi.linkedin.com/pub/ari-pet%C3%A4j%C3%A4j%C3%A4rvi/4/950/49b">LinkedIn</a></li>
+					</ul>
+				</nav>
+				<div class="clear"></div>
+			</div>
+		</header>
+   
+		<section class="parallax-window parallax">
+			<div class="parallax_content">
+				<div id="page_load_content"></div>
+				
+				<p class="info">Chat with anyone online or leave just a shout!<br />All messages are also mailed to me.</p>
+				
+				<div id="chat_area">	 		
+				 <form id="chat_form" action="#" method="POST" enctype="application/x-www-form-urlencoded">
+					<div id="chat_reg">
+						<input type="text" name="chat_name" id="chat_name" placeholder="Chat name"  maxlength="20"/>
+						<input type="text" name="email" id="email" placeholder="E-mail" maxlength="40" />				
+						<input type="button" value="Log in" id="reg_btn" />
+					</div>			
+					<div id="chat_funcs" style="display:none;">
+						<input type="text" name="message_input" id="message_input" maxlength="1000" placeholder="Message"/>
+						<input type="button" value="Send" id="message_send_btn" />
+					</div>
+					<div id="message_area"> 
+						<div class="clear"></div>
+					</div>					
+				 </form>
+			  </div>  
+			</div>		
+			<div class="footer_content"><%= footer_text %></div>
+		
+		</section>	   
+   </body>
+</html>
