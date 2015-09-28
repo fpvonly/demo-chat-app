@@ -6,10 +6,15 @@ var fs = require('fs');
 var nodemailer = require('nodemailer');
 var auth = require('http-auth');
 var socketserver = require('websocket').server;  // for websockets chat
+var Converter = require("csvtojson").Converter;
 var database = require('./database');
 
 var clients = {}; // for websockets chat
 var count = 0; // for websockets chat
+
+var LANG = 'en';
+
+
 
 var basic = auth.basic({
   realm: "Private area",
@@ -47,11 +52,32 @@ app.get( '/', function( req, res ) {
 	}
 );
 
-app.get( '/dataload/:page', function( req, res ) {		
-		res.render( req.params.page, { });
+app.get( '/dataload/:page', function( req, res ) {
+		var converter = new Converter({noheader:true, headers:["id","text"]});
+		converter.on("end_parsed", function( jsonArray ) {
+		   	   			
+		    var localizations_obj = eval( jsonArray );					
+		   	var loc_text = '';
+			for( var prop in localizations_obj ) 
+			{
+				if( localizations_obj[prop]['id'] == req.params.page+'_text' )
+				{
+					loc_text = localizations_obj[prop]['text'];
+					break;
+				}
 
-	}
-);
+			}
+			console.log('loc_text: '+loc_text);
+			var view_texts_obj = {};
+			view_texts_obj[req.params.page+'_text'] = loc_text;
+			res.render( req.params.page, view_texts_obj );
+		   
+				
+	});
+
+		//read from file 
+		fs.createReadStream('localization/' + LANG + '.csv').pipe(converter);
+});
 
 
 // POST routes
@@ -170,15 +196,24 @@ socket.on('request', function(request) {
 
 
 
+// Helper functions
 
+function toHTML( mystring ) {
+	var map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
 
-
-
+  return mystring.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
 
 function getCurrentTime() {
-  var d = new Date();
-  var offset = (new Date().getTimezoneOffset() / 60) * -1;
-  var n = new Date(d.getTime() + offset);
-  var time =  n.getDate()+'.'+(n.getMonth()+1)+'.'+n.getFullYear()+'  '+n.getHours()+':'+n.getMinutes();
-  return time;
+	var d = new Date();
+	var offset = (new Date().getTimezoneOffset() / 60) * -1;
+	var n = new Date(d.getTime() + offset);
+	var time =  n.getDate()+'.'+(n.getMonth()+1)+'.'+n.getFullYear()+'  '+n.getHours()+':'+n.getMinutes();
+	return time;
 };
