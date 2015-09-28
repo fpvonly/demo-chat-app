@@ -15,78 +15,55 @@ var count = 0; // for websockets chat
 var LANG = 'en';
 
 
-
+// auth
 var basic = auth.basic({
   realm: "Private area",
   file: __dirname + "/htpasswd",
   type: "basic"
 }); 
 
+// start server
 var app = express();
-
 var server = app.listen(80, function() {
 	var host = server.address().address;
 	var port = server.address().port;
 });
 
-app.set( 'view engine', 'ejs' );
-app.set( 'views', path.join( __dirname, 'views') );
-
 // serve css, images, js etc
 app.use( '/assets', express.static( path.join( __dirname, 'assets') ) );
-//POST params conf
+
+// POST params conf
 app.use( bodyParser.urlencoded({ extended: false }) );
+
+// Cookies
 app.use( cookieParser() );
 
+// Rendering engine
+app.set( 'view engine', 'ejs' );
+app.set( 'views', path.join( __dirname, 'views') );
 
 
 
 
 // GET routes
 // second param: auth.connect(basic)
-app.get( '/', function( req, res ) {
+app.get( '/', function( req, res ) {		
+		fs.readFile( './views/menu.js', function( err, json ) {
+			var menuObj = JSON.parse( json );
+			renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
+		});		
 		//console.log('COOKIE: '+req.cookies.email);
 		//console.log('COOKIE: '+req.cookies.chat_name);
-		res.render('index', { footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi'});
 		//res.sendFile(  __dirname+'/index.html' );
 	}
 );
 
-app.get( '/dataload/:page', function( req, res ) {
-		var converter = new Converter({noheader:true, headers:["id","text"]});
-		converter.on("end_parsed", function( jsonArray ) {
-		   	   			
-		    var localizations_obj = eval( jsonArray );					
-		   	var loc_text = '';
-			for( var prop in localizations_obj ) 
-			{
-				if( localizations_obj[prop]['id'] == req.params.page+'_text' )
-				{
-					loc_text = localizations_obj[prop]['text'];
-					break;
-				}
-
-			}
-			console.log('loc_text: '+loc_text);
-			var view_texts_obj = {};
-			view_texts_obj[req.params.page+'_text'] = loc_text;
-			res.render( req.params.page, view_texts_obj );
-		   
-				
-	});
-
-		//read from file 
-		fs.createReadStream('localization/' + LANG + '.csv').pipe(converter);
-});
+app.get( '/dataload/:page', function( req, res ) {		
+	renderViewAndLoc( res, req.params.page, req.params.page+'_text', LANG, {} );
+});	
 
 
 // POST routes
-/*
-app.post( '/', function (req, res) {
-	res.contentType('text/html');
-	res.send('Got a POST request');
-});*/
-
 app.post( '/datasend/contact', function( req, res ) {
 		var transporter = nodemailer.createTransport();
 		var currentTime = getCurrentTime();			
@@ -103,6 +80,8 @@ app.post( '/datasend/contact', function( req, res ) {
 	}
 );
 
+// Special cases -->
+
 // 404
 app.use( function( req, res, next ) {
 	res.status(404).send('Sorry! Nothing found :(');
@@ -114,12 +93,52 @@ app.use( function(err, req, res, next) {
 });
 
 
+// Helper functions -->
+
+function renderViewAndLoc( res, view, string, LANG, addToViewObj ) {
+	var converter = new Converter({noheader:true, headers:["id","text"]});
+	converter.on("end_parsed", function( jsonArray ) {
+	   	   			
+	    var localizations_obj = eval( jsonArray );					
+	   	var loc_text = '';
+		for( var prop in localizations_obj ) 
+		{
+			if( localizations_obj[prop]['id'] == string )
+			{
+				loc_text = localizations_obj[prop]['text'];
+				break;
+			}
+
+		}
+		//console.log('loc_text: '+loc_text);
+		var view_texts_obj = {};
+		view_texts_obj[string] = loc_text;
+
+		for( var key in addToViewObj )
+		{ 
+			view_texts_obj[key] = addToViewObj[key];
+		}
+		
+		res.render( view, view_texts_obj );	
+	});
+
+	//read from file 
+	fs.createReadStream('localization/' + LANG + '.csv').pipe(converter);   			
+}
+
+function getCurrentTime() {
+	var d = new Date();
+	var offset = (new Date().getTimezoneOffset() / 60) * -1;
+	var n = new Date(d.getTime() + offset);
+	var time =  n.getDate()+'.'+(n.getMonth()+1)+'.'+n.getFullYear()+'  '+n.getHours()+':'+n.getMinutes();
+	return time;
+};
 
 
 
 
 
-// WEB SOCKETS FUNC, chat
+// WEB SOCKETS FUNCTIONALITY, chat -->
 
 var socket = new socketserver({
 	httpServer: server
@@ -196,24 +215,3 @@ socket.on('request', function(request) {
 
 
 
-// Helper functions
-
-function toHTML( mystring ) {
-	var map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;'
-  };
-
-  return mystring.replace(/[&<>"']/g, function(m) { return map[m]; });
-}
-
-function getCurrentTime() {
-	var d = new Date();
-	var offset = (new Date().getTimezoneOffset() / 60) * -1;
-	var n = new Date(d.getTime() + offset);
-	var time =  n.getDate()+'.'+(n.getMonth()+1)+'.'+n.getFullYear()+'  '+n.getHours()+':'+n.getMinutes();
-	return time;
-};

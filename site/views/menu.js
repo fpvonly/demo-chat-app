@@ -1,0 +1,23 @@
+{
+	"menu":[{
+		"href":"#",
+		"dataTarget":"contact",
+		"text":"Contact",
+		"target":"_self",
+		"class":"main_link"
+	},
+	{
+		"href":"#",
+		"dataTarget":"info",
+		"text":"Info",
+		"target":"_self",
+		"class":"main_link"
+	},
+	{
+		"href":"https://fi.linkedin.com/pub/ari-pet%C3%A4j%C3%A4j%C3%A4rvi/4/950/49b",
+		"dataTarget":"",
+		"text":"LinkedIn",
+		"target":"_blank",
+		"class":"main_link ext"
+	}]
+}

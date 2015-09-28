@@ -12,16 +12,20 @@
 	
 	  <script type="text/javascript">
 	  	   $( document ).ready( function() {	
+	  	   		var ajax_calls = [];
+	  	   		
 				$('.main_link').click(function(e) {
 					if( $(this).hasClass('ext') == false )
 					{
-						e.preventDefault();
-						
+						e.preventDefault();					
+
 						$('.main_link').removeClass('main_link_active');
-						$( this ).addClass('main_link_active' );
+						$( this ).addClass('main_link_active' );						
 						
+						$('#page_load_content').clearQueue();						
+
 						var action = $( this ).attr('data-target');
-						$.ajax({ 
+						var xhr = $.ajax({ 
 							method: 'GET',
 							url: '/dataload/'+action, 
 							cache:false,
@@ -29,18 +33,14 @@
 								$('#page_load_content').animate({opacity:0}, 0);
 								$('#page_load_content').html( result );
 								$('#page_load_content').css({'display':'block'});							
-								$('#page_load_content').animate({opacity:1}, 1500);
-								
+								$('#page_load_content').animate({opacity:1}, 1500);								
 						}});
 					}
 				});
 				
 				$( 'img' ).removeAttr( 'width height' );			
 				// init chat							
-				$('#chat_form').chat();			
-
-				
-				
+				$('#chat_form').chat();					
 		   });  
 		   
 		   function isValidEmailAddress( emailAddress ) {
@@ -60,9 +60,18 @@
 				</div>
 				<nav id="navigation">
 					<ul>
-						<li class="navi_list_element"><a class="main_link" data-target="contact" href="#">Contact</a></li>
-						<li class="navi_list_element"><a class="main_link" data-target="info" href="#">Info</a></li>
-						<li class="navi_list_element"><a class="main_link ext" target="_blank" href="https://fi.linkedin.com/pub/ari-pet%C3%A4j%C3%A4j%C3%A4rvi/4/950/49b">LinkedIn</a></li>
+						<% if( menu ) { 
+							for( var el in menu) {	
+								//console.log(menu[el]);
+							%>
+
+							<li class="navi_list_element">
+								<a class="<%- menu[el].class %>" data-target="<%- menu[el].dataTarget %>" target="<%- menu[el].target %>" href="<%- menu[el].href %>"><%- menu[el].text %></a>
+							</li>						
+						<% 
+								}
+							}
+						%>
 					</ul>
 				</nav>
 				<div class="clear"></div>
@@ -73,7 +82,7 @@
 			<div class="parallax_content">
 				<div id="page_load_content"></div>
 				
-				<p class="info">Chat with anyone online or leave just a shout!<br />All messages are also mailed to me.</p>
+				<p class="info"><%- index_chat_text %></p>
 				
 				<div id="chat_area">	 		
 				 <form id="chat_form" action="#" method="POST" enctype="application/x-www-form-urlencoded">
