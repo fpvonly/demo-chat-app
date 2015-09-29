@@ -1,4 +1,5 @@
 var express = require('express');
+var session = require('express-session')
 var bodyParser =  require('body-parser');
 var cookieParser = require('cookie-parser');
 var path = require('path');
@@ -38,6 +39,14 @@ app.use( bodyParser.urlencoded({ extended: false }) );
 // Cookies
 app.use( cookieParser() );
 
+// Session
+app.use( session({
+  secret: 'nonono',
+  resave: false,
+  saveUninitialized: true
+}));
+
+
 // Rendering engine
 app.set( 'view engine', 'ejs' );
 app.set( 'views', path.join( __dirname, 'views') );
@@ -50,11 +59,28 @@ app.set( 'views', path.join( __dirname, 'views') );
 app.get( '/', function( req, res ) {		
 		fs.readFile( './views/menu.js', function( err, json ) {
 			var menuObj = JSON.parse( json );
-			renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
+			renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { auth_obj: { user_id: req.session.user_id, username: req.session.username }, domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
 		});		
 		//console.log('COOKIE: '+req.cookies.email);
 		//console.log('COOKIE: '+req.cookies.chat_name);
 		//res.sendFile(  __dirname+'/index.html' );
+	}
+);
+
+app.get( '/admin/:action', function( req, res ) {		
+		fs.readFile( './views/menu.js', function( err, json ) {
+			var menuObj = JSON.parse( json );
+			
+			console.log("user_ID_GET:" +req.session.user_id);
+			if( req.params.action == 'login' )
+			{		
+				renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { type:'admin', auth_obj: { user_id: req.session.user_id, username: req.session.username }, username: '', password: '', domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
+			}
+			else
+			{
+				renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { type:'admin', auth_obj: { user_id: req.session.user_id, username: req.session.username }, username: '', password: '', domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
+			}
+		});		
 	}
 );
 
@@ -64,6 +90,49 @@ app.get( '/dataload/:page', function( req, res ) {
 
 
 // POST routes
+app.post( '/admin/:action', function( req, res ) {		
+		fs.readFile( './views/menu.js', function( err, json ) {
+			var menuObj = JSON.parse( json );
+			
+			if( req.params.action == 'login' )
+			{
+				if( req.body.admin_username && req.body.admin_password )
+				{
+					//TODO password
+					database.query("SELECT *, count(id) as cnt from users where username=" + database.escape( req.body.admin_username ) + " LIMIT 1", function(err, rows, fields) {
+						for( var r in rows ) 
+						{	
+							if( rows[r].cnt == 1 )
+							{			
+								req.session.user_id = rows[r].id;
+								req.session.username = rows[r].username;
+
+								//console.log("user_ID:" +req.session.user_id);	
+								break;						
+							}							
+						}
+
+						if( typeof req.session.user_id != 'undefined' && req.session.user_id > 0 )
+						{
+							renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { type:'admin', auth_obj: { user_id: req.session.user_id, username: req.session.username }, username: '', password: '', domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );	
+						}	
+						else
+						{
+							renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { type:'admin', auth_obj: {}, username: req.body.admin_username, password: req.body.admin_password, domain: req.protocol + '://' + req.get('host'), footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
+						}	
+
+						
+					});
+				}
+				else
+				{
+					renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { type:'admin', auth_obj: {}, username: req.body.admin_username, password: req.body.admin_password, domain: req.protocol + '://' + req.get('host'), footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
+				}
+			}			
+		});		
+	}
+);
+
 app.post( '/datasend/contact', function( req, res ) {
 		var transporter = nodemailer.createTransport();
 		var currentTime = getCurrentTime();			

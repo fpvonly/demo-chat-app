@@ -82,8 +82,15 @@ $.fn.chat = function() {
 		{				
 			if( typeof WebSocket != "undefined" )
 			{
-			   var ws = new WebSocket("ws://localhost:80/echo");
-			   //var ws = new WebSocket("ws://128.199.45.96:80/echo");
+			   var host = window.location.host;
+			   if( host.indexOf('localhost') != -1 || host.indexOf('127.0.0.1') != -1 )
+			   {
+			  	  var ws = new WebSocket("ws://localhost:80/echo");
+			   }
+			   else
+			   {
+			   	  var ws = new WebSocket("ws://128.199.45.96:80/echo");
+			   }
 				
 			   ws.onopen = function()
 			   {			

@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html>
    <head>
-	  <meta name="keywords" content="web, developer, node.js">
+	  <meta name="keywords" content="web, developer, node.js, expressjs">
 	  <meta name="description" content="Web Developer - Ari Petäjäjärvi">
 	  <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	  <meta name="viewport" content="width=device-width, initial-scale=1">
-	  <link rel="stylesheet" href="assets/css/styles.css">
-	  <script src="assets/js/jquery-2.1.4.min.js"></script>
-	  <script src="assets/js/chat_ws.js"></script>
+	  <link rel="stylesheet" href="<%- domain %>/assets/css/styles.css">
+	  <script src="<%- domain %>/assets/js/jquery-2.1.4.min.js"></script>
+	  <script src="<%- domain %>/assets/js/chat_ws.js"></script>
 	
 	  <script type="text/javascript">
 	  	   $( document ).ready( function() {	
-	  	   		var ajax_calls = [];
-	  	   		
+	  	   			   		
 				$('.main_link').click(function(e) {
 					if( $(this).hasClass('ext') == false )
 					{
@@ -54,8 +53,8 @@
 		<header class="full_header">
 			<div class="wrapper_navi">
 				<div class="main_logo">
-					<a href="http://128.199.45.96/">
-						<img src="assets/images/logo.png" alt="Web developer - Ari Petäjäjärvi" />						
+					<a href="<%- domain %>">
+						<img src="<%- domain %>/assets/images/logo.png" alt="Web developer - Ari Petäjäjärvi" />						
 					</a>				
 				</div>
 				<nav id="navigation">
@@ -74,6 +73,24 @@
 						%>
 					</ul>
 				</nav>
+				<%
+				if( typeof type != 'undefined' && type == 'admin' && typeof auth_obj.user_id != 'undefined' && auth_obj.user_id > 0 )
+				{
+				%>
+					<div id="login_fields">
+						<%- auth_obj.user_id+','+auth_obj.username %>
+					</div>
+				<%
+				} 
+				else if( typeof type != 'undefined' && type == 'admin' ) { %>
+					<div id="login_fields">
+						<form action="<%- domain %>/admin/login" type="application/x-www-form-urlencoded" method="POST">
+							<input type="text" name="admin_username" placeholder="Username" value="<%= username %>" />
+							<input type="password" name="admin_password" placeholder="Password" value="<%= password %>" />
+							<input type="submit" name="log_in_btn" id="log_in_btn" value="Login" />
+						</form>
+					</div>
+				<% } %>
 				<div class="clear"></div>
 			</div>
 		</header>
