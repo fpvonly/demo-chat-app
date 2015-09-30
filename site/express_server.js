@@ -2,6 +2,7 @@ var express = require('express');
 var session = require('express-session')
 var bodyParser =  require('body-parser');
 var cookieParser = require('cookie-parser');
+var passwordHash = require('password-hash');
 var path = require('path');
 var fs = require('fs');
 var nodemailer = require('nodemailer');
@@ -43,7 +44,8 @@ app.use( cookieParser() );
 app.use( session({
   secret: 'nonono',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {maxAge: 3600000}
 }));
 
 
@@ -61,8 +63,8 @@ app.get( '/', function( req, res ) {
 			var menuObj = JSON.parse( json );
 			renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { auth_obj: { user_id: req.session.user_id, username: req.session.username }, domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
 		});		
-		//console.log('COOKIE: '+req.cookies.email);
-		//console.log('COOKIE: '+req.cookies.chat_name);
+		
+		console.log('COOKIE username: '+req.cookies.un);
 		//res.sendFile(  __dirname+'/index.html' );
 	}
 );
@@ -76,8 +78,15 @@ app.get( '/admin/:action', function( req, res ) {
 			{		
 				renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { type:'admin', auth_obj: { user_id: req.session.user_id, username: req.session.username }, username: '', password: '', domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
 			}
+			else if( req.params.action == 'logout' )
+			{
+				req.session.destroy( function(err){
+					res.redirect('/admin/login');
+				});	
+			}
 			else
 			{
+
 				renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { type:'admin', auth_obj: { user_id: req.session.user_id, username: req.session.username }, username: '', password: '', domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
 			}
 		});		
@@ -97,18 +106,21 @@ app.post( '/admin/:action', function( req, res ) {
 			if( req.params.action == 'login' )
 			{
 				if( req.body.admin_username && req.body.admin_password )
-				{
-					//TODO password
-					database.query("SELECT *, count(id) as cnt from users where username=" + database.escape( req.body.admin_username ) + " LIMIT 1", function(err, rows, fields) {
+				{				
+					database.query("SELECT count(user.id) AS cnt, user.* FROM (SELECT * from users) AS user WHERE username=" + database.escape( req.body.admin_username ) + "", function(err, rows, fields) {
 						for( var r in rows ) 
 						{	
 							if( rows[r].cnt == 1 )
 							{			
-								req.session.user_id = rows[r].id;
-								req.session.username = rows[r].username;
+								if( passwordHash.verify( req.body.admin_password, rows[r].password ) )
+								{
+									req.session.user_id = rows[r].id;
+									req.session.username = rows[r].username;
+									req.cookies.un = rows[r].username;
 
-								//console.log("user_ID:" +req.session.user_id);	
-								break;						
+									//console.log("user_ID:" +req.session.user_id);	
+									break;				
+								}		
 							}							
 						}
 
@@ -148,6 +160,27 @@ app.post( '/datasend/contact', function( req, res ) {
 		res.end(); 
 	}
 );
+
+app.get( '/admin/create/:username/:password', function( req, res ) {		
+	var hashedPassword = passwordHash.generate( req.params.password );
+	database.query("INSERT INTO users (username, password) VALUES ('" + req.params.username + "', '" + hashedPassword + "')", function(err, rows, fields) {
+		if( err )
+		{
+			res.send('error');
+		}
+		else
+		{
+			if( rows.affectedRows > 0 )
+			{
+				res.send('User created');
+			}
+			else
+			{
+				res.send('User NOT created');
+			}
+		}		
+	});
+});	
 
 // Special cases -->
 

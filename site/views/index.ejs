@@ -59,17 +59,16 @@
 				</div>
 				<nav id="navigation">
 					<ul>
-						<% if( menu ) { 
-							for( var el in menu) {	
-								//console.log(menu[el]);
-							%>
-
+						<% 
+						if( menu ) { 
+							for( var el in menu) {									
+						%>
 							<li class="navi_list_element">
 								<a class="<%- menu[el].class %>" data-target="<%- menu[el].dataTarget %>" target="<%- menu[el].target %>" href="<%- menu[el].href %>"><%- menu[el].text %></a>
 							</li>						
 						<% 
-								}
 							}
+						}
 						%>
 					</ul>
 				</nav>
@@ -78,7 +77,10 @@
 				{
 				%>
 					<div id="login_fields">
-						<%- auth_obj.user_id+','+auth_obj.username %>
+						<span class="welcome_text">
+							<%- 'Welcome '+auth_obj.username + '<br />' %>
+						</span>
+						<a href="<%- domain %>/admin/logout" target="_self">Log out</a>
 					</div>
 				<%
 				} 
