@@ -111,7 +111,11 @@ $.fn.chat = function() {
 				  }			
 				  chat_form.find('#message_area').prepend( '<div class="message ' + align_class + '">'+received_msg+'</div>' );	
 				  chat_form.find('#message_area .message').css('opacity');	// this line is needed to get css animation working	
-				  chat_form.find('#message_area .message').css('opacity', '1');			  
+				  chat_form.find('#message_area .message').css('opacity', '1');	
+				  if( getCookie( 'utype' ) == '1' )
+				  {
+				  	 chat_form.find('#message_area .message .message_delete_link').css('display','inline-block');
+				  }	
 			   };
 				
 			   ws.onclose = function()
@@ -167,7 +171,7 @@ $.fn.chat = function() {
 			var d = new Date();
 			d.setTime( d.getTime() + ( exdays*24*60*60*1000 ) );
 			var expires = "expires="+d.toUTCString();
-			document.cookie = cname + "=" + cvalue + "; " + expires;
+			document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/";
 		}
 
 		function getCookie( cname ) 

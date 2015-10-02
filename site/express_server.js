@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var passwordHash = require('password-hash');
 var path = require('path');
 var fs = require('fs');
+var url = require('url');
 var nodemailer = require('nodemailer');
 var auth = require('http-auth');
 var socketserver = require('websocket').server;  // for websockets chat
@@ -45,9 +46,8 @@ app.use( session({
   secret: 'nonono',
   resave: false,
   saveUninitialized: true,
-  cookie: {maxAge: 3600000}
+  cookie: {maxAge: 86400000}
 }));
-
 
 // Rendering engine
 app.set( 'view engine', 'ejs' );
@@ -63,17 +63,16 @@ app.get( '/', function( req, res ) {
 			var menuObj = JSON.parse( json );
 			renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { auth_obj: { user_id: req.session.user_id, username: req.session.username }, domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
 		});		
-		
-		console.log('COOKIE username: '+req.cookies.un);
 		//res.sendFile(  __dirname+'/index.html' );
 	}
 );
 
 app.get( '/admin/:action', function( req, res ) {		
+	console.log('TTET '+req.cookies.utype)
 		fs.readFile( './views/menu.js', function( err, json ) {
 			var menuObj = JSON.parse( json );
 			
-			console.log("user_ID_GET:" +req.session.user_id);
+			//console.log("user_ID_GET:" +req.session.user_id);
 			if( req.params.action == 'login' )
 			{		
 				renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { type:'admin', auth_obj: { user_id: req.session.user_id, username: req.session.username }, username: '', password: '', domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
@@ -81,6 +80,7 @@ app.get( '/admin/:action', function( req, res ) {
 			else if( req.params.action == 'logout' )
 			{
 				req.session.destroy( function(err){
+					res.cookie('utype', 0, { maxAge: 86400000, httpOnly: false });	
 					res.redirect('/admin/login');
 				});	
 			}
@@ -92,6 +92,47 @@ app.get( '/admin/:action', function( req, res ) {
 		});		
 	}
 );
+
+app.get( '/admin/deletemessage/:id', function( req, res ) {		
+		if( typeof req.session.user_id != 'undefined' && req.session.user_id > 0 )
+		{
+			database.query("DELETE FROM chat_log WHERE id="+database.escape( req.params.id ), function(err, rows, fields) {
+				if( !err )
+				{
+					res.send('MESSAGE #' + req.params.id + ' DELETED');
+				}
+			});
+		}
+		else
+		{
+			res.send('UNAUTHORIZED');
+		}
+	
+	}
+);
+
+/*
+app.get( '/admin/create/:username/:password', function( req, res ) {		
+	var hashedPassword = passwordHash.generate( req.params.password );
+	database.query("INSERT INTO users (username, password) VALUES ('" + req.params.username + "', '" + hashedPassword + "')", function(err, rows, fields) {
+		if( err )
+		{
+			res.send('error');
+		}
+		else
+		{
+			if( rows.affectedRows > 0 )
+			{
+				res.send('User created');
+			}
+			else
+			{
+				res.send('User NOT created');
+			}
+		}		
+	});
+});	*/
+
 
 app.get( '/dataload/:page', function( req, res ) {		
 	renderViewAndLoc( res, req.params.page, req.params.page+'_text', LANG, {} );
@@ -116,7 +157,7 @@ app.post( '/admin/:action', function( req, res ) {
 								{
 									req.session.user_id = rows[r].id;
 									req.session.username = rows[r].username;
-									req.cookies.un = rows[r].username;
+									res.cookie('utype', 1, { maxAge: 86400000, httpOnly: false });							
 
 									//console.log("user_ID:" +req.session.user_id);	
 									break;				
@@ -161,26 +202,6 @@ app.post( '/datasend/contact', function( req, res ) {
 	}
 );
 
-app.get( '/admin/create/:username/:password', function( req, res ) {		
-	var hashedPassword = passwordHash.generate( req.params.password );
-	database.query("INSERT INTO users (username, password) VALUES ('" + req.params.username + "', '" + hashedPassword + "')", function(err, rows, fields) {
-		if( err )
-		{
-			res.send('error');
-		}
-		else
-		{
-			if( rows.affectedRows > 0 )
-			{
-				res.send('User created');
-			}
-			else
-			{
-				res.send('User NOT created');
-			}
-		}		
-	});
-});	
 
 // Special cases -->
 
@@ -256,7 +277,10 @@ socket.on('request', function(request) {
 		{				
 			var dateObj = new Date( rows[r].date );
 			var time =  dateObj.getDate()+'.'+(dateObj.getMonth()+1)+'.'+dateObj.getFullYear()+'  '+dateObj.getHours()+':'+dateObj.getMinutes();
-			connection.sendUTF('  <span class="chat_name_span">' + time + ' ' +  rows[r].avatar + ':</span><span class="message_text_span"> ' + rows[r].message + '</span>'  );					
+			
+			var delete_link = '<a class="message_delete_link" style="display:none;" href="' + 'http://' + request.host + '/admin/deletemessage/' + rows[r].id + '" target="_blank">DELETE ' + rows[r].id + '</a>';
+			
+			connection.sendUTF('  <span class="chat_name_span">' + time + ' ' +  rows[r].avatar + ':</span><span class="message_text_span"> ' + rows[r].message + '</span>' + delete_link  );					
 		}
 	});
 	

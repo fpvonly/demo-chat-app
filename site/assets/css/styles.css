@@ -264,6 +264,7 @@ label { font-size: 1.1em; }
 .message { background: rgba(0, 0, 0, 0.75) none repeat scroll 0 0;  width: 250px; margin: 0.5em 0;   padding: 1em; border-radius:5px; color:#ffffff; clear:both; font-size:1.1em; opacity:0; transition: all 5s; box-shadow: #000000 1px 3px 5px;}
 .msg_left { float:left; clear:both;}
 .msg_right { float:right; clear:both; }
+.message_delete_link { color:red; font-weight:bold; ]}
 
 
 /* contact form */
