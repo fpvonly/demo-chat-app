@@ -220,6 +220,36 @@ footer a
 	display:none;
 }
 
+.parallax_content #admin_page_load_content
+{
+	background: rgba(0, 0, 0, 0.75) none no-repeat scroll 0 0;
+	min-height:200px;
+	max-width: 600px;
+	margin: 0 auto;
+	position: relative;
+    top: -7em;
+	border-radius: 0 0 5px 5px;
+	box-shadow: #000000 1px 3px 5px;	
+	display:block;
+}
+
+.parallax_content #admin_page_load_content #drop_area_wrapper
+{
+	min-height: inherit;
+    position: relative;
+    padding: 1em;
+   
+}
+
+.parallax_content #admin_page_load_content div#hit
+{
+	color: #ffffff;
+    font-size: 2em;
+    padding: 25% 25%;
+    display: block;
+    border: 2px dashed #bababa;
+}
+
 .parallax_content h1
 {
 	font-size:7em;
