@@ -33,7 +33,21 @@ var server = app.listen(80, function() {
 	var port = server.address().port;
 });
 
-var upload = multer({ dest: 'uploads/' });
+// Rendering engine
+app.set( 'view engine', 'ejs' );
+app.set( 'views', path.join( __dirname, 'views') );
+
+// multipart file upload settings
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+  	var file_name = file.originalname.split('.').join( '-' + Date.now() + '.' );
+    cb(null, file_name );
+  }
+})
+var upload = multer({ storage: storage });
 
 // serve css, images, js etc
 app.use( '/assets', express.static( path.join( __dirname, 'assets') ) );
@@ -52,9 +66,17 @@ app.use( session({
   cookie: {maxAge: 86400000}
 }));
 
-// Rendering engine
-app.set( 'view engine', 'ejs' );
-app.set( 'views', path.join( __dirname, 'views') );
+function isAuthenticated( req, res, next )
+{
+	if( typeof req.session.user_id != 'undefined' && req.session.user_id > 0 )
+	{
+		return true;
+	}
+	else
+	{		
+		return false;
+	}
+}
 
 // File upload helper functions
 function isAuthenticatedForUpload( req, res, next )
@@ -70,8 +92,8 @@ function isAuthenticatedForUpload( req, res, next )
 }
 
 function finishUpload( req, res, next )
-{
-	console.log('Finish');    
+{	
+	res.sendStatus(200);	  
 }
 
 
@@ -153,20 +175,28 @@ app.get( '/admin/create/:username/:password', function( req, res ) {
 	});
 });	*/
 
-
 app.get( '/dataload/:page', function( req, res ) {		
 	renderViewAndLoc( res, req.params.page, req.params.page+'_text', LANG, {} );
 });	
 
-
-app.post('/admin/upload', [ isAuthenticatedForUpload, upload.single('file'), finishUpload ], function (req, res, next) {	
-		console.log(req.body) // form fields
-    	console.log(req.file) // form files
-    	res.status(204).end()
-	  
+app.get('/uploads/:filename', function (req, res, next ) {			
+ 	if( isAuthenticated( req, res, next ) )
+	{
+  	 	res.sendFile( __dirname + '/uploads/'+req.params.filename );
+  	}
+  	else
+  	{
+  		res.send(401);
+  	}
 });
 
+
+
 // POST routes
+app.post('/admin/upload', [ isAuthenticatedForUpload, upload.array('file'), finishUpload ], function (req, res, next) {			
+    res.sendStatus(204);	  
+});
+
 app.post( '/admin/:action', function( req, res ) {		
 		fs.readFile( './views/menu.js', function( err, json ) {
 			var menuObj = JSON.parse( json );
