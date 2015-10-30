@@ -93,7 +93,15 @@ function isAuthenticatedForUpload( req, res, next )
 
 function finishUpload( req, res, next )
 {	
-	res.sendStatus(200);	  
+	fs.readdir( __dirname + '/uploads/', function(err, items) {
+	    //console.log(items);
+	    var list = '<ul>';
+	    for( var i=0; i<items.length; i++ ) {
+	        list += '<li><a target="_blank" href="' + req.protocol + '://' + req.hostname + '/uploads/' + items[i] + '">' + items[i] + '</a></li>';			
+	    }
+	    list += '</ul>';
+	    res.send( list );	  
+	});	
 }
 
 
@@ -189,6 +197,24 @@ app.get('/uploads/:filename', function (req, res, next ) {
   		res.send(401);
   	}
 });
+/*
+app.get('/uploaded_files/', function (req, res, next ) {			
+ 	if( isAuthenticated( req, res, next ) )
+	{
+  	 	fs.readdir( __dirname + '/uploads/', function(err, items) {
+		    console.log(items);
+
+		    for (var i=0; i<items.length; i++) {
+		        console.log(items[i]);
+		    }
+		});
+  	}
+  	else
+  	{
+  		res.send(401);
+  	}
+});
+*/
 
 
 

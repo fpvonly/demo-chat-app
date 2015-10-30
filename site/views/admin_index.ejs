@@ -48,6 +48,9 @@
 				if( window.FileReader) 
 				{ 			
 				    var client = new XMLHttpRequest();
+
+				    var drop  = document.getElementById('hit');
+					var list  = document.getElementById('upload_list');
 		  
 				    function upload( file ) 
 				    {
@@ -62,14 +65,10 @@
 				    {
 					   if (client.readyState == 4 && client.status == 200) 
 					   {
-						  //alert(client.statusText);
+						  list.innerHTML = client.responseText; 
 					   }
 				    }
-							
-					
-					var drop  = document.getElementById('hit');
-					var list  = document.getElementById('upload_list');
-					
+												
 					function cancel(e) {
 					  if( e.preventDefault ) { e.preventDefault(); }
 					  return false;
@@ -102,10 +101,10 @@
 							upload( file );
 							
 							reader.addEventListener('loadend', function(e) {
-								var bin = this.result; 			
+								/*var bin = this.result; 			
 								var img = document.createElement("img"); 
 								img.src = bin;
-								list.appendChild(img);
+								list.appendChild(img);*/
 							});
 							//}.bindToEventHandler( file ));
 											   

@@ -250,6 +250,22 @@ footer a
     border: 2px dashed #bababa;
 }
 
+.parallax_content #admin_page_load_content #upload_list ul
+{
+	margin: 2em;
+}
+
+.parallax_content #admin_page_load_content #upload_list li,.parallax_content #admin_page_load_content #upload_list a
+{
+	color:#ffffff;
+	font-size:1.2em;
+}
+
+.parallax_content #admin_page_load_content #upload_list a:hover
+{
+	text-decoration: underline;
+}
+
 .parallax_content h1
 {
 	font-size:7em;
