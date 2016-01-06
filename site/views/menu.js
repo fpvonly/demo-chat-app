@@ -19,5 +19,12 @@
 		"text":"LinkedIn",
 		"target":"_blank",
 		"class":"main_link ext"
+	},
+	{
+		"href":"http://128.199.45.96:29/",
+		"dataTarget":"",
+		"text":"PingPong",
+		"target":"_blank",
+		"class":"main_link ext"
 	}]
 }

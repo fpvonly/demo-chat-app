@@ -113,7 +113,7 @@ nav
 {
 	position:relative;
 	float:right;
-	width:50%;
+	width:60%;
 	margin: 1em;	
 }
 
@@ -128,7 +128,7 @@ nav ul li
 	float:left;
 	font-family: Helvetica,Arial,sans-serif;
 	color:#ffffff;
-	
+	margin: 0 0 15px;
 }
 
 nav ul li a 
