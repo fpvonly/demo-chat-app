@@ -34,8 +34,8 @@ var server = app.listen(3000, function() {
 });
 
 // Rendering engine
-app.set( 'view engine', 'ejs' );
-app.set( 'views', path.join( __dirname, 'views') );
+//app.set( 'view engine', 'ejs' );
+//app.set( 'views', path.join( __dirname, 'views') );
 
 // multipart file upload settings
 var storage = multer.diskStorage({
@@ -51,6 +51,7 @@ var upload = multer({ storage: storage });
 
 // serve css, images, js etc
 app.use( '/assets', express.static( path.join( __dirname, 'assets') ) );
+app.use( '/build', express.static( path.join( __dirname, 'build') ) );
 
 // POST params conf
 app.use( bodyParser.urlencoded({ extended: false }) );
@@ -109,14 +110,14 @@ function finishUpload( req, res, next )
 // GET routes
 // second param: auth.connect(basic)
 app.get( '/', function( req, res ) {
-		fs.readFile( './views/menu.js', function( err, json ) {
-			var menuObj = JSON.parse( json );
-			renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { auth_obj: { user_id: req.session.user_id, username: req.session.username }, domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
-		});
-		//res.sendFile(  __dirname+'/index.html' );
+		//fs.readFile( './views/menu.js', function( err, json ) {
+		//	var menuObj = JSON.parse( json );
+		//	renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { auth_obj: { user_id: req.session.user_id, username: req.session.username }, domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
+		//});
+		res.sendFile(  __dirname+'/index.html' );
 	}
 );
-
+/*
 app.get( '/admin/:action', function( req, res ) {
 	console.log('TTET '+req.cookies.utype)
 		fs.readFile( './views/menu.js', function( err, json ) {
@@ -160,7 +161,7 @@ app.get( '/admin/deletemessage/:id', function( req, res ) {
 
 	}
 );
-
+*/
 /*
 app.get( '/admin/create/:username/:password', function( req, res ) {
 	var hashedPassword = passwordHash.generate( req.params.password );
@@ -182,7 +183,7 @@ app.get( '/admin/create/:username/:password', function( req, res ) {
 		}
 	});
 });	*/
-
+/*
 app.get( '/dataload/:page', function( req, res ) {
 	renderViewAndLoc( res, req.params.page, req.params.page+'_text', LANG, {} );
 });
@@ -197,6 +198,7 @@ app.get('/uploads/:filename', function (req, res, next ) {
   		res.send(401);
   	}
 });
+*/
 /*
 app.get('/uploaded_files/', function (req, res, next ) {
  	if( isAuthenticated( req, res, next ) )
@@ -219,6 +221,7 @@ app.get('/uploaded_files/', function (req, res, next ) {
 
 
 // POST routes
+/*
 app.post('/admin/upload', [ isAuthenticatedForUpload, upload.array('file'), finishUpload ], function (req, res, next) {
     res.sendStatus(204);
 });
@@ -284,7 +287,7 @@ app.post( '/datasend/contact', function( req, res ) {
 		res.end();
 	}
 );
-
+*/
 
 // Special cases -->
 
