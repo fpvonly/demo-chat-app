@@ -25,7 +25,8 @@ var config = {
   },
   devServer: {
     /*contentBase: __dirname,*/
-    open: true
+    open: true,
+    historyApiFallback: true
   }
 };
 
