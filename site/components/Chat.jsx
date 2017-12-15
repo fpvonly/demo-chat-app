@@ -1,12 +1,28 @@
 import React from 'react';
 import {render} from 'react-dom';
+import $ from 'jquery';
+import chat from './chat_ws.js';
 
 export default class Chat extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.form = null;
+  }
+
+  componentWillMount() {
+    $.fn.chat = chat;
+  }
+  componentDidMount() {
+    $(this.form).chat();
+  }
+
 
   render() {
     return <div id="chat_area">
     TODO
-     <form id="chat_form" action="#" method="POST" enctype="application/x-www-form-urlencoded">
+     <form ref={(form) => { this.form = form; }} id="chat_form" action="#" method="POST" enctype="application/x-www-form-urlencoded">
       <div id="chat_reg">
         <input type="text" name="chat_name" id="chat_name" placeholder="Chat name" maxlength="20"/>
         <input type="text" name="email" id="email" placeholder="E-mail" maxlength="40" />
