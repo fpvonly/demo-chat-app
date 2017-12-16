@@ -87,7 +87,7 @@ export default function() {
 			   var host = window.location.host;
 			   if( host.indexOf('localhost') != -1 || host.indexOf('127.0.0.1') != -1 )
 			   {
-			  	  var ws = new WebSocket("ws://localhost:80/echo");
+			  	  var ws = new WebSocket("ws://localhost:3000/echo");
 			   }
 			   else
 			   {
