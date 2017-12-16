@@ -2,7 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import { BrowserRouter, Link, Route, IndexRoute, Switch } from 'react-router-dom';
 import Header from '../components/Header.jsx'
-import Chat from '../components/Chat.jsx'
+import Chat from '../components/Chat/Chat.jsx'
 
 export default class App extends React.Component {
   render() {

@@ -358,7 +358,7 @@ socket.on('request', function(request) {
 	count++;
 	connection.id = count;
 	clients[ count ] =  connection;
-	database.query("SELECT * from ( SELECT * FROM chat_log ORDER BY date DESC LIMIT 10 ) AS t ORDER BY date ASC", function(err, rows, fields) {
+	/*database.query("SELECT * from ( SELECT * FROM chat_log ORDER BY date DESC LIMIT 10 ) AS t ORDER BY date ASC", function(err, rows, fields) {
 		for( var r in rows )
 		{
 			var dateObj = new Date( rows[r].date );
@@ -368,7 +368,9 @@ socket.on('request', function(request) {
 
 			connection.sendUTF('  <span class="chat_name_span">' + time + ' ' +  rows[r].avatar + ':</span><span class="message_text_span"> ' + rows[r].message + '</span>' + delete_link  );
 		}
-	});
+	});*/
+//TODO
+  connection.sendUTF('  <span class="chat_name_span">Welcome. Logged in.</span>');
 
 
 	connection.on('message', function(message) {
@@ -393,16 +395,16 @@ socket.on('request', function(request) {
 				console.log( i );
 			}
 
-			database.query("INSERT INTO chat_log ( message, avatar, email, ip ) VALUES ( " + database.escape(message_text) + ", " + database.escape(chat_name) + ", " + database.escape(email) + ", '" + request.remoteAddress + "' )", function(err,rows){
-			});
+			//database.query("INSERT INTO chat_log ( message, avatar, email, ip ) VALUES ( " + database.escape(message_text) + ", " + database.escape(chat_name) + ", " + database.escape(email) + ", '" + request.remoteAddress + "' )", function(err,rows){
+			//});
 
-			var transporter = nodemailer.createTransport();
+			/*var transporter = nodemailer.createTransport();
 			transporter.sendMail({
 				from: 'chat@petajajarvi.net',
 				to: 'aripetaj@gmail.com',
 				subject: 'New chat message',
 				text: currentTime + ' ' + chat_name + ':\n\n'+ message_text + '\n\nemail: ' + email
-			});
+			});*/
 		}
 	});
 
