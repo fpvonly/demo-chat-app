@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import chat from './chat_ws.js';
 import ChatLogin from './ChatLogin.jsx';
+import ChatArea from './ChatArea.jsx';
 
 export default class Chat extends React.Component {
 
@@ -10,21 +11,18 @@ export default class Chat extends React.Component {
     super(props);
 
     this.form = null;
-    this.chat_funcs_area = null;
 
     this.state = {
-      ONLINE: false
+      ONLINE: false,
+      messages: []
     }
   }
 
-
-
   componentWillMount() {
-
   }
+
   componentDidMount() {
 //TODO
-    this.form.submit( function() { return false; } );
 
 		let chat_funcs_area = this.form.find( '#chat_funcs' );
 
@@ -38,8 +36,7 @@ export default class Chat extends React.Component {
 			{
         this.setState({ONLINE: true});
         //TODO __>
-				//chat_reg_area.hide();
-				//chat_funcs_area.show();
+				;
 			//	let msg_btn = this.form.find('#message_send_btn');
 			//	msg_btn.click( function() { this.validateAndSendMessage( this.form ); });
 			//	this.form.keyup( function(e) { if(e.keyCode == 13) { this.validateAndSendMessage( this.form ); }  } );
@@ -48,10 +45,16 @@ export default class Chat extends React.Component {
 		}
   }
 
+  handleKeyUp(e) {
+    if(e.keyCode == 13) {
+      this.validateAndSendMessage();
+    }
+  }
+
   openConnection = () => {
-    if( typeof WebSocket != "undefined" ) {
+    if(typeof WebSocket != "undefined") {
        let host = window.location.host;
-       if( host.indexOf('localhost') != -1 || host.indexOf('127.0.0.1') != -1 ) {
+       if(host.indexOf('localhost') != -1 || host.indexOf('127.0.0.1') != -1) {
           this.ws = new WebSocket("ws://localhost:3000/echo");
        } else {
           this.ws = new WebSocket("ws://128.199.45.96:80/echo");
@@ -61,25 +64,12 @@ export default class Chat extends React.Component {
          this.setState({ONLINE: true});
       };
 
-       this.ws.onmessage = (evt) => {
+      this.ws.onmessage = (evt) => {
         let received_msg = evt.data;
-        let messages = this.form.find('#message_area').find('.message');
-        let align_class = 'msg_right';
-        if( messages.length > 0 )
-        {
-          if( messages.first().hasClass('msg_right') )
-          {
-            align_class = 'msg_left';
-          }
-        }
-        this.form.find('#message_area').prepend( '<div class="message ' + align_class + '">'+received_msg+'</div>' );
-        this.form.find('#message_area .message').css('opacity');	// this line is needed to get css animation working
-        this.form.find('#message_area .message').css('opacity', '1');
-        if( this.getCookie( 'utype' ) == '1' )
-        {
-           this.form.find('#message_area .message .message_delete_link').css('display','inline-block');
-        }
-       };
+        let newMessages = this.state.messages.slice();
+        newMessages.push({message: received_msg});
+        this.setState({messages: newMessages});
+      };
 
        this.ws.onclose = () => {
 //TODO
@@ -105,10 +95,9 @@ export default class Chat extends React.Component {
       this.ws.send(msg);
     }
 
-   validateAndSendMessage = ( chat_form ) => {
+   validateAndSendMessage = () => {
      let msg_input = $.trim( this.form.find('#message_input').val() );
      if( msg_input != '' ) {
-        console.log('validateAndSendMessage', msg_input);
        this.sendMessage( msg_input+';' + this.getCookie( 'chat_name' ) + ';' + this.getCookie( 'email' ) );
        this.form.find('#message_input').val('');
      }
@@ -135,30 +124,28 @@ export default class Chat extends React.Component {
      return "";
    }
 
-
-
-
   render() {
-      let chatArea = this.state.ONLINE === true
-      ? <div>
-          <div ref={(c) => { this.chat_funcs_area = $(c); }} id="chat_funcs">
-            <input type="text" name="message_input" id="message_input" maxlength="1000" placeholder="Message"/>
-            <input type="button" value="Send" id="message_send_btn" onClick={this.validateAndSendMessage} />
-          </div>
-          <div id="message_area">
-            <div className="clear"></div>
-          </div>
-        </div>
-      : null;
 
     return <div id="chat_area">
-    TODO
-     <form ref={(c) => { this.form = $(c); }} id="chat_form" action="#" method="POST" enctype="application/x-www-form-urlencoded">
-      <ChatLogin visible={!this.state.ONLINE} setCookie={this.setCookie} openConnection={this.openConnection} />
-      {chatArea}
-
-     </form>
+     <form
+        ref={(c) => { this.form = $(c); }}
+        onKeyUp={this.handleKeyUp.bind(this)}
+        onSubmit={(e) => {e.preventDefault();}}
+        id="chat_form"
+        action="#"
+        method="POST"
+        enctype="application/x-www-form-urlencoded">
+          <ChatLogin
+            visible={!this.state.ONLINE}
+            setCookie={this.setCookie}
+            openConnection={this.openConnection} />
+          <ChatArea
+            visible={this.state.ONLINE}
+            setCookie={this.setCookie}
+            getCookie={this.getCookie}
+            validateAndSendMessage={this.validateAndSendMessage}
+            messages={this.state.messages} />
+        </form>
     </div>
-
   }
 }
