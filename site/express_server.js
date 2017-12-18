@@ -370,7 +370,7 @@ socket.on('request', function(request) {
 		}
 	});*/
 //TODO
-  connection.sendUTF('  <span class="chat_name_span">Welcome. Logged in.</span>');
+  connection.sendUTF(JSON.stringify({message: 'Welcome. Logged in.'}));
 
 
 	connection.on('message', function(message) {
@@ -391,8 +391,15 @@ socket.on('request', function(request) {
 
 			for( var i in clients )
 			{
-				clients[i].sendUTF('  <span class="chat_name_span">' + currentTime + ' ' + chat_name + ':</span><span class="message_text_span">' + message_text + "</span>"  );
-				console.log( i );
+          clients[i].sendUTF(
+            JSON.stringify({
+              message: message_text,
+              timestamp: currentTime,
+              id: chat_name
+            })
+          );
+				//clients[i].sendUTF('  <span class="chat_name_span">' + currentTime + ' ' + chat_name + ':</span><span class="message_text_span">' + message_text + "</span>"  );
+				//console.log( i );
 			}
 
 			//database.query("INSERT INTO chat_log ( message, avatar, email, ip ) VALUES ( " + database.escape(message_text) + ", " + database.escape(chat_name) + ", " + database.escape(email) + ", '" + request.remoteAddress + "' )", function(err,rows){

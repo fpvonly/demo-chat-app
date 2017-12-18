@@ -1,6 +1,6 @@
 /*@import url(http://fonts.googleapis.com/css?family=Fjalla+One&subset=latin,latin-ext);*/
 
-/* http://meyerweb.com/eric/tools/css/reset/ 
+/* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
 */
@@ -14,8 +14,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
 	margin: 0;
@@ -26,14 +26,14 @@ time, mark, audio, video {
 	outline: none;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 body {
 	font-size: 62.5%;
 	line-height: 1;
-	font-family: 'Fjalla One', sans-serif; 
+	font-family: 'Fjalla One', sans-serif;
 }
 ol, ul {
 	list-style: none;
@@ -64,7 +64,7 @@ p
 	font-size:3em;
 }
 
-header { 	
+header {
 	position:relative;
 	top:0;
 	left:0;
@@ -78,25 +78,25 @@ header h1
 {
 	font-size:3em;
 	font-family: Helvetica,Arial,sans-serif;
-	color:#ffffff;	
+	color:#ffffff;
 	padding: 1em 1.5em;
 }
 
 
-.wrapper_navi 
-{	
+.wrapper_navi
+{
 	height:auto;
 	min-height:inherit;
 	max-width:600px;
 	margin:0 auto;
 	padding: 0 1em;
-	background: rgba(0, 0, 0, 0.75) none repeat scroll 0 0; 
+	background: rgba(0, 0, 0, 0.75) none repeat scroll 0 0;
 	box-shadow: #000000 1px 3px 5px;
 	border-radius:0 0 5px 5px;
 
 }
 
-.main_logo 
+.main_logo
 {
 	position:relative;
 	float:left;
@@ -106,23 +106,23 @@ header h1
 
 .main_logo img
 {
-	
+
 }
 
-nav 
+nav
 {
 	position:relative;
 	float:right;
 	width:60%;
-	margin: 1em;	
+	margin: 1em;
 }
 
-nav ul 
+nav ul
 {
 	float:right;
 }
 
-nav ul li 
+nav ul li
 {
 	position:relative;
 	float:left;
@@ -131,8 +131,8 @@ nav ul li
 	margin: 0 0 15px;
 }
 
-nav ul li a 
-{	
+nav ul li a
+{
 	color:#ffffff;
 	font-weight: normal;
 	white-space:nowrap;
@@ -144,17 +144,17 @@ nav ul li a
 }
 
 nav ul li a:hover
-{	
+{
 	border-bottom: 3px solid #ffffff;
 }
 
 nav ul li a.main_link_active
-{	
+{
 	border-bottom: 3px solid #ffffff;
 }
 
-footer { 
-	background: rgba(0, 0, 0, 0.95) none repeat scroll 0 0; 
+footer {
+	background: rgba(0, 0, 0, 0.95) none repeat scroll 0 0;
 	position:relative;
 	transition: all 0.5s ease 0s;
 	width:100%;
@@ -165,10 +165,10 @@ footer {
 	font-size:1.4em;
 }
 
-footer a 
+footer a
 {
 	color:rgb(136,136,136);
-} 
+}
 
 .clear { clear:both; }
 
@@ -177,7 +177,7 @@ footer a
 	height: 100%;
     min-height: 100%;
 	position:relative;
-	/*background: #ffffff url("img/paral1.jpg") no-repeat fixed center center; not for parallax plugin */ 
+	/*background: #ffffff url("img/paral1.jpg") no-repeat fixed center center; not for parallax plugin */
 	background-size:cover;
 }
 
@@ -215,7 +215,7 @@ footer a
 	position: relative;
     top: -7em;
 	border-radius: 0 0 5px 5px;
-	box-shadow: #000000 1px 3px 5px;	
+	box-shadow: #000000 1px 3px 5px;
 	opacity:0;
 	display:none;
 }
@@ -229,7 +229,7 @@ footer a
 	position: relative;
     top: -7em;
 	border-radius: 0 0 5px 5px;
-	box-shadow: #000000 1px 3px 5px;	
+	box-shadow: #000000 1px 3px 5px;
 	display:block;
 }
 
@@ -238,7 +238,7 @@ footer a
 	min-height: inherit;
     position: relative;
     padding: 1em;
-   
+
 }
 
 .parallax_content #admin_page_load_content div#hit
@@ -277,8 +277,8 @@ footer a
 }
 
 
-.wrapper_content 
-{	
+.wrapper_content
+{
 	height:auto;
 	min-height:inherit;
 	max-width:1200px;
@@ -307,11 +307,22 @@ input[type="text"], textarea, input[type="password"] { padding:0.3em 1%; border-
 label { font-size: 1.1em; }
 .chat_name_span { font-style:italic; }
 .message_text_span { display: block; font-weight: bold; margin-top:0.7em; }
-.message { background: rgba(0, 0, 0, 0.75) none repeat scroll 0 0;  width: 250px; margin: 0.5em 0;   padding: 1em; border-radius:5px; color:#ffffff; clear:both; font-size:1.1em; opacity:0; transition: all 5s; box-shadow: #000000 1px 3px 5px;}
+.message { background: rgba(0, 0, 0, 0.75) none repeat scroll 0 0;  width: 250px; margin: 0.5em 0;   padding: 1em; border-radius:5px; color:#ffffff; clear:both; font-size:1.1em; box-shadow: #000000 1px 3px 5px;}
 .msg_left { float:left; clear:both;}
 .msg_right { float:right; clear:both; }
 .message_delete_link { color:red; font-weight:bold; ]}
-
+.message.fade-enter {opacity: 0;}
+.message.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+.message.fade-leave {
+  opacity: 1;
+}
+.message.fade-leave.fade-leave-active {
+  opacity: 0;
+  transition: opacity 500ms ease-in;
+}
 
 /* contact form */
 #contact_form {  padding: 2.5%;}
@@ -334,7 +345,7 @@ label { font-size: 1.1em; }
 	font-size:1.1em;
 }
 
-@media screen and (max-width: 500px) {  
+@media screen and (max-width: 500px) {
 	#message_send_btn, #contact_btn, #reg_btn { margin-top:1em; }
 	#reg_btn { display: block; margin: 1em auto 0 auto;  }
 	#email { clear:both; margin-top:1em; }

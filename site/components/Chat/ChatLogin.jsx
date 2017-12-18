@@ -37,19 +37,13 @@ export default class ChatLogin extends React.Component {
   handleRegBtnClick = (e, data) => {
     this.chat_name.css({'border':'0'});
     this.email.css({'border':'0'});
-    if( $.trim( this.chat_name.val() ) != '' && $.trim( this.email.val() ) != '' )
+    if($.trim( this.chat_name.val() ) != '' && $.trim( this.email.val() ) != '')
     {
-      if( this.isValidEmailAddress( $.trim( this.email.val() ) ) == true )
+      if(this.isValidEmailAddress( $.trim( this.email.val() ) ) == true)
       {
-        this.props.setCookie( 'chat_name', $.trim( this.chat_name.val() ), 1 );
-        this.props.setCookie( 'email', $.trim( this.email.val() ), 1 );
-
-      //  this.setState({ONLINE: true}, function() {
-        //  let msg_btn = this.chat_form.find('#message_send_btn');
-        //  msg_btn.click( function() { this.validateAndSendMessage( this.form ); });
-        //  this.chat_form.keyup( function(e) { if(e.keyCode == 13) { this.validateAndSendMessage( this.form ); }  } );
-          this.props.openConnection();
-      //  }.bind(this));
+        this.props.setCookie('chat_name', $.trim(this.chat_name.val()), 1);
+        this.props.setCookie('email', $.trim(this.email.val()), 1);
+        this.props.openConnection();
       }
       else
       {
