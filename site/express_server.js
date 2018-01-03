@@ -13,6 +13,7 @@ var socketserver = require('websocket').server;  // for websockets chat
 var Converter = require("csvtojson").Converter;
 var database = require('./database');
 
+
 var clients = {}; // for websockets chat
 var count = 0; // for websockets chat
 
@@ -21,7 +22,7 @@ var LANG = 'en';
 
 // auth
 var basic = auth.basic({
-  realm: "Private area",
+  realm: "Private area!",
   file: __dirname + "/htpasswd",
   type: "basic"
 });
@@ -32,6 +33,9 @@ var server = app.listen(3000, function() {
 	var host = server.address().address;
 	var port = server.address().port;
 });
+
+//app.use(auth.connect(basic));
+
 
 // Rendering engine
 //app.set( 'view engine', 'ejs' );
@@ -398,10 +402,15 @@ socket.on('request', function(request) {
               id: chat_name
             })
           );
-				//clients[i].sendUTF('  <span class="chat_name_span">' + currentTime + ' ' + chat_name + ':</span><span class="message_text_span">' + message_text + "</span>"  );
-				//console.log( i );
 			}
-
+      database.insert({
+          message: message_text,
+          user_name: chat_name,
+          email: email,
+          ip: request.remoteAddress,
+          timestamp: new Date()
+        }
+      );
 			//database.query("INSERT INTO chat_log ( message, avatar, email, ip ) VALUES ( " + database.escape(message_text) + ", " + database.escape(chat_name) + ", " + database.escape(email) + ", '" + request.remoteAddress + "' )", function(err,rows){
 			//});
 

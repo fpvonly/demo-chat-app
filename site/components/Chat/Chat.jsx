@@ -46,7 +46,6 @@ export default class Chat extends React.Component {
       this.ws.onmessage = (evt) => {
         let received_msg = JSON.parse(evt.data);
         let newMessages = this.state.messages.slice();
-        console.log('newMessages', newMessages);
         newMessages.push(received_msg);
 
         this.setState({messages: newMessages});
