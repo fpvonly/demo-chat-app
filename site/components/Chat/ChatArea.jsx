@@ -52,13 +52,15 @@ export default class ChatArea extends React.Component {
 
     for (let i = messagesProps.length - 1; i >= 0; i--) {
       let msg = messagesProps[i];
-      align_class = (i % 2 === 0 ? 'msg_right' : 'msg_left')
+      align_class = (i % 2 === 0 ? 'msg_right' : 'msg_left');
       // if msg is the newest message of top of the array
       if (msg.custom) {
         messages.push(<div className={'message ' + align_class} key={i}><span className="message_text_span">{msg.custom}</span></div>);
       } else {
         messages.push(<div className={'message ' + align_class} key={i}>
-            {msg.timestamp && msg.id ? <span className="chat_name_span">{msg.timestamp + ' ' +  msg.id}</span> : null}
+            {msg.timestamp && msg.user_name
+              ? <span className="chat_name_span">{this.getCurrentTime(msg.timestamp) + ' "' +  msg.user_name + '" says:'}</span>
+              : null}
             <span className="message_text_span">{msg.message}</span>
           </div>);
       }
@@ -73,6 +75,15 @@ export default class ChatArea extends React.Component {
     return messages;
   }
 
+  getCurrentTime = (date) => {
+  	var d = (date ? new Date(date) : new Date());
+  	var offset = (new Date().getTimezoneOffset() / 60) * -1;
+  	var n = new Date(d.getTime() + offset);
+  	var time = n.getDate() + '.' + (n.getMonth() + 1) + '.' + n.getFullYear() + '  '
+      + (n.getHours() < 10 ? '0' : '') + n.getHours() + ':' + (n.getMinutes() < 10 ? '0' : '') + n.getMinutes();
+  	return time;
+  };
+
   render() {
     let messages = this.drawMessages();
     let chatArea = null;
@@ -83,7 +94,7 @@ export default class ChatArea extends React.Component {
               <input type="text" name="message_input" id="message_input" maxlength="1000" placeholder="Message"/>
               <input type="button" value="Send" id="message_send_btn" onClick={this.props.validateAndSendMessage} />
             </div>
-            <div  ref={(c) => { this.message_area = $(c); }} id="message_area">
+            <div ref={(c) => { this.message_area = $(c); }} id="message_area">
               <ReactCSSTransitionGroup
                 transitionName="fade"
                 transitionEnterTimeout={500}
@@ -95,7 +106,7 @@ export default class ChatArea extends React.Component {
           </div>;
     } else if(this.props.visible === false && this.props.messages.length === 1 && this.props.messages[0].custom) {
       chatArea = <div>
-          <div  ref={(c) => { this.message_area = $(c); }} id="message_area">
+          <div ref={(c) => { this.message_area = $(c); }} id="message_area">
             <ReactCSSTransitionGroup
               transitionName="fade"
               transitionEnterTimeout={500}

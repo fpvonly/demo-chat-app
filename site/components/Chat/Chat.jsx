@@ -32,21 +32,25 @@ export default class Chat extends React.Component {
 
   openConnection = () => {
     if(typeof WebSocket !== "undefined") {
-       let host = window.location.host;
-       if(host.indexOf('localhost') != -1 || host.indexOf('127.0.0.1') !== -1) {
-          this.ws = new WebSocket("ws://localhost:3000/echo");
-       } else {
-          this.ws = new WebSocket("ws://128.199.45.96:80/echo");
-       }
+      let host = window.location.host;
+      if(host.indexOf('localhost') !== -1 || host.indexOf('127.0.0.1') !== -1) {
+        this.ws = new WebSocket("ws://localhost:3000/echo");
+      } else {
+        this.ws = new WebSocket("ws://128.199.45.96:80/echo");
+      }
 
-       this.ws.onopen = () => {
+      this.ws.onopen = () => {
          this.setState({ONLINE: true});
       };
 
       this.ws.onmessage = (evt) => {
-        let received_msg = JSON.parse(evt.data);
+        let receivedMsg = JSON.parse(evt.data);
         let newMessages = this.state.messages.slice();
-        newMessages.push(received_msg);
+        if(Array.isArray(receivedMsg) === true && receivedMsg.length > 0) {
+          newMessages = newMessages.concat(receivedMsg);
+        } else {
+          newMessages.push(receivedMsg);
+        }
 
         this.setState({messages: newMessages});
       };
@@ -83,29 +87,27 @@ export default class Chat extends React.Component {
 
   validateAndSendMessage = () => {
     let msg_input = $.trim( this.form.find('#message_input').val() );
-    if(msg_input != '') {
+    if(msg_input !== '') {
       this.sendMessage( msg_input+';' + this.getCookie('chat_name') + ';' + this.getCookie('email') );
       this.form.find('#message_input').val('');
     }
   }
 
-  setCookie(cname, cvalue, exdays)
-  {
+  setCookie(cname, cvalue, exdays) {
     let d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     let expires = "expires="+d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/";
   }
 
-  getCookie(cname)
-  {
+  getCookie(cname) {
     let name = cname + "=";
     let ca = document.cookie.split(';');
-    for(let i=0; i<ca.length; i++)
+    for(let i = 0; i < ca.length; i++)
     {
       let c = ca[i];
-      while (c.charAt(0)==' ') c = c.substring(1);
-      if(c.indexOf(name) == 0) return c.substring(name.length,c.length);
+      while (c.charAt(0) === ' ') c = c.substring(1);
+      if(c.indexOf(name) === 0) return c.substring(name.length,c.length);
     }
     return "";
   }

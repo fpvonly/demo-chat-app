@@ -9,14 +9,10 @@ export default class Menu extends React.Component {
     super(props);
   }
 
-  componentWillMount() {
-
-  }
-
   getMenuItems = () => {
     let items = [];
-    items = menu.menu.map(function(indexValueObject) {
-      return <li className="navi_list_element">
+    items = menu.menu.map(function(indexValueObject, i) {
+      return <li className="navi_list_element" key={i}>
         <NavLink
           to={(indexValueObject.class.indexOf('ext') !== -1
             ? indexValueObject.href

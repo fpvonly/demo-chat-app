@@ -13,12 +13,12 @@ var socketserver = require('websocket').server;  // for websockets chat
 var Converter = require("csvtojson").Converter;
 var database = require('./database');
 
+var mongo = new database();
 
 var clients = {}; // for websockets chat
 var count = 0; // for websockets chat
 
 var LANG = 'en';
-
 
 // auth
 var basic = auth.basic({
@@ -35,7 +35,6 @@ var server = app.listen(3000, function() {
 });
 
 //app.use(auth.connect(basic));
-
 
 // Rendering engine
 //app.set( 'view engine', 'ejs' );
@@ -339,12 +338,13 @@ function renderViewAndLoc( res, view, string, LANG, addToViewObj ) {
 	fs.createReadStream('localization/' + LANG + '.csv').pipe(converter);
 }
 
-function getCurrentTime() {
-	var d = new Date();
-	var offset = (new Date().getTimezoneOffset() / 60) * -1;
-	var n = new Date(d.getTime() + offset);
-	var time =  n.getDate()+'.'+(n.getMonth()+1)+'.'+n.getFullYear()+'  '+n.getHours()+':'+n.getMinutes();
-	return time;
+getCurrentTime = (date) => {
+  var d = (date ? new Date(date) : new Date());
+  var offset = (new Date().getTimezoneOffset() / 60) * -1;
+  var n = new Date(d.getTime() + offset);
+  var time = n.getDate() + '.' + (n.getMonth() + 1) + '.' + n.getFullYear() + '  '
+    + (n.getHours() < 10 ? '0' : '') + n.getHours() + ':' + (n.getMinutes() < 10 ? '0' : '') + n.getMinutes();
+  return time;
 };
 
 
@@ -362,6 +362,13 @@ socket.on('request', function(request) {
 	count++;
 	connection.id = count;
 	clients[ count ] =  connection;
+
+  connection.sendUTF(JSON.stringify({message: 'Welcome. Logged in.'}));
+
+  mongo.find({}, function(err, results) {
+    connection.sendUTF(JSON.stringify(results));
+    //console.log("RESULTS", results);
+  });
 	/*database.query("SELECT * from ( SELECT * FROM chat_log ORDER BY date DESC LIMIT 10 ) AS t ORDER BY date ASC", function(err, rows, fields) {
 		for( var r in rows )
 		{
@@ -374,12 +381,11 @@ socket.on('request', function(request) {
 		}
 	});*/
 //TODO
-  connection.sendUTF(JSON.stringify({message: 'Welcome. Logged in.'}));
+
 
 
 	connection.on('message', function(message) {
-		if( database )
-		{
+		if(mongo)	{
 			// 0: message
 			// 1: chat name
 			// 2: email
@@ -389,21 +395,18 @@ socket.on('request', function(request) {
 			var email = msg_parts[2];
 
 			console.log( chat_name + ':' + message_text );
-			console.log('\nCLIENT IDS ACTIVE:\n ');
 
-			var currentTime = getCurrentTime();
-
-			for( var i in clients )
-			{
-          clients[i].sendUTF(
-            JSON.stringify({
-              message: message_text,
-              timestamp: currentTime,
-              id: chat_name
-            })
-          );
+			for(var i in clients)	{
+        clients[i].sendUTF(
+          JSON.stringify({
+            message: message_text,
+            timestamp: new Date(),
+            user_name: chat_name
+          })
+        );
 			}
-      database.insert({
+
+      mongo.insert({
           message: message_text,
           user_name: chat_name,
           email: email,
@@ -411,8 +414,6 @@ socket.on('request', function(request) {
           timestamp: new Date()
         }
       );
-			//database.query("INSERT INTO chat_log ( message, avatar, email, ip ) VALUES ( " + database.escape(message_text) + ", " + database.escape(chat_name) + ", " + database.escape(email) + ", '" + request.remoteAddress + "' )", function(err,rows){
-			//});
 
 			/*var transporter = nodemailer.createTransport();
 			transporter.sendMail({
@@ -425,16 +426,12 @@ socket.on('request', function(request) {
 	});
 
 	connection.on('close', function( reasonCode, description ) {
-		console.log('\nCLIENT IDS ACTIVE:\n ');
-		for( var i in clients )
-		{
-			if( i == connection.id )
-			{
-				 delete clients[ i ];
-			}
-			else
-			{
-				console.log( i );
+		//console.log('\nCLIENT IDS ACTIVE:\n ');
+		for(var i in clients) {
+			if(i == connection.id) {
+				 delete clients[i];
+			}	else {
+				//console.log( i );
 			}
 		}
 		console.log('connection closed');
