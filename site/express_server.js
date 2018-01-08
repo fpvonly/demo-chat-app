@@ -361,11 +361,11 @@ socket.on('request', function(request) {
 	var connection = request.accept(null, request.origin);
 	count++;
 	connection.id = count;
-	clients[ count ] =  connection;
+	clients[count] =  connection;
 
   connection.sendUTF(JSON.stringify({message: 'Welcome. Logged in.'}));
 
-  mongo.find({}, function(err, results) {
+  mongo.find(false, { fields: {message: 1, user_name: 1, email: 1, timestamp: 1/*, _id: 0*/}, limit: 10, sort: {timestamp: 1} }, function(err, results) {
     connection.sendUTF(JSON.stringify(results));
     //console.log("RESULTS", results);
   });

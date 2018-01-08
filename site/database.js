@@ -16,9 +16,16 @@ function database() {
   }.bind(this));
 };
 
-database.prototype.find = function(criteria, callback) {
+database.prototype.find = function(criteria, options, callback) {
   // TODO criteria etc
-  this.collection.find({}, function(err, cursor) {
+  if (typeof criteria === undefined || criteria === false) {
+    criteria = {};
+  }
+  if (typeof options === undefined || options === false) {
+    options = {};
+  }
+
+  this.collection.find(criteria, options, function(err, cursor) {
     assert.equal(null, err);
     cursor.toArray(callback);
   });
