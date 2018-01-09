@@ -34,6 +34,7 @@ var server = app.listen(3000, function() {
 	var port = server.address().port;
 });
 
+// basic auth
 //app.use(auth.connect(basic));
 
 // Rendering engine
@@ -70,37 +71,28 @@ app.use( session({
   cookie: {maxAge: 86400000}
 }));
 
-function isAuthenticated( req, res, next )
-{
-	if( typeof req.session.user_id != 'undefined' && req.session.user_id > 0 )
-	{
+function isAuthenticated(req, res, next) {
+	if(typeof req.session.user_id != 'undefined' && req.session.user_id > 0) {
 		return true;
-	}
-	else
-	{
+	}	else {
 		return false;
 	}
 }
 
 // File upload helper functions
-function isAuthenticatedForUpload( req, res, next )
-{
-	if( typeof req.session.user_id != 'undefined' && req.session.user_id > 0 )
-	{
+function isAuthenticatedForUpload(req, res, next) {
+	if(typeof req.session.user_id != 'undefined' && req.session.user_id > 0) {
 		next();
-	}
-	else
-	{
+	}	else {
 		res.sendStatus(401);
 	}
 }
 
-function finishUpload( req, res, next )
-{
+function finishUpload(req, res, next) {
 	fs.readdir( __dirname + '/uploads/', function(err, items) {
 	    //console.log(items);
 	    var list = '<ul>';
-	    for( var i=0; i<items.length; i++ ) {
+	    for(var i = 0; i < items.length; i++) {
 	        list += '<li><a target="_blank" href="' + req.protocol + '://' + req.hostname + '/uploads/' + items[i] + '">' + items[i] + '</a></li>';
 	    }
 	    list += '</ul>';
@@ -108,10 +100,8 @@ function finishUpload( req, res, next )
 	});
 }
 
+// GET routes ->
 
-
-// GET routes
-// second param: auth.connect(basic)
 app.get( '/', function( req, res ) {
 		//fs.readFile( './views/menu.js', function( err, json ) {
 		//	var menuObj = JSON.parse( json );
@@ -301,12 +291,12 @@ app.use( function( req, res, next ) {
 
 //errors (for example file not found)
 app.use( function(err, req, res, next) {
-	res.status(500).send('Something broke! '+err.stack); // +err.stack
+	res.status(500).send('Something broke! ' + err.stack);
 });
 
 
 // Helper functions -->
-
+/*
 function renderViewAndLoc( res, view, string, LANG, addToViewObj ) {
 	var converter = new Converter({noheader:true, headers:["id","text"]});
 	converter.on("end_parsed", function( jsonArray ) {
@@ -336,7 +326,7 @@ function renderViewAndLoc( res, view, string, LANG, addToViewObj ) {
 
 	//read from file
 	fs.createReadStream('localization/' + LANG + '.csv').pipe(converter);
-}
+}*/
 
 getCurrentTime = (date) => {
   var d = (date ? new Date(date) : new Date());
