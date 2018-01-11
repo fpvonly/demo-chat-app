@@ -4,6 +4,7 @@ import {render} from 'react-dom';
 export default class Contact extends React.Component {
 
   render() {
+      console.log('TEST CONTACT', this.props);
     return <div>zdcsdfsdf Contact </div>
   }
 }
