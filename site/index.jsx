@@ -13,6 +13,7 @@ ReactDOM.render(
     <App>
       <Switch>
         <Route exact path="/" component={Index} />
+        <Route exact path="/admin" component={Index} />
         <Route exact path="/contact" component={Contact} />
         <Route exact path="/info" component={Info} />
         <Route component={NotFound} />

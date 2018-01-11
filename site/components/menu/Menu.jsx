@@ -33,6 +33,9 @@ export default class Menu extends React.Component {
     return <nav id="navigation">
       <ul>
         {this.getMenuItems()}
+        <li className="navi_list_element">
+          <NavLink to="/admin" className="main_link">Login</NavLink>
+        </li>
       </ul>
     </nav>
   }
