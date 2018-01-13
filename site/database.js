@@ -16,7 +16,8 @@ function database() {
   }.bind(this));
 };
 
-database.prototype.find = function(criteria, options, callback) {
+database.prototype.find = function(collection, criteria, options, callback) {
+  this.collection = this.db.collection(collection);
   // TODO criteria etc
   if (typeof criteria === undefined || criteria === false) {
     criteria = {};
@@ -27,14 +28,21 @@ database.prototype.find = function(criteria, options, callback) {
 
   this.collection.find(criteria, options, function(err, cursor) {
     assert.equal(null, err);
+    //cursor.toArray(callback);
     cursor.toArray(callback);
   });
 }
 
-database.prototype.insert = function(data) {
+database.prototype.insert = function(data, collection, callback) {
+  this.collection = this.db.collection(collection);
   this.collection.insert(data, function(err, result) {
       assert.equal(err, null);
       assert.equal(1, result.insertedCount);
+      if (err === null) {
+        callback(true, result);
+      } else {
+        callback(false);
+      }
       //console.log("DB Insert successful", result);
   }.bind(this));
   // collection.insertMany([}...

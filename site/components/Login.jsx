@@ -20,25 +20,29 @@ class Login extends React.Component {
   }
 
   static defaultProps = {
-    loggedIn: () => {}
+    logIn: () => {}
   };
 
   static propTypes = {
-    loggedIn: PropTypes.Func
+    logIn: PropTypes.Func
   };
 
   handleLoginClick = (e) => {
-    //TODO
-    this.setState({loggedIn: true}, () => {
-      this.props.loggedIn(this.state.loggedIn);
-    });
+    let uname = this.username.val();
+    let passw = this.password.val()
+    if ($.trim(passw) !== '' && $.trim(uname) !== '')  {
+      //TODO
+      this.setState({loggedIn: true}, () => {
+        this.props.logIn(uname, passw);
+      });
+    }    
   }
 
   handleLogOutClick = (e) => {
     e.preventDefault();
     //TODO
     this.setState({loggedIn: false}, () => {
-      this.props.loggedIn(this.state.loggedIn);
+      this.props.logIn(this.state.loggedIn);
     });
   }
 

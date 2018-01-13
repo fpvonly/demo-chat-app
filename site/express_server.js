@@ -58,7 +58,7 @@ app.use( '/assets', express.static( path.join( __dirname, 'assets') ) );
 app.use( '/build', express.static( path.join( __dirname, 'build') ) );
 
 // POST params conf
-app.use( bodyParser.urlencoded({ extended: false }) );
+app.use( bodyParser.urlencoded({ extended: true }) );
 
 // Cookies
 app.use( cookieParser() );
@@ -71,8 +71,14 @@ app.use( session({
   cookie: {maxAge: 86400000}
 }));
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 function isAuthenticated(req, res, next) {
-	if(typeof req.session.user_id != 'undefined' && req.session.user_id > 0) {
+	if(typeof req.session.user_id !== 'undefined') {
 		return true;
 	}	else {
 		return false;
@@ -155,27 +161,24 @@ app.get( '/admin/deletemessage/:id', function( req, res ) {
 	}
 );
 */
-/*
-app.get( '/admin/create/:username/:password', function( req, res ) {
-	var hashedPassword = passwordHash.generate( req.params.password );
-	database.query("INSERT INTO users (username, password) VALUES ('" + req.params.username + "', '" + hashedPassword + "')", function(err, rows, fields) {
-		if( err )
-		{
-			res.send('error');
-		}
-		else
-		{
-			if( rows.affectedRows > 0 )
-			{
-				res.send('User created');
-			}
-			else
-			{
-				res.send('User NOT created');
-			}
-		}
-	});
-});	*/
+
+app.get('/admin/create/:username/:password', function(req, res) {
+	var hashedPassword = passwordHash.generate(req.params.password);
+
+  mongo.insert({
+      username: req.params.username,
+      password: hashedPassword,
+      timestamp: new Date()
+  },
+  'users',
+  function(result) {
+    if (result === true) {
+      res.send('User created');
+    } else {
+      res.send('error');
+    }
+  });
+});
 /*
 app.get( '/dataload/:page', function( req, res ) {
 	renderViewAndLoc( res, req.params.page, req.params.page+'_text', LANG, {} );
@@ -214,6 +217,47 @@ app.get('/uploaded_files/', function (req, res, next ) {
 
 
 // POST routes
+app.post('/login/:action', function(req, res, next) {
+  if (req.params.action === 'status') {
+    if (isAuthenticated(req, res, next) === true) {
+      res.contentType('application/json');
+      res.cookie('utype', 1, { maxAge: 86400000, httpOnly: false });
+      res.send({'login': true});
+    } else {
+      res.contentType('application/json');
+      res.cookie('utype', 0, { maxAge: 1, httpOnly: false });
+      res.send({'login': false});
+    }
+  } else if(req.params.action === 'admin' && req.body.username && req.body.password) {
+      mongo.find('users', { username: req.body.username}, { fields: { username: 1, password: 1 } },
+        function(err, result) {
+          if (err === null && Array.isArray(result) && result.length > 0) {
+            let userHits = [];
+            for (let i = 0; i < result.length; i++) {
+              if (passwordHash.verify(req.body.password, result[i].password)) {
+                userHits.push(result[i]);
+              }
+            }
+            if (userHits.length === 1) {
+              res.contentType('application/json');
+              res.cookie('utype', 1, { maxAge: 86400000, httpOnly: false });
+              req.session.user_id = userHits[0]._id;
+              req.session.username = userHits[0].username;
+              res.send({'login': true});
+            } else {
+              res.contentType('application/json');
+              res.cookie('utype', 0, { maxAge: 1, httpOnly: false });
+              res.send({'login': false});
+            }
+          } else {
+            res.contentType('application/json');
+            res.cookie('utype', 0, { maxAge: 1, httpOnly: false });
+            res.send({'login': false});
+          }
+      });
+  }
+});
+
 /*
 app.post('/admin/upload', [ isAuthenticatedForUpload, upload.array('file'), finishUpload ], function (req, res, next) {
     res.sendStatus(204);
@@ -351,11 +395,11 @@ socket.on('request', function(request) {
 	var connection = request.accept(null, request.origin);
 	count++;
 	connection.id = count;
-	clients[count] =  connection;
+	clients[count] = connection;
 
   connection.sendUTF(JSON.stringify({message: 'Welcome. Logged in.'}));
 
-  mongo.find(false, { fields: {message: 1, user_name: 1, email: 1, timestamp: 1/*, _id: 0*/}, limit: 10, sort: {timestamp: 1} }, function(err, results) {
+  mongo.find('messages', false, { fields: {message: 1, user_name: 1, email: 1, timestamp: 1/*, _id: 0*/}, limit: 10, sort: {timestamp: 1} }, function(err, results) {
     connection.sendUTF(JSON.stringify(results));
     //console.log("RESULTS", results);
   });
@@ -402,8 +446,7 @@ socket.on('request', function(request) {
           email: email,
           ip: request.remoteAddress,
           timestamp: new Date()
-        }
-      );
+      }, 'messages');
 
 			/*var transporter = nodemailer.createTransport();
 			transporter.sendMail({
@@ -419,7 +462,7 @@ socket.on('request', function(request) {
 		//console.log('\nCLIENT IDS ACTIVE:\n ');
 		for(var i in clients) {
 			if(i == connection.id) {
-				 delete clients[i];
+				 delete clients[i]; // delete the closed connection object from the client OBJECT LITERAL
 			}	else {
 				//console.log( i );
 			}
