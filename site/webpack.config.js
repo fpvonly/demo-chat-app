@@ -19,7 +19,6 @@ var config = {
         loader: 'babel-loader',
         test: /\.(js|jsx)$/,
         include: APP_DIR
-
       }
     ]
   },
@@ -27,7 +26,12 @@ var config = {
     /*contentBase: __dirname,*/
     open: true,
     historyApiFallback: true
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
+    })
+  ]
 };
 
 module.exports = config;

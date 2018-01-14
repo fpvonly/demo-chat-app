@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import $ from 'jquery';
 import chat from './chat_ws.js';
 import ChatLogin from './ChatLogin.jsx';
@@ -17,11 +18,23 @@ export default class Chat extends React.Component {
     }
   }
 
+  static propTypes = {
+    siteLoginStatus: PropTypes.Boolean
+  };
+
+  static defaultProps = {
+    siteLoginStatus: false
+  };
+
+  static contextTypes = {
+    loginData: PropTypes.Bool
+  };
+
   componentWillMount() {
   }
 
   componentDidMount() {
-    if (typeof WebSocket != "undefined") {
+    if (typeof WebSocket !== "undefined") {
 			if(this.getCookie('chat_name') == '' && this.getCookie('email') == '') {
 				this.setState({ONLINE: false});
 			}	else {
@@ -51,7 +64,6 @@ export default class Chat extends React.Component {
         } else {
           newMessages.push(receivedMsg);
         }
-
         this.setState({messages: newMessages});
       };
 
@@ -84,11 +96,12 @@ export default class Chat extends React.Component {
   sendMessage = (msg) => {
     this.ws.send(msg);
   }
-
+  
+//TODO...clean up
   validateAndSendMessage = () => {
     let msg_input = $.trim( this.form.find('#message_input').val() );
     if(msg_input !== '') {
-      this.sendMessage( msg_input+';' + this.getCookie('chat_name') + ';' + this.getCookie('email') );
+      this.sendMessage(msg_input+';' + this.getCookie('chat_name') + ';' + this.getCookie('email'));
       this.form.find('#message_input').val('');
     }
   }
@@ -125,6 +138,7 @@ export default class Chat extends React.Component {
             setCookie={this.setCookie}
             openConnection={this.openConnection} />
           <ChatArea
+            siteLoginStatus={this.props.siteLoginStatus}
             visible={this.state.ONLINE}
             setCookie={this.setCookie}
             getCookie={this.getCookie}

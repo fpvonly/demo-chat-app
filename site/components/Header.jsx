@@ -12,15 +12,17 @@ export default class Header extends React.Component {
   }
 
   static defaultProps = {
-    logIn: () => {}
+    logIn: () => {},
+    loginStatus: false
   };
 
   static propTypes = {
-    logIn: PropTypes.Func
+    logIn: PropTypes.Func,
+    loginData: PropTypes.Bool
   };
 
   static contextTypes = {
-    loginStatus: PropTypes.Bool
+    loginData: PropTypes.Bool
   };
 
   componenWillMount() {
@@ -34,8 +36,8 @@ export default class Header extends React.Component {
             <img src="./assets/images/logo.png" alt="Web developer" />
           </a>
         </div>
-        <Navigation />
-        <Login logIn={this.props.logIn} />
+        <Navigation loginStatus={this.props.loginStatus} />
+        <Login logIn={this.props.logIn} loginStatus={this.props.loginStatus} />
         <div className="clear"></div>
       </div>
     </header>

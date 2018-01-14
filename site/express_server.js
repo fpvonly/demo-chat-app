@@ -72,7 +72,14 @@ app.use( session({
 }));
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
+  if (process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
+    res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+  } else {
+    // TODO
+    res.header("Access-Control-Allow-Origin", "TODO");
+  }
+  //res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
@@ -116,52 +123,8 @@ app.get( '/', function( req, res ) {
 		res.sendFile(  __dirname+'/index.html' );
 	}
 );
-/*
-app.get( '/admin/:action', function( req, res ) {
-	console.log('TTET '+req.cookies.utype)
-		fs.readFile( './views/menu.js', function( err, json ) {
-			var menuObj = JSON.parse( json );
 
-			//console.log("user_ID_GET:" +req.session.user_id);
-			if( req.params.action == 'login' )
-			{
-				renderViewAndLoc( res, 'admin_index', 'index_chat_text', LANG, { type:'admin', auth_obj: { user_id: req.session.user_id, username: req.session.username }, username: '', password: '', domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
-			}
-			else if( req.params.action == 'logout' )
-			{
-				req.session.destroy( function(err){
-					res.cookie('utype', 0, { maxAge: 86400000, httpOnly: false });
-					res.redirect('/admin/login');
-				});
-			}
-			else
-			{
-
-				renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { type:'admin', auth_obj: { user_id: req.session.user_id, username: req.session.username }, username: '', password: '', domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
-			}
-		});
-	}
-);
-
-app.get( '/admin/deletemessage/:id', function( req, res ) {
-		if( typeof req.session.user_id != 'undefined' && req.session.user_id > 0 )
-		{
-			database.query("DELETE FROM chat_log WHERE id="+database.escape( req.params.id ), function(err, rows, fields) {
-				if( !err )
-				{
-					res.send('MESSAGE #' + req.params.id + ' DELETED');
-				}
-			});
-		}
-		else
-		{
-			res.send('UNAUTHORIZED');
-		}
-
-	}
-);
-*/
-
+// TODO needs htaccess
 app.get('/admin/create/:username/:password', function(req, res) {
 	var hashedPassword = passwordHash.generate(req.params.password);
 
@@ -179,6 +142,7 @@ app.get('/admin/create/:username/:password', function(req, res) {
     }
   });
 });
+
 /*
 app.get( '/dataload/:page', function( req, res ) {
 	renderViewAndLoc( res, req.params.page, req.params.page+'_text', LANG, {} );
@@ -222,7 +186,11 @@ app.post('/login/:action', function(req, res, next) {
     if (isAuthenticated(req, res, next) === true) {
       res.contentType('application/json');
       res.cookie('utype', 1, { maxAge: 86400000, httpOnly: false });
-      res.send({'login': true});
+      res.send({
+        'login': true,
+        'user_id': req.session.user_id,
+        'username': req.session.username
+      });
     } else {
       res.contentType('application/json');
       res.cookie('utype', 0, { maxAge: 1, httpOnly: false });
@@ -243,7 +211,11 @@ app.post('/login/:action', function(req, res, next) {
               res.cookie('utype', 1, { maxAge: 86400000, httpOnly: false });
               req.session.user_id = userHits[0]._id;
               req.session.username = userHits[0].username;
-              res.send({'login': true});
+              res.send({
+                'login': true,
+                'user_id': req.session.user_id,
+                'username': req.session.username
+              });
             } else {
               res.contentType('application/json');
               res.cookie('utype', 0, { maxAge: 1, httpOnly: false });
@@ -256,7 +228,39 @@ app.post('/login/:action', function(req, res, next) {
           }
       });
   }
+  // DEBUG
+  if (process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
+    console.log('REQ SESSION OBJECT:', req.session);
+  }
 });
+
+app.post( '/logout', function( req, res ) {
+  req.session.destroy(function(err) {
+    res.contentType('application/json');
+    res.cookie('utype', 0, { maxAge: 1, httpOnly: false });
+    res.send({'logout': true});
+  });
+});
+
+
+
+
+app.post( '/admin/deletemessage', function( req, res ) {
+		if(typeof req.session.user_id !== 'undefined') {
+      mongo.remove('messages', {_id: req.body.id}, function(status) {
+        res.contentType('application/json');
+        res.send({
+          'deleted': status
+        });
+      });
+		} else {
+      res.contentType('application/json');
+      res.send({
+        'deleted': false
+      });
+		}
+	}
+);
 
 /*
 app.post('/admin/upload', [ isAuthenticatedForUpload, upload.array('file'), finishUpload ], function (req, res, next) {
@@ -399,24 +403,10 @@ socket.on('request', function(request) {
 
   connection.sendUTF(JSON.stringify({message: 'Welcome. Logged in.'}));
 
-  mongo.find('messages', false, { fields: {message: 1, user_name: 1, email: 1, timestamp: 1/*, _id: 0*/}, limit: 10, sort: {timestamp: 1} }, function(err, results) {
+  mongo.find('messages', false, { fields: {message: 1, user_name: 1, email: 1, timestamp: 1/*, _id: 0*/}, limit: 100, sort: {timestamp: 1} }, function(err, results) {
     connection.sendUTF(JSON.stringify(results));
     //console.log("RESULTS", results);
   });
-	/*database.query("SELECT * from ( SELECT * FROM chat_log ORDER BY date DESC LIMIT 10 ) AS t ORDER BY date ASC", function(err, rows, fields) {
-		for( var r in rows )
-		{
-			var dateObj = new Date( rows[r].date );
-			var time =  dateObj.getDate()+'.'+(dateObj.getMonth()+1)+'.'+dateObj.getFullYear()+'  '+dateObj.getHours()+':'+dateObj.getMinutes();
-
-			var delete_link = '<a class="message_delete_link" style="display:none;" href="' + 'http://' + request.host + '/admin/deletemessage/' + rows[r].id + '" target="_blank">DELETE ' + rows[r].id + '</a>';
-
-			connection.sendUTF('  <span class="chat_name_span">' + time + ' ' +  rows[r].avatar + ':</span><span class="message_text_span"> ' + rows[r].message + '</span>' + delete_link  );
-		}
-	});*/
-//TODO
-
-
 
 	connection.on('message', function(message) {
 		if(mongo)	{

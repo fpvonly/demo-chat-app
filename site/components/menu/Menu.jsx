@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {render} from 'react-dom';
 import { NavLink  } from 'react-router-dom';
 import menu from './menu.json';
@@ -7,6 +8,14 @@ export default class Menu extends React.Component {
 
   constructor(props) {
     super(props);
+  }
+
+  static propTypes = {
+    loginStatus: PropTypes.Bool
+  }
+
+  static defaultProps = {
+    loginStatus: false
   }
 
   getMenuItems = () => {
@@ -33,9 +42,12 @@ export default class Menu extends React.Component {
     return <nav id="navigation">
       <ul>
         {this.getMenuItems()}
-        <li className="navi_list_element">
-          <NavLink to="/admin" className="main_link">Login</NavLink>
-        </li>
+        {(this.props.loginStatus === false
+          ? <li className="navi_list_element">
+              <NavLink to="/admin" className="main_link">Login</NavLink>
+          </li>
+          : null)}
+
       </ul>
     </nav>
   }
