@@ -20,40 +20,42 @@ class Login extends React.Component {
   }
 
   static defaultProps = {
-    logIn: () => {}
+    logIn: () => {},
+    loginStatus: false
   };
 
   static propTypes = {
-    logIn: PropTypes.Func
+    logIn: PropTypes.Func,
+    loginStatus: PropTypes.Bool
+  };
+
+  static contextTypes = {
+    loginData: PropTypes.Bool
   };
 
   handleLoginClick = (e) => {
+    e.preventDefault();
     let uname = this.username.val();
     let passw = this.password.val()
     if ($.trim(passw) !== '' && $.trim(uname) !== '')  {
-      //TODO
-      this.setState({loggedIn: true}, () => {
-        this.props.logIn(uname, passw);
-      });
-    }    
+        this.props.logIn(uname, passw, 'login/admin');
+    }
   }
 
   handleLogOutClick = (e) => {
     e.preventDefault();
-    //TODO
-    this.setState({loggedIn: false}, () => {
-      this.props.logIn(this.state.loggedIn);
-    });
+    this.props.logIn(false, false, 'logout');
   }
 
   render() {
     let fields = null;
 
     // if user is succesfully logged in, display welcome message
-    if (this.state.loggedIn === true) {
+    if (this.props.loginStatus === true) {
       fields = <div id="login_fields">
           <span className="welcome_text">
-            TODOOO!!!
+            {'Welcome ' + (this.context.loginData !== null && this.context.loginData.username ? this.context.loginData.username : '')}
+            <br />
           </span>
           <a href="#" onClick={this.handleLogOutClick}>Log out</a>
         </div>;

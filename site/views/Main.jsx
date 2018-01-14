@@ -13,15 +13,18 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.loginStatus = false;
+    this.loginData = null;
+    this.state = {
+      loginStatus: false
+    };
   }
 
   static childContextTypes = {
-    loginStatus: PropTypes.Bool
+    loginData: PropTypes.Bool
   };
 
   getChildContext() {
-    return {loginStatus: this.loginStatus};
+    return {loginData: this.loginData};
   }
 
   componentWillMount() {
@@ -31,10 +34,23 @@ class App extends React.Component {
   logIn = (uname = null, passw = null, action = 'login/admin') => {
     let host = window.location.host;
     let url = '';
-    if(host.indexOf('localhost') != -1 || host.indexOf('127.0.0.1') != -1) {
+    let params = {};
+    /*if(host.indexOf('localhost') != -1 || host.indexOf('127.0.0.1') != -1) {
        url = 'http://localhost:3000/';
     } else {
        url = '';
+    }*/
+    if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
+       url = 'http://localhost:3000/';
+    } else {
+       url = 'TODO';
+    }
+
+    if (uname !== false && passw !== false) {
+      params = {
+        username: uname,
+        password: passw
+      }
     }
 
     $.ajax({
@@ -43,12 +59,18 @@ class App extends React.Component {
       },
       type: "POST",
       url: url + action,
-      data: {
-        username: uname,
-        password: passw
-      },
-      success: function() {
-          this.loginStatus = status;
+      data: params,
+      success: function(data) {
+        if (data.login && data.login === true) {
+          this.loginData = data;
+          this.setState({loginStatus: true});
+        } else if (data.logout && data.logout === true) {
+          this.loginData = null;
+          this.setState({loginStatus: false});
+        } else {
+          this.loginData = null;
+          this.setState({loginStatus: false});
+        }
       }.bind(this),
       dataType: 'json'
     });
@@ -57,14 +79,14 @@ class App extends React.Component {
   render() {
 
     return <div>
-      <Header logIn={this.logIn}/>
+      <Header logIn={this.logIn} loginStatus={this.state.loginStatus} />
   		<section className="parallax-window parallax">
   			<div className="parallax_content">
   				<div id="page_load_content">
             {this.props.children}
           </div>
   				<p className="info">index_chat_text</p>
-  				<Chat />
+  				<Chat siteLoginStatus={this.state.loginStatus} />
     			<div className="footer_content">footer_text</div>
         </div>
   		</section>
