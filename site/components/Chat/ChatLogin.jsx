@@ -17,14 +17,14 @@ export default class ChatLogin extends React.Component {
 
   static propTypes = {
     visible: PropTypes.Boolean,
-    openConnection: PropTypes.function,
+    openWSConnection: PropTypes.function,
     setCookie: PropTypes.function,
     getCookie: PropTypes.function
   };
 
   static defaultProps = {
     visible: false,
-    openConnection: () => {},
+    openWSConnection: () => {},
     setCookie: function() {},
     getCookie: function() {}
   };
@@ -37,21 +37,24 @@ export default class ChatLogin extends React.Component {
   handleRegBtnClick = (e, data) => {
     this.chat_name.css({'border':'0'});
     this.email.css({'border':'0'});
-    if($.trim( this.chat_name.val()) != '' && $.trim( this.email.val()) != '') {
-      if(this.isValidEmailAddress( $.trim( this.email.val() ) ) == true) {
-        this.props.setCookie('chat_name', $.trim(this.chat_name.val()), 1);
-        this.props.setCookie('email', $.trim(this.email.val()), 1);
-        this.props.openConnection();
+    let name = $.trim(this.chat_name.val());
+    let email = $.trim(this.email.val());
+
+    // for now, email is optional
+    if(name !== '' /*&& $.trim( this.email.val()) !== ''*/) {
+      if(email === '' || this.isValidEmailAddress(email) === true) {
+        this.props.setCookie('chat_name', name, 1);
+        this.props.setCookie('email', email, 1);
+        this.props.openWSConnection();
       } else {
         this.email.css({'border':'1px solid red'});
       }
     } else {
-      if($.trim(this.chat_name.val()) == '') {
-        this.chat_name.css({'border':'1px solid red'});
-      }
-      if($.trim(this.email.val()) == '') {
+      this.chat_name.css({'border':'1px solid red'});
+      // for now, email is optional
+      /*if(email === '') {
         this.email.css({'border':'1px solid red'});
-      }
+      }*/
     }
   }
 
@@ -59,7 +62,7 @@ export default class ChatLogin extends React.Component {
     let chatRegArea = this.props.visible === true
       ? <div ref={(c) => { this.chat_reg_area = $(c); }} id="chat_reg">
           <input ref={(c) => { this.chat_name = $(c); }} type="text" name="chat_name" id="chat_name" placeholder="Chat name" maxLength="20"/>
-          <input ref={(c) => { this.email = $(c); }} type="text" name="email" id="email" placeholder="E-mail" maxLength="40" />
+          <input ref={(c) => { this.email = $(c); }} type="text" name="email" id="email" placeholder="E-mail (optional)" maxLength="40" />
           <input ref={(c) => { this.reg_btn = $(c); }} type="button" value="Log in" id="reg_btn" onClick={this.handleRegBtnClick} />
         </div>
       : null;

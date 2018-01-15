@@ -18,11 +18,11 @@ export default class Header extends React.Component {
 
   static propTypes = {
     logIn: PropTypes.Func,
-    loginData: PropTypes.Bool
+    loginData: PropTypes.Object
   };
 
   static contextTypes = {
-    loginData: PropTypes.Bool
+    loginData: PropTypes.Object
   };
 
   componenWillMount() {

@@ -27,7 +27,7 @@ export default class Chat extends React.Component {
   };
 
   static contextTypes = {
-    loginData: PropTypes.Bool
+    loginData: PropTypes.Object
   };
 
   componentWillMount() {
@@ -38,12 +38,12 @@ export default class Chat extends React.Component {
 			if(this.getCookie('chat_name') == '' && this.getCookie('email') == '') {
 				this.setState({ONLINE: false});
 			}	else {
-				this.openConnection();
+				this.openWSConnection();
 			}
 		}
   }
 
-  openConnection = () => {
+  openWSConnection = () => {
     if(typeof WebSocket !== "undefined") {
       let host = window.location.host;
       if(host.indexOf('localhost') !== -1 || host.indexOf('127.0.0.1') !== -1) {
@@ -64,6 +64,7 @@ export default class Chat extends React.Component {
         } else {
           newMessages.push(receivedMsg);
         }
+
         this.setState({messages: newMessages});
       };
 
@@ -87,22 +88,50 @@ export default class Chat extends React.Component {
     }
   }
 
-  handleKeyUp = (e) => {
-    if(e.keyCode === 13) {
-      this.validateAndSendMessage();
+  sendWSMessage = (msg) => {
+    this.ws.send(msg);
+  }
+
+  validateAndSendMessage = (e, msgInput) => {
+    let msgText = $.trim(msgInput);
+    if(msgText !== '') {
+      this.sendWSMessage(msgText+';' + this.getCookie('chat_name') + ';' + this.getCookie('email'));
     }
   }
 
-  sendMessage = (msg) => {
-    this.ws.send(msg);
-  }
-  
-//TODO...clean up
-  validateAndSendMessage = () => {
-    let msg_input = $.trim( this.form.find('#message_input').val() );
-    if(msg_input !== '') {
-      this.sendMessage(msg_input+';' + this.getCookie('chat_name') + ';' + this.getCookie('email'));
-      this.form.find('#message_input').val('');
+  deleteMessage(messageId, e) {
+    e.preventDefault();
+
+    if (confirm('Are you sure you want to delete the message?') === true) {
+      let url = '';
+      if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
+         url = 'http://localhost:3000/';
+      } else {
+         url = 'TODO';
+      }
+
+      $.ajax({
+        xhrFields: {
+          withCredentials: true
+        },
+        type: "POST",
+        url: url + 'admin/deletemessage/',
+        data: {id: messageId},
+        success: function(data) {
+          // if the delete was succesful, update the message list
+          if (data.deleted && data.deleted === true) {
+            let messages = this.state.messages.slice();
+            let newMessages = messages.filter(function(message) {
+              if (message._id && message._id === messageId) {
+                return false;
+              }
+              return true;
+            });
+            this.setState({messages: newMessages});
+          }
+        }.bind(this),
+        dataType: 'json'
+      });
     }
   }
 
@@ -128,21 +157,21 @@ export default class Chat extends React.Component {
   render() {
     return <div id="chat_area">
      <form
-        ref={(c) => { this.form = $(c); }}
-        onKeyUp={this.handleKeyUp}
-        onSubmit={(e) => {e.preventDefault();}}
         id="chat_form"
-        action="#">
+        action="#"
+        ref={(c) => { this.form = $(c); }}
+        onSubmit={(e) => {e.preventDefault();}}>
           <ChatLogin
             visible={!this.state.ONLINE}
             setCookie={this.setCookie}
-            openConnection={this.openConnection} />
+            openWSConnection={this.openWSConnection} />
           <ChatArea
             siteLoginStatus={this.props.siteLoginStatus}
             visible={this.state.ONLINE}
             setCookie={this.setCookie}
             getCookie={this.getCookie}
             validateAndSendMessage={this.validateAndSendMessage}
+            deleteMessage={this.deleteMessage.bind(this)}
             messages={this.state.messages} />
         </form>
     </div>

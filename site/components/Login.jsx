@@ -30,7 +30,7 @@ class Login extends React.Component {
   };
 
   static contextTypes = {
-    loginData: PropTypes.Bool
+    loginData: PropTypes.Object
   };
 
   handleLoginClick = (e) => {
