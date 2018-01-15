@@ -12,12 +12,18 @@ export default class ChatArea extends React.Component {
     this.reg_btn = null;
     this.chat_funcs_area = null;
     this.message_area = null;
+    this.message_input = null;
+
+    this.state = {
+      clearMsgFieldKey: 1
+    }
   }
 
   static propTypes = {
     siteLoginStatus: PropTypes.Bool,
     visible: PropTypes.Boolean,
     validateAndSendMessage: PropTypes.function,
+    deleteMessage: PropTypes.function,
     setCookie: PropTypes.function,
     getCookie: PropTypes.function,
     messages: PropTypes.Array
@@ -27,57 +33,15 @@ export default class ChatArea extends React.Component {
     siteLoginStatus: false,
     visible: false,
     validateAndSendMessage: () => {},
+    deleteMessage: function() {},
     setCookie: function() {},
     getCookie: function() {},
     messages: []
   };
 
   static contextTypes = {
-    loginData: PropTypes.Bool
+    loginData: PropTypes.Object
   };
-
-  componentDidMount() {
-  /*  if (this.message_area !== null) {
-      this.message_area.find('.message').css('opacity');
-      this.message_area.find('.message').css('opacity', '1');
-    }*/
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    /*if (prevProps.messages !== this.props.messages && this.message_area !== null) {
-
-      this.message_area.find('.message').css('opacity');
-      this.message_area.find('.message').css('opacity', '1');
-    }*/
-  }
-
-  deleteMessage(messageId, e) {
-    e.preventDefault();
-    let url = '';
-
-    if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
-       url = 'http://localhost:3000/';
-    } else {
-       url = 'TODO';
-    }
-
-    $.ajax({
-      xhrFields: {
-        withCredentials: true
-      },
-      type: "POST",
-      url: url + 'admin/deletemessage/',
-      data: {id: messageId},
-      success: function(data) {
-        if (data.deleted && data.deleted === true) {
-
-          console.log('DELETE', data.deleted);
-          //this.setState({loginStatus: true});
-        }
-      }.bind(this),
-      dataType: 'json'
-    });
-  }
 
   drawMessages = () => {
     let messagesProps = Array.isArray(this.props.messages) === true ? this.props.messages : [];
@@ -90,7 +54,7 @@ export default class ChatArea extends React.Component {
       align_class = (i % 2 === 0 ? 'msg_right' : 'msg_left');
 
       if (this.context.loginData && this.context.loginData.user_id) {
-        deleteBtn = <a href="#" onClick={this.deleteMessage.bind(this, msg._id)}>Delete {msg._id }</a>;
+        deleteBtn = <a href="#" className="delete_btn" onClick={this.props.deleteMessage.bind(this, msg._id)}>Delete this message</a>;
       }
 
       // if msg is the newest message of top of the array
@@ -109,6 +73,23 @@ export default class ChatArea extends React.Component {
     return messages;
   }
 
+  validateAndSendMessage = (e) => {
+    this.props.validateAndSendMessage(e, this.message_input.val());
+    this.clearMsgField();
+  }
+
+  clearMsgField = () => {
+    let currentMsgFieldKey = this.state.clearMsgFieldKey;
+    currentMsgFieldKey++
+    this.setState({clearMsgFieldKey: currentMsgFieldKey});
+  }
+
+  handleKeyUp = (e) => {
+    if(e.keyCode === 13) {
+      this.validateAndSendMessage();
+    }
+  }
+
   getCurrentTime = (date) => {
   	var d = (date ? new Date(date) : new Date());
   	var offset = (new Date().getTimezoneOffset() / 60) * -1;
@@ -121,12 +102,19 @@ export default class ChatArea extends React.Component {
   render() {
     let messages = this.drawMessages();
     let chatArea = null;
-console.log('RENDER');
+
     if(this.props.visible === true) {
       chatArea = <div>
             <div ref={(c) => { this.chat_funcs_area = $(c); }} id="chat_funcs">
-              <input type="text" name="message_input" id="message_input" maxlength="1000" placeholder="Message"/>
-              <input type="button" value="Send" id="message_send_btn" onClick={this.props.validateAndSendMessage} />
+              <input
+                ref={(c) => { this.message_input = $(c); }}
+                type="text"
+                id="message_input"
+                maxLength="1000"
+                placeholder="Message"
+                onKeyUp={this.handleKeyUp}
+                key={this.state.clearMsgFieldKey} />
+              <input type="button" value="Send" id="message_send_btn" onClick={this.validateAndSendMessage} />
             </div>
             <div ref={(c) => { this.message_area = $(c); }} id="message_area">
               <ReactCSSTransitionGroup

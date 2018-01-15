@@ -247,7 +247,7 @@ app.post( '/logout', function( req, res ) {
 
 app.post( '/admin/deletemessage', function( req, res ) {
 		if(typeof req.session.user_id !== 'undefined') {
-      mongo.remove('messages', {_id: req.body.id}, function(status) {
+      mongo.deleteOneById('messages', {_id: req.body.id}, function(status) {
         res.contentType('application/json');
         res.send({
           'deleted': status
@@ -344,38 +344,6 @@ app.use( function(err, req, res, next) {
 
 
 // Helper functions -->
-/*
-function renderViewAndLoc( res, view, string, LANG, addToViewObj ) {
-	var converter = new Converter({noheader:true, headers:["id","text"]});
-	converter.on("end_parsed", function( jsonArray ) {
-
-	    var localizations_obj = eval( jsonArray );
-	   	var loc_text = '';
-		for( var prop in localizations_obj )
-		{
-			if( localizations_obj[prop]['id'] == string )
-			{
-				loc_text = localizations_obj[prop]['text'];
-				break;
-			}
-
-		}
-		//console.log('loc_text: '+loc_text);
-		var view_texts_obj = {};
-		view_texts_obj[string] = loc_text;
-
-		for( var key in addToViewObj )
-		{
-			view_texts_obj[key] = addToViewObj[key];
-		}
-
-		res.render( view, view_texts_obj );
-	});
-
-	//read from file
-	fs.createReadStream('localization/' + LANG + '.csv').pipe(converter);
-}*/
-
 getCurrentTime = (date) => {
   var d = (date ? new Date(date) : new Date());
   var offset = (new Date().getTimezoneOffset() / 60) * -1;
@@ -384,9 +352,6 @@ getCurrentTime = (date) => {
     + (n.getHours() < 10 ? '0' : '') + n.getHours() + ':' + (n.getMinutes() < 10 ? '0' : '') + n.getMinutes();
   return time;
 };
-
-
-
 
 
 // WEB SOCKETS FUNCTIONALITY, chat -->
@@ -418,25 +383,29 @@ socket.on('request', function(request) {
 			var chat_name = msg_parts[1];
 			var email = msg_parts[2];
 
-			console.log( chat_name + ':' + message_text );
-
-			for(var i in clients)	{
-        clients[i].sendUTF(
-          JSON.stringify({
-            message: message_text,
-            timestamp: new Date(),
-            user_name: chat_name
-          })
-        );
-			}
-
       mongo.insert({
           message: message_text,
           user_name: chat_name,
           email: email,
           ip: request.remoteAddress,
           timestamp: new Date()
-      }, 'messages');
+      },
+      'messages',
+      function(status, result) {
+        if (result) {
+          console.log( chat_name + ':' + message_text );
+          for(var i in clients)	{
+            clients[i].sendUTF(
+              JSON.stringify({
+                message: result.ops[0].message,
+                timestamp: result.ops[0].timestamp,
+                user_name: result.ops[0].user_name,
+                _id: result.ops[0]._id
+              })
+            );
+    			}
+        }
+      });
 
 			/*var transporter = nodemailer.createTransport();
 			transporter.sendMail({
