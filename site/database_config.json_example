@@ -1,0 +1,6 @@
+{
+  "username": "joe",
+  "password": "foobar",
+  "domain": "localhost",
+  "port": "27017"
+}

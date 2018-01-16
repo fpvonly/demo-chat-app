@@ -34,12 +34,14 @@ var server = app.listen(3000, function() {
 	var port = server.address().port;
 });
 
-// basic auth
-//app.use(auth.connect(basic));
-
-// Rendering engine
-//app.set( 'view engine', 'ejs' );
-//app.set( 'views', path.join( __dirname, 'views') );
+// basic auth for new user account (type -> admin) creation
+app.use(function(req, res, next) {
+    if (req.path.indexOf('/admin/create') !== -1) {
+      (auth.connect(basic))(req, res, next);
+    } else {
+      next();
+    }
+});
 
 // multipart file upload settings
 var storage = multer.diskStorage({
@@ -74,57 +76,23 @@ app.use( session({
 app.use(function(req, res, next) {
   if (process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
     res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+    //res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   } else {
-    // TODO
-    res.header("Access-Control-Allow-Origin", "TODO");
+    // TODO if needed in the future
+    //res.header("Access-Control-Allow-Origin", "TODO");
   }
-  //res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-
-function isAuthenticated(req, res, next) {
-	if(typeof req.session.user_id !== 'undefined') {
-		return true;
-	}	else {
-		return false;
-	}
-}
-
-// File upload helper functions
-function isAuthenticatedForUpload(req, res, next) {
-	if(typeof req.session.user_id != 'undefined' && req.session.user_id > 0) {
-		next();
-	}	else {
-		res.sendStatus(401);
-	}
-}
-
-function finishUpload(req, res, next) {
-	fs.readdir( __dirname + '/uploads/', function(err, items) {
-	    //console.log(items);
-	    var list = '<ul>';
-	    for(var i = 0; i < items.length; i++) {
-	        list += '<li><a target="_blank" href="' + req.protocol + '://' + req.hostname + '/uploads/' + items[i] + '">' + items[i] + '</a></li>';
-	    }
-	    list += '</ul>';
-	    res.send( list );
-	});
-}
 
 // GET routes ->
 
 app.get( '/', function( req, res ) {
-		//fs.readFile( './views/menu.js', function( err, json ) {
-		//	var menuObj = JSON.parse( json );
-		//	renderViewAndLoc( res, 'index', 'index_chat_text', LANG, { auth_obj: { user_id: req.session.user_id, username: req.session.username }, domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
-		//});
 		res.sendFile(  __dirname+'/index.html' );
 	}
 );
 
-// TODO needs htaccess
 app.get('/admin/create/:username/:password', function(req, res) {
 	var hashedPassword = passwordHash.generate(req.params.password);
 
@@ -242,11 +210,8 @@ app.post( '/logout', function( req, res ) {
   });
 });
 
-
-
-
-app.post( '/admin/deletemessage', function( req, res ) {
-		if(typeof req.session.user_id !== 'undefined') {
+app.post( '/admin/deletemessage', function( req, res, next ) {
+		if (isAuthenticated(req, res, next) === true) {
       mongo.deleteOneById('messages', {_id: req.body.id}, function(status) {
         res.contentType('application/json');
         res.send({
@@ -337,13 +302,43 @@ app.use( function( req, res, next ) {
 	res.status(404).send('Sorry! Nothing found :(');
 });
 
-//errors (for example file not found)
+// errors (for example file not found)
 app.use( function(err, req, res, next) {
 	res.status(500).send('Something broke! ' + err.stack);
 });
 
 
 // Helper functions -->
+
+function isAuthenticated(req, res, next) {
+	if(typeof req.session.user_id !== 'undefined') {
+		return true;
+	}	else {
+		return false;
+	}
+}
+
+// File upload helper functions
+function isAuthenticatedForUpload(req, res, next) {
+	if(typeof req.session.user_id != 'undefined' && req.session.user_id > 0) {
+		next();
+	}	else {
+		res.sendStatus(401);
+	}
+}
+
+function finishUpload(req, res, next) {
+	fs.readdir( __dirname + '/uploads/', function(err, items) {
+	    //console.log(items);
+	    var list = '<ul>';
+	    for(var i = 0; i < items.length; i++) {
+	        list += '<li><a target="_blank" href="' + req.protocol + '://' + req.hostname + '/uploads/' + items[i] + '">' + items[i] + '</a></li>';
+	    }
+	    list += '</ul>';
+	    res.send( list );
+	});
+}
+
 getCurrentTime = (date) => {
   var d = (date ? new Date(date) : new Date());
   var offset = (new Date().getTimezoneOffset() / 60) * -1;
