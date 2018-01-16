@@ -32,7 +32,9 @@ database.prototype.find = function(collection, criteria, options, callback) {
 
   collection.find(criteria, options, function(err, cursor) {
     //assert.equal(null, err);
-    cursor.toArray(callback);
+    if (cursor && callback) {
+      cursor.toArray(callback);
+    }
   });
 }  // ENDS find
 
@@ -56,7 +58,7 @@ database.prototype.deleteOneById = function(collection, criteria, callback) {
   collection.deleteOne({_id: MongoDB.ObjectId(criteria._id)},
     function(err, result) {
       if (typeof callback !== 'undefined') {
-        if(err !== null && result.deletedCount === 1) {
+        if(err !== null || result.deletedCount !== 1) {
           callback(false);
         } else {
           callback(true);
