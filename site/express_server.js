@@ -364,7 +364,14 @@ socket.on('request', function(request) {
   connection.sendUTF(JSON.stringify({message: 'Welcome. Logged in.'}));
 
   mongo.find('messages', false, { fields: {message: 1, user_name: 1, email: 1, timestamp: 1/*, _id: 0*/}, limit: 100, sort: {timestamp: 1} }, function(err, results) {
-    connection.sendUTF(JSON.stringify(results));
+    if (Array.isArray(results) === true) {
+      connection.sendUTF(JSON.stringify(results));
+    } else {
+      connection.sendUTF(JSON.stringify({
+        custom: "Sorry! Problems with the database..."
+      }));
+    }
+
     //console.log("RESULTS", results);
   });
 

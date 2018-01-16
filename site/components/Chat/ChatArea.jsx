@@ -53,7 +53,7 @@ export default class ChatArea extends React.Component {
       let deleteBtn = null;
       align_class = (i % 2 === 0 ? 'msg_right' : 'msg_left');
 
-      if (this.context.loginData && this.context.loginData.user_id) {
+      if (this.context.loginData && this.context.loginData.user_id && msg._id) {
         deleteBtn = <a href="#" className="delete_btn" onClick={this.props.deleteMessage.bind(this, msg._id)}>Delete this message</a>;
       }
 
@@ -61,7 +61,7 @@ export default class ChatArea extends React.Component {
       if (msg.custom) {
         messages.push(<div className={'message ' + align_class} key={i}><span className="message_text_span">{msg.custom}</span></div>);
       } else {
-        messages.push(<div className={'message ' + align_class} key={i}>
+        messages.push(<div className={'message ' + align_class} key={(msg._id ? msg._id : i)}>
             {msg.timestamp && msg.user_name
               ? <span className="chat_name_span">{this.getCurrentTime(msg.timestamp) + ' "' +  msg.user_name + '" says:'}</span>
               : null}
