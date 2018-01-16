@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
-import chat from './chat_ws.js';
+
 import ChatLogin from './ChatLogin.jsx';
 import ChatArea from './ChatArea.jsx';
 
@@ -29,9 +29,6 @@ export default class Chat extends React.Component {
   static contextTypes = {
     loginData: PropTypes.Object
   };
-
-  componentWillMount() {
-  }
 
   componentDidMount() {
     if (typeof WebSocket !== "undefined") {

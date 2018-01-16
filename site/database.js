@@ -1,18 +1,23 @@
 const MongoDB = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
+const fs = require('fs');
 
 function database() {
-  // Connection URL
-  const url = 'mongodb://admin:MO_mieite8411@localhost:27017';
-  this.db;
+  fs.readFile( 'database_config.json', function( err, json ) {
+    var config = JSON.parse(json);
 
-  MongoClient.connect(url, function(err, mongo) {
-    assert.equal(null, err);
-    this.db = mongo.db('admin');
-    var collection = this.db.collection('messages');
-    console.log("Connected successfully to mongodb-server");
-    //client.close();
+    // Connection URL
+    const url = 'mongodb://' + config.username + ':' + config.password + '@' + config.domain + ':' + config.port;
+    this.db;
+
+    MongoClient.connect(url, function(err, mongo) {
+      assert.equal(null, err);
+      this.db = mongo.db('admin');
+      var collection = this.db.collection('messages');
+      console.log("Connected successfully to mongodb-server");
+      //client.close();
+    }.bind(this));
   }.bind(this));
 };  // ENDS constructor
 

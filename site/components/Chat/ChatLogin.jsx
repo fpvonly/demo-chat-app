@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
-import chat from './chat_ws.js';
 
 export default class ChatLogin extends React.Component {
 
@@ -34,7 +33,7 @@ export default class ChatLogin extends React.Component {
     return pattern.test( emailAddress );
   };
 
-  handleRegBtnClick = (e, data) => {
+  handleRegBtnClick = (e) => {
     this.chat_name.css({'border':'0'});
     this.email.css({'border':'0'});
     let name = $.trim(this.chat_name.val());
@@ -58,12 +57,34 @@ export default class ChatLogin extends React.Component {
     }
   }
 
+  handleKeyUp = (e) => {
+    if(e.keyCode === 13) {
+      this.handleRegBtnClick(e);
+    }
+  }
+
   render() {
     let chatRegArea = this.props.visible === true
       ? <div ref={(c) => { this.chat_reg_area = $(c); }} id="chat_reg">
-          <input ref={(c) => { this.chat_name = $(c); }} type="text" name="chat_name" id="chat_name" placeholder="Chat name" maxLength="20"/>
-          <input ref={(c) => { this.email = $(c); }} type="text" name="email" id="email" placeholder="E-mail (optional)" maxLength="40" />
-          <input ref={(c) => { this.reg_btn = $(c); }} type="button" value="Log in" id="reg_btn" onClick={this.handleRegBtnClick} />
+          <input ref={(c) => { this.chat_name = $(c); }}
+            type="text"
+            name="chat_name"
+            id="chat_name"
+            placeholder="Chat name"
+            maxLength="20"
+            onKeyUp={this.handleKeyUp} />
+          <input ref={(c) => { this.email = $(c); }}
+            type="text"
+            name="email"
+            id="email"
+            placeholder="E-mail (optional)"
+            maxLength="40"
+            onKeyUp={this.handleKeyUp} />
+          <input ref={(c) => { this.reg_btn = $(c); }}
+            type="button"
+            value="Log in"
+            id="reg_btn"
+            onClick={this.handleRegBtnClick} />
         </div>
       : null;
 
