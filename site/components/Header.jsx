@@ -25,15 +25,12 @@ export default class Header extends React.Component {
     loginData: PropTypes.Object
   };
 
-  componenWillMount() {
-  }
-
   render() {
     return <header className="full_header">
       <div className="wrapper_navi">
         <div className="main_logo">
-          <a href="">
-            <img src="./assets/images/logo.png" alt="Web developer" />
+          <a href="/">
+            <img src="./assets/images/logo.png" alt="Click for Home Page - Web Development with Javascript" />
           </a>
         </div>
         <Navigation loginStatus={this.props.loginStatus} />
