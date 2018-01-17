@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Link, Route, IndexRoute, Switch } from 'react-router-dom';
+
 import App from './views/Main.jsx';
 import Index from './views/index.jsx';
 import Contact from './views/Contact.jsx';

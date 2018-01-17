@@ -328,7 +328,7 @@ function isAuthenticatedForUpload(req, res, next) {
 }
 
 function finishUpload(req, res, next) {
-	fs.readdir( __dirname + '/uploads/', function(err, items) {
+	fs.readdir(__dirname + '/uploads/', function(err, items) {
 	    //console.log(items);
 	    var list = '<ul>';
 	    for(var i = 0; i < items.length; i++) {
