@@ -79,8 +79,6 @@ class App extends React.Component {
   }
 
   render() {
-
-
     return <div>
       <Header logIn={this.logIn} loginStatus={this.state.loginStatus} />
   		<section className="parallax-window parallax">

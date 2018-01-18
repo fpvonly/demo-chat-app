@@ -361,17 +361,20 @@ socket.on('request', function(request) {
 	connection.id = count;
 	clients[count] = connection;
 
-  connection.sendUTF(JSON.stringify({message: 'Welcome. Logged in.'}));
-
-  mongo.find('messages', false, { fields: {message: 1, user_name: 1, email: 1, timestamp: 1/*, _id: 0*/}, limit: 100, sort: {timestamp: 1} }, function(err, results) {
-    if (Array.isArray(results) === true) {
-      connection.sendUTF(JSON.stringify(results));
-    } else {
+  mongo.find('messages', false, { fields: {message: 1, user_name: 1, email: 1, timestamp: 1/*, _id: 0*/}, sort: {timestamp: -1}, limit: 10 }, function(err, results) {
+    if (err !== null) {
       connection.sendUTF(JSON.stringify({
-        custom: "Sorry! Problems with the database..."
+        custom: "Sorry! Problems with the database...",
+        _id: 'custom_err'
       }));
+    } else {
+      if (Array.isArray(results) === true && results.length > 0) {
+        var firstMessage = [{message: 'Welcome. Logged in.', _id: 'custom_welcome'}];
+        connection.sendUTF(JSON.stringify(results.concat(firstMessage)));
+      } else {
+        connection.sendUTF(JSON.stringify({message: 'Welcome. Logged in.', _id: 'custom_welcome'}));
+      }
     }
-
     //console.log("RESULTS", results);
   });
 

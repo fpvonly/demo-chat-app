@@ -44,10 +44,11 @@ export default class ChatArea extends React.Component {
   };
 
   drawMessages = () => {
-    let messagesProps = Array.isArray(this.props.messages) === true ? this.props.messages : [];
+    let messagesProps = Array.isArray(this.props.messages) === true ? this.props.messages.slice() : [];
     let messages = [];
-    let align_class = 'msg_right';
+    let align_class = '';
 
+    messagesProps.reverse();
     for (let i = messagesProps.length - 1; i >= 0; i--) {
       let msg = messagesProps[i];
       let deleteBtn = null;
@@ -59,7 +60,7 @@ export default class ChatArea extends React.Component {
 
       // if msg is the newest message of top of the array
       if (msg.custom) {
-        messages.push(<div className={'message ' + align_class} key={i}><span className="message_text_span">{msg.custom}</span></div>);
+        messages.push(<div className={'message ' + align_class} key={(msg._id ? msg._id : i)}><span className="message_text_span">{msg.custom}</span></div>);
       } else {
         messages.push(<div className={'message ' + align_class} key={(msg._id ? msg._id : i)}>
             {msg.timestamp && msg.user_name
@@ -119,6 +120,8 @@ export default class ChatArea extends React.Component {
             <div ref={(c) => { this.message_area = $(c); }} id="message_area">
               <ReactCSSTransitionGroup
                 transitionName="fade"
+                transitionAppear={true}
+                transitionAppearTimeout={500}
                 transitionEnterTimeout={500}
                 transitionLeaveTimeout={500}>
                   {messages}

@@ -29,7 +29,7 @@ export default class Header extends React.Component {
     return <header className="full_header">
       <div className="wrapper_navi">
         <div className="main_logo">
-          <a href="/">
+          <a className="logo" href="/">
             <img src="./assets/images/logo.png" alt="Click for Home Page - Web Development with Javascript" />
           </a>
         </div>

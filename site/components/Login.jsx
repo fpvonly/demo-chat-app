@@ -35,8 +35,8 @@ class Login extends React.Component {
 
   handleLoginClick = (e) => {
     e.preventDefault();
-    let uname = this.username.val();
-    let passw = this.password.val()
+    let uname = this.username.value;
+    let passw = this.password.value;
     if ($.trim(passw) !== '' && $.trim(uname) !== '')  {
         this.props.logIn(uname, passw, 'login/admin');
     }
@@ -57,14 +57,14 @@ class Login extends React.Component {
             {'Welcome ' + (this.context.loginData !== null && this.context.loginData.username ? this.context.loginData.username : '')}
             <br />
           </span>
-          <a href="#" onClick={this.handleLogOutClick}>Log out</a>
+          <a className='logout_link' href="#" onClick={this.handleLogOutClick}>Log out</a>
         </div>;
     } // else if user us NOT loggedin but is in location /admin, show login fields
     else if (this.props.location.pathname.indexOf('/admin') !== -1) {
       fields = <div id="login_fields">
           <form action="#">
-            <input ref={(c) => { this.username = $(c); }} type="text" name="admin_username" placeholder="Username" />
-            <input ref={(c) => { this.password = $(c); }} type="password" name="admin_password" placeholder="Password" />
+            <input ref={(c) => { this.username = c; }} type="text" name="admin_username" placeholder="Username" />
+            <input ref={(c) => { this.password = c; }} type="password" name="admin_password" placeholder="Password" />
             <input type="submit" name="log_in_btn" id="log_in_btn" value="Login" onClick={this.handleLoginClick} />
           </form>
         </div>;

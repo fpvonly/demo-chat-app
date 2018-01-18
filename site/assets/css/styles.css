@@ -57,7 +57,12 @@ body { background: #000000 url("../images/wood.jpg") repeat fixed center center;
 
 img { max-width: 100%; }
 
-a { text-decoration:none; }
+a { text-decoration:none; border-bottom: 1px solid #b7b9bc; padding-bottom: 2px; color: #b7b9bc; }
+a:hover { border-bottom: 1px solid #ffffff; color: #ffffff;}
+a.logo {text-decoration:none; border-bottom: 0; padding-bottom: 0; }
+a.logout_link { display: inline-block; margin: 0.5rem 0 0; }
+a.admin_login_link { border-bottom: 0 !important; box-shadow: none !important;}
+a.admin_login_link img { width: 1rem; border-bottom: 0; }
 
 p
 {
@@ -294,8 +299,8 @@ input[type="text"], textarea, input[type="password"] { padding:0.3em 1%; border-
 label { font-size: 1.1em; }
 .chat_name_span { font-style:italic; }
 .message_text_span { display: block; font-weight: bold; margin-top:0.7em; }
-.message .delete_btn { display: inline-block; transition: color,background-color 0.5s; color: #ffffff; background-color: #e70000; padding: 0.6rem; margin: 0.5rem 0.2rem 0rem 0.2rem; font-weight: bold; font-size: 0.7rem; }
-.message .delete_btn:hover { transition: color, background-color 0.5s; background-color: #ffffff; color: #e70000; }
+.message .delete_btn { display: inline-block; border: 0; transition: color,background-color 0.5s; color: #ffffff; background-color: #e70000; padding: 0.6rem; margin: 0.5rem 0.2rem 0rem 0.2rem; font-weight: bold; font-size: 0.7rem; }
+.message .delete_btn:hover { border: 0; transition: color, background-color 0.5s; background-color: #ffffff; color: #e70000; }
 .message { background: rgba(0, 0, 0, 0.75) none repeat scroll 0 0;  width: 250px; margin: 0.5em 0;   padding: 1em; border-radius:5px; color:#ffffff; clear:both; font-size:1.1em; box-shadow: #000000 1px 3px 5px;}
 .msg_left { float:left; clear:both;}
 .msg_right { float:right; clear:both; }
@@ -332,7 +337,8 @@ label { font-size: 1.1em; }
 	font-size:1.1em;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 650px) {
+	#message_send_btn {width: 70%; margin-left: 0 }
 	#message_send_btn, #contact_btn, #reg_btn { margin-top:1em; }
 	#reg_btn { display: block; margin: 1em auto 0 auto;  }
 	#email { clear:both; margin-top:1em; }

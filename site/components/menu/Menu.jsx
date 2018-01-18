@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {render} from 'react-dom';
-import { NavLink  } from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import menu from './menu.json';
 
 export default class Menu extends React.Component {
@@ -44,7 +44,9 @@ export default class Menu extends React.Component {
         {this.getMenuItems()}
         {(this.props.loginStatus === false
           ? <li className="navi_list_element">
-              <NavLink to="/admin" className="main_link">Login</NavLink>
+              <NavLink to="/admin" className="main_link admin_login_link">
+                <img src="../../assets/images/settings-icon.png" />
+              </NavLink>
           </li>
           : null)}
 

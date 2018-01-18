@@ -12,6 +12,11 @@ export default class ChatLogin extends React.Component {
     this.chat_name = null;
     this.email = null;
     this.chat_reg_area = null;
+
+    this.state = {
+      nameError: false,
+      emailError: false
+    }
   }
 
   static propTypes = {
@@ -34,8 +39,9 @@ export default class ChatLogin extends React.Component {
   };
 
   handleRegBtnClick = (e) => {
-    this.chat_name.css({'border':'0'});
-    this.email.css({'border':'0'});
+    let nameInputError = false;
+    let emailInputError = false;
+
     let name = $.trim(this.chat_name.val());
     let email = $.trim(this.email.val());
 
@@ -46,15 +52,16 @@ export default class ChatLogin extends React.Component {
         this.props.setCookie('email', email, 1);
         this.props.openWSConnection();
       } else {
-        this.email.css({'border':'1px solid red'});
+        emailInputError = true;
       }
     } else {
-      this.chat_name.css({'border':'1px solid red'});
+      nameInputError = true;
       // for now, email is optional
       /*if(email === '') {
-        this.email.css({'border':'1px solid red'});
+        emailInputError = true;
       }*/
     }
+    this.setState({emailError: emailInputError, nameError: nameInputError});
   }
 
   handleKeyUp = (e) => {
@@ -64,6 +71,11 @@ export default class ChatLogin extends React.Component {
   }
 
   render() {
+    let errorStyle = null;
+    if (this.state.nameError === true || this.state.emailError === true) {
+      errorStyle = {'border':'1px solid red'};
+    }
+
     let chatRegArea = this.props.visible === true
       ? <div ref={(c) => { this.chat_reg_area = $(c); }} id="chat_reg">
           <input ref={(c) => { this.chat_name = $(c); }}
@@ -72,6 +84,7 @@ export default class ChatLogin extends React.Component {
             id="chat_name"
             placeholder="Chat name"
             maxLength="20"
+            style={(this.state.nameError === true ? errorStyle : null)}
             onKeyUp={this.handleKeyUp} />
           <input ref={(c) => { this.email = $(c); }}
             type="text"
@@ -79,6 +92,7 @@ export default class ChatLogin extends React.Component {
             id="email"
             placeholder="E-mail (optional)"
             maxLength="40"
+            style={(this.state.emailError === true ? errorStyle : null)}
             onKeyUp={this.handleKeyUp} />
           <input ref={(c) => { this.reg_btn = $(c); }}
             type="button"
