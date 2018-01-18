@@ -3,6 +3,7 @@ import {render} from 'react-dom';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router';
 import {BrowserRouter, Link, Route, IndexRoute, Switch} from 'react-router-dom';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import $ from 'jquery';
 
 import Translate from '../components/Translate.jsx';
@@ -78,13 +79,20 @@ class App extends React.Component {
   }
 
   render() {
+
+
     return <div>
       <Header logIn={this.logIn} loginStatus={this.state.loginStatus} />
   		<section className="parallax-window parallax">
   			<div className="parallax_content">
-  				<div id="page_load_content">
-            {this.props.children}
-          </div>
+          <ReactCSSTransitionGroup
+            transitionName="fade"
+            transitionAppear={true}
+            transitionAppearTimeout={500}
+            transitionEnterTimeout={500}
+            transitionLeave={false}>
+               {React.cloneElement(this.props.children, {key: Math.random()})}
+          </ReactCSSTransitionGroup>
   				<p className="info">
             <Translate id="index_chat_text"/>
           </p>

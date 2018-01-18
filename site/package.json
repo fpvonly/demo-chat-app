@@ -9,7 +9,7 @@
     "chat",
     "spa"
   ],
-  "main": "index.jsx",
+  "main": "app.jsx",
   "dependencies": {
     "cookie-parser": "^1.4.3",
     "express": "^4.16.2",
