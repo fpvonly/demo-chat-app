@@ -226,65 +226,32 @@ footer a
 	font-size:1.7em;
 }
 
-.parallax_content #page_load_content
+.page_load_content
 {
 	background: rgba(0, 0, 0, 0.75) none no-repeat scroll 0 0;
 	min-height:200px;
 	max-width: 600px;
 	margin: 0 auto;
 	position: relative;
-    top: -7em;
+  top: -7em;
 	border-radius: 0 0 5px 5px;
 	box-shadow: #000000 1px 3px 5px;
-	opacity:0;
-	display:none;
+	opacity: 1;
 }
 
-.parallax_content #admin_page_load_content
-{
-	background: rgba(0, 0, 0, 0.75) none no-repeat scroll 0 0;
-	min-height:200px;
-	max-width: 600px;
-	margin: 0 auto;
-	position: relative;
-    top: -7em;
-	border-radius: 0 0 5px 5px;
-	box-shadow: #000000 1px 3px 5px;
-	display:block;
+.fade-enter {opacity: 0.01;}
+.page_load_content.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+.page_load_content.fade-leave {
+  opacity: 1;
+}
+.page_load_content.fade-leave.fade-leave-active {
+  opacity: 0.01;
+  transition: opacity 500ms ease-in;
 }
 
-.parallax_content #admin_page_load_content #drop_area_wrapper
-{
-	min-height: inherit;
-    position: relative;
-    padding: 1em;
-
-}
-
-.parallax_content #admin_page_load_content div#hit
-{
-	color: #ffffff;
-    font-size: 2em;
-    padding: 25% 25%;
-    display: block;
-    border: 2px dashed #bababa;
-}
-
-.parallax_content #admin_page_load_content #upload_list ul
-{
-	margin: 2em;
-}
-
-.parallax_content #admin_page_load_content #upload_list li,.parallax_content #admin_page_load_content #upload_list a
-{
-	color:#ffffff;
-	font-size:1.2em;
-}
-
-.parallax_content #admin_page_load_content #upload_list a:hover
-{
-	text-decoration: underline;
-}
 
 .parallax_content h1
 {
