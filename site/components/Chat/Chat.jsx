@@ -11,6 +11,7 @@ export default class Chat extends React.Component {
   constructor(props) {
     super(props);
 
+    this.ws = null;
     this.form = null;
     this.state = {
       ONLINE: false,
@@ -55,12 +56,11 @@ export default class Chat extends React.Component {
 
       this.ws.onmessage = (evt) => {
         let receivedMsg = JSON.parse(evt.data);
-
         let newMessages = this.state.messages.slice();
         if(Array.isArray(receivedMsg) === true) {
-          newMessages = newMessages.concat(receivedMsg);
+          newMessages = receivedMsg.concat(newMessages); // array of messages
         } else {
-          newMessages.push(receivedMsg);
+          newMessages = [receivedMsg].concat(newMessages); // single message
         }
 
         this.setState({messages: newMessages});
@@ -73,7 +73,7 @@ export default class Chat extends React.Component {
       this.ws.onerror = () => {
         this.setState({
           ONLINE: false,
-          messages: [{custom: 'Sorry but there seems to be a problem with the chat server.'}]
+          messages: [{custom: 'Sorry but there seems to be a problem with the chat server.', _id: 'custom_err_1'}]
         });
       };
     }
@@ -81,7 +81,7 @@ export default class Chat extends React.Component {
     {
       this.setState({
         ONLINE: false,
-        messages: [{custom: 'Sorry, your browser has no Websocket API support. Update the browser!'}]
+        messages: [{custom: 'Sorry, your browser has no Websocket API support. Update the browser!', _id: 'custom_err_2'}]
       });
     }
   }
@@ -157,7 +157,7 @@ export default class Chat extends React.Component {
      <form
         id="chat_form"
         action="#"
-        ref={(c) => { this.form = $(c); }}
+        ref={(c) => { this.form = c; }}
         onSubmit={(e) => {e.preventDefault();}}>
           <ChatLogin
             visible={!this.state.ONLINE}
