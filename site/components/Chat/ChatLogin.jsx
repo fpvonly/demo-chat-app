@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
 
 export default class ChatLogin extends React.Component {
 
@@ -42,11 +41,11 @@ export default class ChatLogin extends React.Component {
     let nameInputError = false;
     let emailInputError = false;
 
-    let name = $.trim(this.chat_name.val());
-    let email = $.trim(this.email.val());
+    let name = this.chat_name.value.trim();
+    let email = this.email.value.trim();
 
     // for now, email is optional
-    if(name !== '' /*&& $.trim( this.email.val()) !== ''*/) {
+    if(name !== '' /*&& email !== ''*/) {
       if(email === '' || this.isValidEmailAddress(email) === true) {
         this.props.setCookie('chat_name', name, 1);
         this.props.setCookie('email', email, 1);
@@ -77,8 +76,8 @@ export default class ChatLogin extends React.Component {
     }
 
     let chatRegArea = this.props.visible === true
-      ? <div ref={(c) => { this.chat_reg_area = $(c); }} id="chat_reg">
-          <input ref={(c) => { this.chat_name = $(c); }}
+      ? <div ref={(c) => { this.chat_reg_area = c; }} id="chat_reg">
+          <input ref={(c) => { this.chat_name = c; }}
             type="text"
             name="chat_name"
             id="chat_name"
@@ -86,7 +85,7 @@ export default class ChatLogin extends React.Component {
             maxLength="20"
             style={(this.state.nameError === true ? errorStyle : null)}
             onKeyUp={this.handleKeyUp} />
-          <input ref={(c) => { this.email = $(c); }}
+          <input ref={(c) => { this.email = c; }}
             type="text"
             name="email"
             id="email"
@@ -94,7 +93,7 @@ export default class ChatLogin extends React.Component {
             maxLength="40"
             style={(this.state.emailError === true ? errorStyle : null)}
             onKeyUp={this.handleKeyUp} />
-          <input ref={(c) => { this.reg_btn = $(c); }}
+          <input ref={(c) => { this.reg_btn = c; }}
             type="button"
             value="Log in"
             id="reg_btn"

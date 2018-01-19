@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {render} from 'react-dom';
 
-import Navigation from './menu/Menu.jsx'
+import Navigation from './Navigation/Navigation.jsx'
 import Login from './Login.jsx';
 
 export default class Header extends React.Component {

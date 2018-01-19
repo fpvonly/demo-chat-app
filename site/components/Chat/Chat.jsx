@@ -91,7 +91,7 @@ export default class Chat extends React.Component {
   }
 
   validateAndSendMessage = (e, msgInput) => {
-    let msgText = $.trim(msgInput);
+    let msgText = msgInput.trim();
     if(msgText !== '') {
       this.sendWSMessage(msgText+';' + this.getCookie('chat_name') + ';' + this.getCookie('email'));
     }
