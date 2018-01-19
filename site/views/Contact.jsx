@@ -39,7 +39,7 @@ export default class Contact extends React.Component {
     if (contactMessage === '') {
       messageInputErr = true;
     }
-console.log('test', contactName, contactEmail, contactMessage);
+
     let url = '';
     if (nameInputErr == false && emailInputErr == false && messageInputErr === false) {
       if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
