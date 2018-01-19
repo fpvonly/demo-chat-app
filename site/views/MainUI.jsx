@@ -79,6 +79,7 @@ class App extends React.Component {
   }
 
   render() {
+    const pathName = this.props.location.pathname;
     return <div>
       <Header logIn={this.logIn} loginStatus={this.state.loginStatus} />
   		<section className="parallax-window parallax">
@@ -89,7 +90,7 @@ class App extends React.Component {
             transitionAppearTimeout={500}
             transitionEnterTimeout={500}
             transitionLeave={false}>
-               {React.cloneElement(this.props.children, {key: Math.random()})}
+               {React.cloneElement(this.props.children, {key: pathName})}
           </ReactCSSTransitionGroup>
   				<p className="info">
             <Translate id="index_chat_text"/>

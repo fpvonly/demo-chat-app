@@ -2,9 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router';
 import {render} from 'react-dom';
-import $ from 'jquery';
-
-import Navigation from './menu/Menu.jsx'
 
 class Login extends React.Component {
 
@@ -37,7 +34,7 @@ class Login extends React.Component {
     e.preventDefault();
     let uname = this.username.value;
     let passw = this.password.value;
-    if ($.trim(passw) !== '' && $.trim(uname) !== '')  {
+    if (passw.trim() !== '' && uname.trim() !== '')  {
         this.props.logIn(uname, passw, 'login/admin');
     }
   }
