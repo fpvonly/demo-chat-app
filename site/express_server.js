@@ -8,9 +8,9 @@ var path = require('path');
 var fs = require('fs');
 var url = require('url');
 var nodemailer = require('nodemailer');
+var argv = require('yargs').argv
 var auth = require('http-auth');
-var socketserver = require('websocket').server;  // for websockets chat
-var Converter = require("csvtojson").Converter;
+var socketserver = require('websocket').server;
 var database = require('./database');
 
 var mongo = new database();
@@ -18,7 +18,17 @@ var mongo = new database();
 var clients = {}; // for websockets chat
 var count = 0; // for websockets chat
 
-var LANG = 'en';
+var mailConfig = {
+  'user': '',
+  'password': ''
+};
+if (typeof argv.gmail !== 'undefined') {
+  // email settings are given via command line
+  mailConfig = {
+    'user': argv.gmail.split(',')[0],
+    'pass': argv.gmail.split(',')[1]
+  };
+}
 
 // auth
 var basic = auth.basic({
@@ -412,13 +422,30 @@ socket.on('request', function(request) {
         }
       });
 
-			/*var transporter = nodemailer.createTransport();
-			transporter.sendMail({
-				from: 'chat@petajajarvi.net',
-				to: 'aripetaj@gmail.com',
-				subject: 'New chat message',
-				text: currentTime + ' ' + chat_name + ':\n\n'+ message_text + '\n\nemail: ' + email
-			});*/
+      try {
+        var transporter = nodemailer.createTransport({
+          service: 'Gmail',
+          auth: {
+            user: mailConfig.user,
+            pass: mailConfig.pass
+          }
+        });
+
+        transporter.sendMail({
+          from: 'chat@petajajarvi.net',
+          to: 'aripetaj@gmail.com',
+          subject: 'New chat message',
+          text: new Date() + ' ' + chat_name + ':\n\n'+ message_text + '\n\nemail: ' + email
+        },
+        function(error, info){
+          if(error){
+              console.log('MAIL SEND ERROR', error);
+          }else{
+              console.log('Message sent: ' + info.response);
+          }
+        });
+      } catch (err) {};
+
 		}
 	});
 
