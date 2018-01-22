@@ -1,7 +1,8 @@
 import React from 'react';
 import {render} from 'react-dom';
-
 import $ from 'jquery';
+
+import Translate from '../components/Translate.jsx';
 
 export default class Contact extends React.Component {
 
@@ -81,10 +82,12 @@ export default class Contact extends React.Component {
 
     return <div className="page_load_content">
       <section className="content_part">
-          <p className="info">contact_text</p>
+          <p className="info">
+            <Translate id="contact_text"/>
+          </p>
 
           <div id="contact_area">
-           <form id="contact_form" action="#" method="POST" enctype="application/x-www-form-urlencoded">
+           <form id="contact_form" action="#">
               <input
                 ref={(c) => { this.contactName = c; }}
                 style={(this.state.nameInputError === true ? errorStyle : null)}
