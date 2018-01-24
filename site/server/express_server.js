@@ -159,6 +159,38 @@ app.get('/uploaded_files/', function (req, res, next ) {
 
 
 // POST routes
+
+app.post( '/contact/send', function( req, res ) {
+  try {
+    var transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: mailConfig.user,
+        pass: mailConfig.pass
+      }
+    });
+
+    transporter.sendMail({
+      from: 'contact@petajajarvi.net',
+      to: 'aripetaj@gmail.com',
+      subject: 'New contact message',
+      text: new Date() + ' ' + req.body.contact_name + ':\n\n'+ req.body.contact_message + '\n\nemail: ' + req.body.contact_email
+    },
+    function(error, info){
+      if (error) {
+        res.contentType('application/json');
+        res.send({'status': false});
+      } else {
+          res.contentType('application/json');
+      		res.send({'status': true});
+      }
+    });
+  } catch (err) {
+    res.contentType('application/json');
+    res.send({'status': false});
+  };
+});
+
 app.post('/login/:action', function(req, res, next) {
   if (req.params.action === 'status') {
     if (isAuthenticated(req, res, next) === true) {
@@ -285,22 +317,6 @@ app.post( '/admin/:action', function( req, res ) {
 				}
 			}
 		});
-	}
-);
-
-app.post( '/datasend/contact', function( req, res ) {
-		var transporter = nodemailer.createTransport();
-		var currentTime = getCurrentTime();
-		transporter.sendMail({
-			from: 'contact@petajajarvi.net',
-			to: 'aripetaj@gmail.com',
-			subject: 'New contact message',
-			text: currentTime + ' ' + req.body.contact_name + ':\n\n'+ req.body.contact_message + '\n\nemail: ' + req.body.contact_email
-		});
-
-		res.contentType('text/html');
-		res.send( 'datasend_success' );
-		res.end();
 	}
 );
 */
