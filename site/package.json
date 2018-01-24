@@ -28,7 +28,7 @@
     "react-router-dom": "^4.2.2",
     "superagent": "^3.8.2",
     "websocket": "^1.0.25",
-    "yargs": "^10.1.1"
+    "yargs": "^10.1.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -45,9 +45,6 @@
   "scripts": {
     "dev": "set NODE_ENV=development&& webpack-dev-server",
     "build": "set NODE_ENV=production&& webpack",
-    "devserver": "set NODE_ENV=development&& nodemon express_server.js", 
-    "prodserver": "nodemon express_server.js",
-    "buildserverTODO": "TODO nodemon express_server.js --exec babel-node --presets es2015,stage-0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
