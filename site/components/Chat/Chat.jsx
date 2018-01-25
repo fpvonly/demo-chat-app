@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 
+import Server from '../../server/server_config.json'
 import ChatLogin from './ChatLogin.jsx';
 import ChatArea from './ChatArea.jsx';
 
@@ -47,7 +48,7 @@ export default class Chat extends React.Component {
       if(host.indexOf('localhost') !== -1 || host.indexOf('127.0.0.1') !== -1) {
         this.ws = new WebSocket("ws://localhost:3000/echo");
       } else {
-        this.ws = new WebSocket("ws://128.199.45.96:80/echo");
+        this.ws = new WebSocket("ws://" + Server.server_domain + ":" + Server.server_port + "/echo");
       }
 
       this.ws.onopen = () => {
@@ -105,7 +106,7 @@ export default class Chat extends React.Component {
       if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
          url = 'http://localhost:3000/';
       } else {
-         url = 'TODO';
+         url = 'http://' + Server.server_domain + ':' + Server.server_port;
       }
 
       $.ajax({

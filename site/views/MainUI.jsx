@@ -6,6 +6,7 @@ import {BrowserRouter, Link, Route, IndexRoute, Switch} from 'react-router-dom';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import $ from 'jquery';
 
+import Server from '../server/server_config.json'
 import Translate from '../components/Translate.jsx';
 import Header from '../components/Header.jsx'
 import Chat from '../components/Chat/Chat.jsx'
@@ -33,7 +34,7 @@ class App extends React.Component {
     this.logIn(null, null, 'login/status');
   }
 
-  logIn = (uname = null, passw = null, action = 'login/admin') => {
+  logIn = (uname = null, passw = null, action = 'login/admin', afterLoginFailureCallback = () => {}) => {
     let host = window.location.host;
     let url = '';
     let params = {};
@@ -43,9 +44,9 @@ class App extends React.Component {
        url = '';
     }*/
     if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
-       url = 'http://localhost:3000/';
+      url = 'http://localhost:3000/';
     } else {
-       url = 'TODO';
+      url = 'http://' + Server.server_domain + ':' + Server.server_port;
     }
 
     if (uname !== false && passw !== false) {
@@ -71,7 +72,9 @@ class App extends React.Component {
           this.setState({loginStatus: false});
         } else {
           this.loginData = null;
-          this.setState({loginStatus: false});
+          this.setState({loginStatus: false}, () => {
+            afterLoginFailureCallback();
+          });
         }
       }.bind(this),
       dataType: 'json'

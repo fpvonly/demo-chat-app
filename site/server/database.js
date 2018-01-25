@@ -4,11 +4,11 @@ const assert = require('assert');
 const fs = require('fs');
 
 function database() {
-  fs.readFile( 'database_config.json', function( err, json ) {
+  fs.readFile('server_config.json', function( err, json ) {
     var config = JSON.parse(json);
 
     // Connection URL
-    const url = 'mongodb://' + config.username + ':' + config.password + '@' + config.domain + ':' + config.port;
+    const url = 'mongodb://' + config.db_username + ':' + config.db_password + '@' + config.db_domain + ':' + config.db_port;
     this.db;
 
     MongoClient.connect(url, function(err, mongo) {
