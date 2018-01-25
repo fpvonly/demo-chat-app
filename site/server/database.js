@@ -4,7 +4,7 @@ const assert = require('assert');
 const fs = require('fs');
 
 function database(db = 'site') {
-  fs.readFile('server_config.json', function( err, json ) {
+  fs.readFile('database_config.json', function( err, json ) {
     var config = JSON.parse(json);
 
     // Connection URL

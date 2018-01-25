@@ -2,7 +2,5 @@
   "db_username": "joe",
   "db_password": "foobar",
   "db_domain": "localhost",
-  "db_port": "27017",
-  "server_domain": "146.185.148.22",
-  "server_port": "3000"
+  "db_port": "27017"
 }
