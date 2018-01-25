@@ -52,7 +52,7 @@ class Login extends React.Component {
       passwordInputError: passwordInputError
     }, () => {
       if (usernameInputError === false && passwordInputError === false)  {
-        this.props.logIn(uname, passw, 'login/admin', () => {          
+        this.props.logIn(uname, passw, 'login/admin', () => {
           this.setState({
             usernameInputError: true,
             passwordInputError: true

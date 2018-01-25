@@ -44,9 +44,8 @@ export default class Chat extends React.Component {
 
   openWSConnection = () => {
     if(typeof WebSocket !== "undefined") {
-      let host = window.location.host;
-      if(host.indexOf('localhost') !== -1 || host.indexOf('127.0.0.1') !== -1) {
-        this.ws = new WebSocket("ws://localhost:3000/echo");
+      if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
+        this.ws = new WebSocket("ws://localhost:80/echo");
       } else {
         this.ws = new WebSocket("ws://" + Server.server_domain + ":" + Server.server_port + "/echo");
       }
@@ -104,7 +103,7 @@ export default class Chat extends React.Component {
     if (confirm('Are you sure you want to delete the message?') === true) {
       let url = '';
       if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
-         url = 'http://localhost:3000/';
+         url = 'http://localhost:80/';
       } else {
          url = 'http://' + Server.server_domain + ':' + Server.server_port + '/';
       }

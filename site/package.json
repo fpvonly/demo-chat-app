@@ -27,8 +27,7 @@
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
     "superagent": "^3.8.2",
-    "websocket": "^1.0.25",
-    "yargs": "^10.1.2"
+    "websocket": "^1.0.25"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -44,7 +43,8 @@
   },
   "scripts": {
     "dev": "set NODE_ENV=development&& webpack-dev-server",
-    "build": "set NODE_ENV=production&& webpack",
+    "devbuild": "set NODE_ENV=development&& webpack",
+    "prodbuild": "set NODE_ENV=production&& webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

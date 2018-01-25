@@ -47,7 +47,7 @@ export default class Contact extends React.Component {
     if (nameInputErr == false && emailInputErr == false && messageInputErr === false) {
 
       if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
-         url = 'http://localhost:3000/';
+         url = 'http://localhost:80/';
       } else {
          url = 'http://' + Server.server_domain + ':' + Server.server_port + '/';
       }

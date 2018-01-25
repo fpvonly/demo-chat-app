@@ -38,13 +38,9 @@ class App extends React.Component {
     let host = window.location.host;
     let url = '';
     let params = {};
-    /*if(host.indexOf('localhost') != -1 || host.indexOf('127.0.0.1') != -1) {
-       url = 'http://localhost:3000/';
-    } else {
-       url = '';
-    }*/
+
     if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
-      url = 'http://localhost:3000/';
+      url = 'http://localhost:80/';
     } else {
       url = 'http://' + Server.server_domain + ':' + Server.server_port + '/';
     }
