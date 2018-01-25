@@ -12,7 +12,9 @@ class Login extends React.Component {
     this.password = null;
 
     this.state = {
-      loggedIn: false
+      loggedIn: false,
+      usernameInputError: false,
+      passwordInputError: false
     }
   }
 
@@ -32,11 +34,32 @@ class Login extends React.Component {
 
   handleLoginClick = (e) => {
     e.preventDefault();
-    let uname = this.username.value;
-    let passw = this.password.value;
-    if (passw.trim() !== '' && uname.trim() !== '')  {
-        this.props.logIn(uname, passw, 'login/admin');
+
+    let usernameInputError = false;
+    let passwordInputError = false;
+    let uname = this.username.value.trim();
+    let passw = this.password.value.trim();
+
+    if (uname === '') {
+      usernameInputError = true;
     }
+    if (passw === '') {
+      passwordInputError = true;
+    }
+
+    this.setState({
+      usernameInputError: usernameInputError,
+      passwordInputError: passwordInputError
+    }, () => {
+      if (usernameInputError === false && passwordInputError === false)  {
+        this.props.logIn(uname, passw, 'login/admin', () => {          
+          this.setState({
+            usernameInputError: true,
+            passwordInputError: true
+          });
+        });
+      }
+    });
   }
 
   handleLogOutClick = (e) => {
@@ -58,10 +81,25 @@ class Login extends React.Component {
         </div>;
     } // else if user us NOT loggedin but is in location /admin, show login fields
     else if (this.props.location.pathname.indexOf('/admin') !== -1) {
+      let errorStyle = null;
+      if (this.state.usernameInputError === true || this.state.passwordInputError === true) {
+        errorStyle = {'border':'1px solid red'};
+      }
+
       fields = <div id="login_fields">
           <form action="#">
-            <input ref={(c) => { this.username = c; }} type="text" name="admin_username" placeholder="Username" />
-            <input ref={(c) => { this.password = c; }} type="password" name="admin_password" placeholder="Password" />
+            <input
+              ref={(c) => { this.username = c; }}
+              type="text"
+              name="admin_username"
+              placeholder="Username"
+              style={(this.state.usernameInputError === true ? errorStyle : null)} />
+            <input
+              ref={(c) => { this.password = c; }}
+              type="password"
+              name="admin_password"
+              placeholder="Password"
+              style={(this.state.passwordInputError === true ? errorStyle : null)} />
             <input type="submit" name="log_in_btn" id="log_in_btn" value="Login" onClick={this.handleLoginClick} />
           </form>
         </div>;

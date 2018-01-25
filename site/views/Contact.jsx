@@ -2,6 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import $ from 'jquery';
 
+import Server from '../server/server_config.json'
 import Translate from '../components/Translate.jsx';
 
 export default class Contact extends React.Component {
@@ -48,7 +49,7 @@ export default class Contact extends React.Component {
       if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
          url = 'http://localhost:3000/';
       } else {
-         url = 'TODO';
+         url = 'http://' + Server.server_domain + ':' + Server.server_port;
       }
 
       this.setState({inProgress: true}, () => {
