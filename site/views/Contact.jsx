@@ -49,7 +49,7 @@ export default class Contact extends React.Component {
       if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
          url = 'http://localhost:3000/';
       } else {
-         url = 'http://' + Server.server_domain + ':' + Server.server_port;
+         url = 'http://' + Server.server_domain + ':' + Server.server_port + '/';
       }
 
       this.setState({inProgress: true}, () => {

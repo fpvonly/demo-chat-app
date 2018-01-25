@@ -3,7 +3,7 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const fs = require('fs');
 
-function database() {
+function database(db = 'site') {
   fs.readFile('server_config.json', function( err, json ) {
     var config = JSON.parse(json);
 
@@ -13,7 +13,7 @@ function database() {
 
     MongoClient.connect(url, function(err, mongo) {
       assert.equal(null, err);
-      this.db = mongo.db('admin');
+      this.db = mongo.db(db);
       var collection = this.db.collection('messages');
       console.log("Connected successfully to mongodb-server");
       //client.close();
