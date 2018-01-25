@@ -59,24 +59,24 @@ var storage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
-  	var file_name = file.originalname.split('.').join( '-' + Date.now() + '.' );
+  	var file_name = file.originalname.split('.').join('-' + Date.now() + '.');
     cb(null, file_name );
   }
 })
 var upload = multer({ storage: storage });
 
 // serve css, images, js etc
-app.use( '/assets', express.static( path.join( __dirname, 'assets') ) );
-app.use( '/build', express.static( path.join( __dirname, 'build') ) );
+app.use('/assets', express.static( path.resolve('../assets')));
+app.use('/build', express.static( path.resolve('../build')));
 
 // POST params conf
-app.use( bodyParser.urlencoded({ extended: true }) );
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Cookies
-app.use( cookieParser() );
+app.use(cookieParser());
 
 // Session
-app.use( session({
+app.use(session({
   secret: 'nonono',
   resave: false,
   saveUninitialized: true,
@@ -98,8 +98,8 @@ app.use(function(req, res, next) {
 
 // GET routes ->
 
-app.get( '/', function( req, res ) {
-		res.sendFile(  __dirname+'/index.html' );
+app.get('/', function(req, res) {
+  	res.sendFile(path.resolve('../index.html'));
 	}
 );
 
@@ -160,7 +160,7 @@ app.get('/uploaded_files/', function (req, res, next ) {
 
 // POST routes
 
-app.post( '/contact/send', function( req, res ) {
+app.post('/contact/send', function(req, res) {
   try {
     var transporter = nodemailer.createTransport({
       service: 'Gmail',
@@ -244,7 +244,7 @@ app.post('/login/:action', function(req, res, next) {
   }
 });
 
-app.post( '/logout', function( req, res ) {
+app.post('/logout', function(req, res) {
   req.session.destroy(function(err) {
     res.contentType('application/json');
     res.cookie('utype', 0, { maxAge: 1, httpOnly: false });
@@ -252,7 +252,7 @@ app.post( '/logout', function( req, res ) {
   });
 });
 
-app.post( '/admin/deletemessage', function( req, res, next ) {
+app.post('/admin/deletemessage', function(req, res, next) {
 		if (isAuthenticated(req, res, next) === true) {
       mongo.deleteOneById('messages', {_id: req.body.id}, function(status) {
         res.contentType('application/json');
@@ -324,12 +324,12 @@ app.post( '/admin/:action', function( req, res ) {
 // Special cases -->
 
 // 404
-app.use( function( req, res, next ) {
+app.use(function(req, res, next) {
 	res.status(404).send('Sorry! Nothing found :(');
 });
 
 // errors (for example file not found)
-app.use( function(err, req, res, next) {
+app.use(function(err, req, res, next) {
 	res.status(500).send('Something broke! ' + err.stack);
 });
 
