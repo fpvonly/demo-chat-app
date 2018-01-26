@@ -8,8 +8,8 @@ export default class Info extends React.Component {
   render() {
     return <div className="page_load_content">
         <section className="content_part">
-                <Translate id="info_text"/>
-                <Translate id="git_url"/>
+          <Translate id="info_text"/>
+          <Translate id="git_url"/>
         </section>
       </div>;
   }

@@ -14,8 +14,8 @@ export default class Translate extends React.Component {
   }
 
   static propTypes = {
-    id: PropTypes.String,
-    lang: PropTypes.String
+    id: PropTypes.string,
+    lang: PropTypes.string
   };
 
   static defaultProps = {

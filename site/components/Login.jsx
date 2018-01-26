@@ -24,12 +24,12 @@ class Login extends React.Component {
   };
 
   static propTypes = {
-    logIn: PropTypes.Func,
-    loginStatus: PropTypes.Bool
+    logIn: PropTypes.func,
+    loginStatus: PropTypes.bool
   };
 
   static contextTypes = {
-    loginData: PropTypes.Object
+    loginData: PropTypes.object
   };
 
   handleLoginClick = (e) => {

@@ -13,16 +13,17 @@ export default class Header extends React.Component {
 
   static defaultProps = {
     logIn: () => {},
-    loginStatus: false
+    loginStatus: false,
+    loginData: null
   };
 
   static propTypes = {
-    logIn: PropTypes.Func,
-    loginData: PropTypes.Object
+    logIn: PropTypes.func,
+    loginData: PropTypes.object
   };
 
   static contextTypes = {
-    loginData: PropTypes.Object
+    loginData: PropTypes.object
   };
 
   render() {

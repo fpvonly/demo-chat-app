@@ -139,7 +139,7 @@ export default class Contact extends React.Component {
           </textarea>
           <input type="button" value="Send" id="contact_btn" disabled={this.state.inProgress} onClick={this.handleSend} />
 
-          <div class="clear"></div>
+          <div className="clear"></div>
         </form>
       </div>;
     }

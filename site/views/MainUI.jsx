@@ -23,7 +23,7 @@ class App extends React.Component {
   }
 
   static childContextTypes = {
-    loginData: PropTypes.Bool
+    loginData: PropTypes.object
   };
 
   getChildContext() {

@@ -20,16 +20,16 @@ export default class Chat extends React.Component {
     }
   }
 
-  static propTypes = {
-    siteLoginStatus: PropTypes.Boolean
-  };
-
   static defaultProps = {
     siteLoginStatus: false
   };
 
+  static propTypes = {
+    siteLoginStatus: PropTypes.bool
+  };
+
   static contextTypes = {
-    loginData: PropTypes.Object
+    loginData: PropTypes.object
   };
 
   componentDidMount() {

@@ -19,16 +19,6 @@ export default class ChatArea extends React.Component {
     }
   }
 
-  static propTypes = {
-    siteLoginStatus: PropTypes.Bool,
-    visible: PropTypes.Boolean,
-    validateAndSendMessage: PropTypes.function,
-    deleteMessage: PropTypes.function,
-    setCookie: PropTypes.function,
-    getCookie: PropTypes.function,
-    messages: PropTypes.Array
-  };
-
   static defaultProps = {
     siteLoginStatus: false,
     visible: false,
@@ -39,8 +29,18 @@ export default class ChatArea extends React.Component {
     messages: []
   };
 
+  static propTypes = {
+    siteLoginStatus: PropTypes.bool,
+    visible: PropTypes.bool,
+    validateAndSendMessage: PropTypes.func,
+    deleteMessage: PropTypes.func,
+    setCookie: PropTypes.func,
+    getCookie: PropTypes.func,
+    messages: PropTypes.array
+  };
+
   static contextTypes = {
-    loginData: PropTypes.Object
+    loginData: PropTypes.object
   };
 
   drawMessages = () => {

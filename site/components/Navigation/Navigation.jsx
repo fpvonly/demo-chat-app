@@ -11,7 +11,7 @@ export default class Menu extends React.Component {
   }
 
   static propTypes = {
-    loginStatus: PropTypes.Bool
+    loginStatus: PropTypes.bool
   }
 
   static defaultProps = {

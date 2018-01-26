@@ -19,10 +19,10 @@ export default class ChatLogin extends React.Component {
   }
 
   static propTypes = {
-    visible: PropTypes.Boolean,
-    openWSConnection: PropTypes.function,
-    setCookie: PropTypes.function,
-    getCookie: PropTypes.function
+    visible: PropTypes.bool,
+    openWSConnection: PropTypes.func,
+    setCookie: PropTypes.func,
+    getCookie: PropTypes.func
   };
 
   static defaultProps = {

@@ -1,3 +1,0 @@
-To setup mail sending:
-
-npm run devserver -- --gmail=<username,password>
