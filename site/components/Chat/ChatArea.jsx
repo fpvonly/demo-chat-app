@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import $ from 'jquery';
 
+import Utils from '../Utils.js';
+
 export default class ChatArea extends React.Component {
 
   constructor(props) {
@@ -24,8 +26,6 @@ export default class ChatArea extends React.Component {
     visible: false,
     validateAndSendMessage: () => {},
     deleteMessage: function() {},
-    setCookie: function() {},
-    getCookie: function() {},
     messages: []
   };
 
@@ -34,8 +34,6 @@ export default class ChatArea extends React.Component {
     visible: PropTypes.bool,
     validateAndSendMessage: PropTypes.func,
     deleteMessage: PropTypes.func,
-    setCookie: PropTypes.func,
-    getCookie: PropTypes.func,
     messages: PropTypes.array
   };
 
@@ -64,7 +62,7 @@ export default class ChatArea extends React.Component {
       } else {
         messages.push(<div className={'message ' + align_class} key={(msg._id ? msg._id : i)}>
             {msg.timestamp && msg.user_name
-              ? <span className="chat_name_span">{this.getCurrentTime(msg.timestamp) + ' "' +  msg.user_name + '" says:'}</span>
+              ? <span className="chat_name_span">{Utils.getCurrentTime(msg.timestamp) + ' "' +  msg.user_name + '" says:'}</span>
               : null}
             <span className="message_text_span">{msg.message}</span>
             <div>{deleteBtn}</div>
@@ -90,15 +88,6 @@ export default class ChatArea extends React.Component {
       this.validateAndSendMessage();
     }
   }
-
-  getCurrentTime = (date) => {
-  	var d = (date ? new Date(date) : new Date());
-  	var offset = (new Date().getTimezoneOffset() / 60) * -1;
-  	var n = new Date(d.getTime() + offset);
-  	var time = n.getDate() + '.' + (n.getMonth() + 1) + '.' + n.getFullYear() + '  '
-      + (n.getHours() < 10 ? '0' : '') + n.getHours() + ':' + (n.getMinutes() < 10 ? '0' : '') + n.getMinutes();
-  	return time;
-  };
 
   render() {
     let messages = this.drawMessages();

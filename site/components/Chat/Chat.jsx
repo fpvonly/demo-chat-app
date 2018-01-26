@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import $ from 'jquery';
 
 import Server from '../../server/server_config.json'
+import Utils from '../Utils.js';
 import ChatLogin from './ChatLogin.jsx';
 import ChatArea from './ChatArea.jsx';
 
@@ -34,7 +35,7 @@ export default class Chat extends React.Component {
 
   componentDidMount() {
     if (typeof WebSocket !== "undefined") {
-			if(this.getCookie('chat_name') == '' && this.getCookie('email') == '') {
+			if(Utils.getCookie('chat_name') == '' && Utils.getCookie('email') == '') {
 				this.setState({ONLINE: false});
 			}	else {
 				this.openWSConnection();
@@ -93,7 +94,7 @@ export default class Chat extends React.Component {
   validateAndSendMessage = (e, msgInput) => {
     let msgText = msgInput.trim();
     if(msgText !== '') {
-      this.sendWSMessage(msgText+';' + this.getCookie('chat_name') + ';' + this.getCookie('email'));
+      this.sendWSMessage(msgText+';' + Utils.getCookie('chat_name') + ';' + Utils.getCookie('email'));
     }
   }
 
@@ -101,19 +102,12 @@ export default class Chat extends React.Component {
     e.preventDefault();
 
     if (confirm('Are you sure you want to delete the message?') === true) {
-      let url = '';
-      if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
-         url = 'http://localhost:80/';
-      } else {
-         url = 'http://' + Server.server_domain + ':' + Server.server_port + '/';
-      }
-
       $.ajax({
         xhrFields: {
           withCredentials: true
         },
         type: "POST",
-        url: url + 'admin/deletemessage/',
+        url: Utils.getUrl() + 'admin/deletemessage/',
         data: {id: messageId},
         success: function(data) {
           // if the delete was succesful, update the message list
@@ -133,25 +127,6 @@ export default class Chat extends React.Component {
     }
   }
 
-  setCookie(cname, cvalue, exdays) {
-    let d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    let expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/";
-  }
-
-  getCookie(cname) {
-    let name = cname + "=";
-    let ca = document.cookie.split(';');
-    for(let i = 0; i < ca.length; i++)
-    {
-      let c = ca[i];
-      while (c.charAt(0) === ' ') c = c.substring(1);
-      if(c.indexOf(name) === 0) return c.substring(name.length,c.length);
-    }
-    return "";
-  }
-
   render() {
     return <div id="chat_area">
      <form
@@ -161,13 +136,10 @@ export default class Chat extends React.Component {
         onSubmit={(e) => {e.preventDefault();}}>
           <ChatLogin
             visible={!this.state.ONLINE}
-            setCookie={this.setCookie}
             openWSConnection={this.openWSConnection} />
           <ChatArea
             siteLoginStatus={this.props.siteLoginStatus}
             visible={this.state.ONLINE}
-            setCookie={this.setCookie}
-            getCookie={this.getCookie}
             validateAndSendMessage={this.validateAndSendMessage}
             deleteMessage={this.deleteMessage.bind(this)}
             messages={this.state.messages} />

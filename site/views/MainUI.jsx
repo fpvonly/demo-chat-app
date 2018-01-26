@@ -7,6 +7,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import $ from 'jquery';
 
 import Server from '../server/server_config.json'
+import Utils from '../components/Utils.js';
 import Translate from '../components/Translate.jsx';
 import Header from '../components/Header.jsx'
 import Chat from '../components/Chat/Chat.jsx'
@@ -35,15 +36,7 @@ class App extends React.Component {
   }
 
   logIn = (uname = null, passw = null, action = 'login/admin', afterLoginFailureCallback = () => {}) => {
-    let host = window.location.host;
-    let url = '';
     let params = {};
-
-    if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
-      url = 'http://localhost:80/';
-    } else {
-      url = 'http://' + Server.server_domain + ':' + Server.server_port + '/';
-    }
 
     if (uname !== false && passw !== false) {
       params = {
@@ -57,7 +50,7 @@ class App extends React.Component {
         withCredentials: true
       },
       type: "POST",
-      url: url + action,
+      url: Utils.getUrl() + action,
       data: params,
       success: function(data) {
         if (data.login && data.login === true) {
