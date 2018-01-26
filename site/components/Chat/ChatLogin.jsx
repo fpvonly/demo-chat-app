@@ -40,8 +40,8 @@ export default class ChatLogin extends React.Component {
     // for now, email is optional
     if(name !== '' /*&& email !== ''*/) {
       if(email === '' || Utils.isValidEmailAddress(email) === true) {
-        Utils.setCookie('chat_name', name, 1);
-        Utils.setCookie('email', email, 1);
+        Utils.setlocalStorageItem('chat_name', name, 1);
+        Utils.setlocalStorageItem('email', email, 1);
         this.props.openWSConnection();
       } else {
         emailInputError = true;

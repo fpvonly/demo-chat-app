@@ -35,7 +35,7 @@ export default class Chat extends React.Component {
 
   componentDidMount() {
     if (typeof WebSocket !== "undefined") {
-			if(Utils.getCookie('chat_name') == '' && Utils.getCookie('email') == '') {
+			if(Utils.getlocalStorageItem('chat_name') === '' && Utils.getlocalStorageItem('email') === '') {
 				this.setState({ONLINE: false});
 			}	else {
 				this.openWSConnection();
@@ -94,7 +94,7 @@ export default class Chat extends React.Component {
   validateAndSendMessage = (e, msgInput) => {
     let msgText = msgInput.trim();
     if(msgText !== '') {
-      this.sendWSMessage(msgText+';' + Utils.getCookie('chat_name') + ';' + Utils.getCookie('email'));
+      this.sendWSMessage(msgText+';' + Utils.getlocalStorageItem('chat_name') + ';' + Utils.getlocalStorageItem('email'));
     }
   }
 

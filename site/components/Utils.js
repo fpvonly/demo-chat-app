@@ -16,6 +16,25 @@ export default class Utils {
     return url;
   }
 
+  static setlocalStorageItem = (cname, cvalue, exdays) => {
+    if (window.localStorage) {
+      window.localStorage.setItem(cname, cvalue);
+    } else {
+      Utils.setCookie(cname, cvalue, exdays);
+    }
+  }
+
+  static getlocalStorageItem = (cname) => {
+    let value = '';
+    if (window.localStorage) {
+      value = window.localStorage.getItem(cname);
+    } else {
+      value = Utils.getCookie(cname);
+    }
+
+    return (value === null ? '' : value);
+  }
+
   static setCookie = (cname, cvalue, exdays) => {
     let d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
