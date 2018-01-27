@@ -1,6 +1,5 @@
 var webpack = require('webpack');
 var path = require('path');
-var webpackUglifyJsPlugin = require('webpack-uglify-js-plugin');
 
 var BUILD_DIR = path.resolve(__dirname, 'build');
 var APP_DIR  = path.resolve(__dirname, '');
