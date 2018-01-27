@@ -2,29 +2,29 @@
 	"menu": [
 		{
 			"href":"#",
-			"dataTarget":"contact",
-			"text":"Contact",
-			"target":"_self",
-			"class":"main_link"
-		},
-		{
-			"href":"#",
 			"dataTarget":"info",
 			"text":"Info",
 			"target":"_self",
 			"class":"main_link"
 		},
 		{
-			"href":"https://fi.linkedin.com/pub/ari-pet%C3%A4j%C3%A4j%C3%A4rvi/4/950/49b",
+			"href":"#",
+			"dataTarget":"contact",
+			"text":"Contact",
+			"target":"_self",
+			"class":"main_link"
+		},
+		{
+			"href":"https://github.com/fpvonly/personalSite",
 			"dataTarget":"",
-			"text":"LinkedIn",
+			"text":"GitHub",
 			"target":"_blank",
 			"class":"main_link ext"
 		},
 		{
 			"href":"http://128.199.45.96:29/",
 			"dataTarget":"",
-			"text":"PingPong",
+			"text":"Ping Pong",
 			"target":"_blank",
 			"class":"main_link ext"
 		}
