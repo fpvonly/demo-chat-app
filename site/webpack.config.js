@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
+var webpackUglifyJsPlugin = require('webpack-uglify-js-plugin');
 
 var BUILD_DIR = path.resolve(__dirname, 'build');
 var APP_DIR  = path.resolve(__dirname, '');
@@ -33,5 +34,13 @@ var config = {
     })
   ]
 };
+
+if (process.env.NODE_ENV === 'production') {
+  config.devtool = 'source-map'
+  config.devServer = {}
+  config.plugins = [
+    new webpack.optimize.UglifyJsPlugin()
+  ]
+}
 
 module.exports = config;
