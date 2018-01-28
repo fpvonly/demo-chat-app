@@ -71,6 +71,7 @@ p
 
 input[type="button"], input[type="submit"] {
 	font-size: 0.8rem;
+	font-weight: bold;
   line-height: 1rem;
 	margin-left: 0.8rem;
 	outline: none;
@@ -159,12 +160,12 @@ nav ul li
 nav ul li a
 {
 	color:#ffffff;
-	font-weight: normal;
+	font-weight: bold;
 	white-space:nowrap;
 	margin-left:2.5em;
 	font-size: 1.3em;
 	box-shadow: 1px 2px 3px #000000;
-    border-bottom: 3px solid #525252;
+  border-bottom: 3px solid #525252;
 	transition: border 0.5s;
 }
 
@@ -299,8 +300,12 @@ input[type="text"], textarea, input[type="password"] { padding:0.3em 1%; border-
 label { font-size: 1.1em; }
 .chat_name_span { font-style:italic; }
 .message_text_span { display: block; font-weight: bold; margin-top:0.7em; }
-.message .delete_btn { display: inline-block; border: 0; transition: color,background-color 0.5s; color: #ffffff; background-color: #e70000; padding: 0.6rem; margin: 0.5rem 0.2rem 0rem 0.2rem; font-weight: bold; font-size: 0.7rem; }
+.message .delete_btn { display: inline-block; border: 0; transition: color,background-color 0.5s; min-width: 10rem; color: #ffffff; background-color: #e70000; padding: 0.6rem; margin: 0.5rem 0.2rem 0rem 0.2rem; font-weight: bold; font-size: 0.7rem; }
 .message .delete_btn:hover { border: 0; transition: color, background-color 0.5s; background-color: #ffffff; color: #e70000; }
+.message .edit_btn { display: inline-block; border: 0; transition: color,background-color 0.5s; color: #ffffff; background-color: #43a4f9; min-width: 10rem; padding: 0.6rem; margin: 0.5rem 0.2rem 0rem 0.2rem; font-weight: bold; font-size: 0.7rem; }
+.message .edit_btn:hover { border: 0; transition: color, background-color 0.5s; background-color: #ffffff; color: #43a4f9; }
+.message .save_btn { display: inline-block; border: 0; transition: color,background-color 0.5s; color: #ffffff; background-color: #6c3; min-width: 10rem; padding: 0.6rem; margin: 0.5rem 0.2rem 0rem 0.2rem; font-weight: bold; font-size: 0.7rem; }
+.message .save_btn:hover { border: 0; transition: color, background-color 0.5s; background-color: #ffffff; color: #6c3; }
 .message { background: rgba(0, 0, 0, 0.75) none repeat scroll 0 0;  width: 250px; margin: 0.5em 0;   padding: 1em; border-radius:5px; color:#ffffff; clear:both; font-size:1.1em; box-shadow: #000000 1px 3px 5px;}
 .msg_left { float:left; clear:both;}
 .msg_right { float:right; clear:both; }

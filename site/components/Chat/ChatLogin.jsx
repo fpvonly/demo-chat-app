@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import RFC4122 from 'rfc4122';
 
 import Utils from '../Utils.js';
 
@@ -39,9 +40,12 @@ export default class ChatLogin extends React.Component {
 
     // for now, email is optional
     if(name !== '' /*&& email !== ''*/) {
-      if(email === '' || Utils.isValidEmailAddress(email) === true) {
+      if(email === '' || Utils.isValidEmailAddress(email) === true) {        
+        let rfc4122 = new RFC4122();
+        let uid = rfc4122.v4f();
         Utils.setlocalStorageItem('chat_name', name, 1);
         Utils.setlocalStorageItem('email', email, 1);
+        Utils.setlocalStorageItem('uid', uid, 1);
         this.props.openWSConnection();
       } else {
         emailInputError = true;

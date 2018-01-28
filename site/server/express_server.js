@@ -210,8 +210,15 @@ fs.readFile('server_config.json', function( err, json ) {
         res.send({'login': false});
       }
     } else if(req.params.action === 'admin' && req.body.username && req.body.password) {
-        mongo.find('users', { username: req.body.username}, { fields: { username: 1, password: 1 } },
-          function(err, result) {
+        mongo.find(
+          'users',
+          {username: req.body.username},
+          {
+            fields: {
+              username: 1, password: 1
+            }
+          },
+          function (err, result) {
             if (err === null && Array.isArray(result) && result.length > 0) {
               let userHits = [];
               for (let i = 0; i < result.length; i++) {
@@ -239,7 +246,7 @@ fs.readFile('server_config.json', function( err, json ) {
               res.cookie('utype', 0, { maxAge: 1, httpOnly: false });
               res.send({'login': false});
             }
-        });
+        }); // ENDS func
     }
     // DEBUG
     if (process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
@@ -385,26 +392,43 @@ fs.readFile('server_config.json', function( err, json ) {
   });
 
   socket.on('request', function(request) {
-  	var connection = request.accept(null, request.origin);
+  	let connection = request.accept(null, request.origin);
   	count++;
   	connection.id = count;
   	clients[count] = connection;
 
-    mongo.find('messages', false, { fields: {message: 1, user_name: 1, email: 1, timestamp: 1/*, _id: 0*/}, sort: {timestamp: -1}, limit: 10 }, function(err, results) {
-      if (err !== null) {
-        connection.sendUTF(JSON.stringify({
-          custom: "Sorry! Problems with the database...",
-          _id: 'custom_err'
-        }));
-      } else {
-        if (Array.isArray(results) === true && results.length > 0) {
-          var firstMessage = [{message: 'Welcome. Logged in.', _id: 'custom_welcome'}];
-          connection.sendUTF(JSON.stringify(results.concat(firstMessage)));
+    mongo.find(
+      'messages',
+      false,
+      {
+        fields: {
+          message: 1,
+          user_name: 1,
+          email: 1,
+          uid: 1,
+          timestamp: 1
+          /*, _id: 0*/
+        },
+        sort: {
+          timestamp: -1
+        },
+        limit: 10
+      },
+      function (err, results) {
+        if (err !== null) {
+          connection.sendUTF(JSON.stringify({
+            custom: "Sorry! Problems with the database...",
+            _id: 'custom_err'
+          }));
         } else {
-          connection.sendUTF(JSON.stringify({message: 'Welcome. Logged in.', _id: 'custom_welcome'}));
+          if (Array.isArray(results) === true && results.length > 0) {
+            let firstMessage = [{custom: 'Welcome. Logged in.', _id: 'custom_welcome'}];
+            connection.sendUTF(JSON.stringify(results.concat(firstMessage)));
+          } else {
+            connection.sendUTF(JSON.stringify({custom: 'Welcome. Logged in.', _id: 'custom_welcome'}));
+          }
         }
-      }
-      //console.log("RESULTS", results);
+        //console.log("RESULTS", results);
     });
 
   	connection.on('message', function(message) {
@@ -412,15 +436,17 @@ fs.readFile('server_config.json', function( err, json ) {
   			// 0: message
   			// 1: chat name
   			// 2: email
-  			var msg_parts = message.utf8Data.split(';');
-  			var message_text = msg_parts[0];
-  			var chat_name = msg_parts[1];
-  			var email = msg_parts[2];
+  			let msg_parts = message.utf8Data.split(';');
+  			let message_text = msg_parts[0];
+  			let chat_name = msg_parts[1];
+  			let email = msg_parts[2];
+        let uid = msg_parts[3];
 
         mongo.insert({
             message: message_text,
             user_name: chat_name,
             email: email,
+            uid: uid,
             ip: request.remoteAddress,
             timestamp: new Date()
         },
@@ -428,12 +454,13 @@ fs.readFile('server_config.json', function( err, json ) {
         function(status, result) {
           if (result) {
             console.log( chat_name + ':' + message_text );
-            for(var i in clients)	{
+            for(let i in clients)	{
               clients[i].sendUTF(
                 JSON.stringify({
                   message: result.ops[0].message,
                   timestamp: result.ops[0].timestamp,
                   user_name: result.ops[0].user_name,
+                  uid: result.ops[0].uid,
                   _id: result.ops[0]._id
                 })
               );
@@ -442,7 +469,7 @@ fs.readFile('server_config.json', function( err, json ) {
         });
 
         try {
-          var transporter = nodemailer.createTransport({
+          let transporter = nodemailer.createTransport({
             service: 'Gmail',
             auth: {
               user: mailConfig.user,
@@ -457,10 +484,10 @@ fs.readFile('server_config.json', function( err, json ) {
             text: new Date() + ' ' + chat_name + ':\n\n'+ message_text + '\n\nemail: ' + email
           },
           function(error, info){
-            if(error){
-                console.log('MAIL SEND ERROR', error);
-            }else{
-                console.log('Message sent: ' + info.response);
+            if (error) {
+              console.log('MAIL SEND ERROR', error);
+            } else {
+              console.log('Message sent: ' + info.response);
             }
           });
         } catch (err) {};
@@ -470,14 +497,14 @@ fs.readFile('server_config.json', function( err, json ) {
 
   	connection.on('close', function( reasonCode, description ) {
   		//console.log('\nCLIENT IDS ACTIVE:\n ');
-  		for(var i in clients) {
+  		for(let i in clients) {
   			if(i == connection.id) {
   				 delete clients[i]; // delete the closed connection object from the client OBJECT LITERAL
   			}	else {
   				//console.log( i );
   			}
   		}
-  		console.log('connection closed');
+  		//console.log('connection closed');
   	});
 
   });

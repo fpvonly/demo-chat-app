@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import Message from './ChatAreaMessage.jsx';
 import $ from 'jquery';
 
 import Utils from '../Utils.js';
@@ -49,24 +50,23 @@ export default class ChatArea extends React.Component {
     messagesProps.reverse();
     for (let i = messagesProps.length - 1; i >= 0; i--) {
       let msg = messagesProps[i];
-      let deleteBtn = null;
       align_class = (i % 2 === 0 ? 'msg_right' : 'msg_left');
 
-      if (this.context.loginData && this.context.loginData.user_id && msg._id) {
-        deleteBtn = <a href="#" className="delete_btn" onClick={this.props.deleteMessage.bind(this, msg._id)}>Delete this message</a>;
-      }
-
-      // if msg is the newest message of top of the array
       if (msg.custom) {
-        messages.push(<div className={'message ' + align_class} key={(msg._id ? msg._id : i)}><span className="message_text_span">{msg.custom}</span></div>);
+        messages.push(<Message className={'message ' + align_class} custom key={(msg._id ? msg._id : i)}>{msg.custom}</Message>);
       } else {
-        messages.push(<div className={'message ' + align_class} key={(msg._id ? msg._id : i)}>
-            {msg.timestamp && msg.user_name
-              ? <span className="chat_name_span">{Utils.getCurrentTime(msg.timestamp) + ' "' +  msg.user_name + '" says:'}</span>
-              : null}
-            <span className="message_text_span">{msg.message}</span>
-            <div>{deleteBtn}</div>
-          </div>);
+        messages.push(
+          <Message
+            className={'message ' + align_class}
+            allowSenderEdit={(msg.uid === Utils.getlocalStorageItem('uid'))}
+            timestamp={msg.timestamp}
+            userName={msg.user_name}
+            messageId={msg._id}
+            deleteCallback={this.props.deleteMessage}
+            key={(msg._id ? msg._id : i)}
+          >
+            {msg.message}
+        </Message>);
       }
     }
     return messages;
@@ -104,7 +104,11 @@ export default class ChatArea extends React.Component {
                 placeholder="Message"
                 onKeyUp={this.handleKeyUp}
                 key={this.state.clearMsgFieldKey} />
-              <input type="button" value="Send" id="message_send_btn" onClick={this.validateAndSendMessage} />
+              <input
+                type="button"
+                id="message_send_btn"
+                value="Send"
+                onClick={this.validateAndSendMessage} />
             </div>
             <div ref={(c) => { this.message_area = $(c); }} id="message_area">
               <ReactCSSTransitionGroup

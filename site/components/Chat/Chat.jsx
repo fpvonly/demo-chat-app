@@ -94,11 +94,11 @@ export default class Chat extends React.Component {
   validateAndSendMessage = (e, msgInput) => {
     let msgText = msgInput.trim();
     if(msgText !== '') {
-      this.sendWSMessage(msgText+';' + Utils.getlocalStorageItem('chat_name') + ';' + Utils.getlocalStorageItem('email'));
+      this.sendWSMessage(msgText+';' + Utils.getlocalStorageItem('chat_name') + ';' + Utils.getlocalStorageItem('email') + ';' + Utils.getlocalStorageItem('uid'));
     }
   }
 
-  deleteMessage(messageId, e) {
+  deleteMessage = (messageId, e) => {
     e.preventDefault();
 
     if (confirm('Are you sure you want to delete the message?') === true) {

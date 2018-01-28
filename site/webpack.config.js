@@ -37,9 +37,9 @@ var config = {
 if (process.env.NODE_ENV === 'production') {
   config.devtool = 'source-map'
   config.devServer = {}
-  config.plugins = [
+  config.plugins = config.plugins.concat([
     new webpack.optimize.UglifyJsPlugin()
-  ]
+  ])
 }
 
 module.exports = config;
