@@ -127,6 +127,10 @@ export default class Chat extends React.Component {
     }
   }
 
+  editMessage = (messageId, e) => {
+
+  }
+
   render() {
     return <div id="chat_area">
      <form
@@ -141,7 +145,8 @@ export default class Chat extends React.Component {
             siteLoginStatus={this.props.siteLoginStatus}
             visible={this.state.ONLINE}
             validateAndSendMessage={this.validateAndSendMessage}
-            deleteMessage={this.deleteMessage.bind(this)}
+            editMessage={this.editMessage}
+            deleteMessage={this.deleteMessage}
             messages={this.state.messages} />
         </form>
     </div>

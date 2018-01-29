@@ -27,6 +27,7 @@ export default class ChatArea extends React.Component {
     visible: false,
     validateAndSendMessage: () => {},
     deleteMessage: function() {},
+    editMessage: function() {},
     messages: []
   };
 
@@ -35,6 +36,7 @@ export default class ChatArea extends React.Component {
     visible: PropTypes.bool,
     validateAndSendMessage: PropTypes.func,
     deleteMessage: PropTypes.func,
+    editMessage: PropTypes.func,
     messages: PropTypes.array
   };
 
@@ -62,6 +64,7 @@ export default class ChatArea extends React.Component {
             timestamp={msg.timestamp}
             userName={msg.user_name}
             messageId={msg._id}
+            editCallback={this.props.editMessage}
             deleteCallback={this.props.deleteMessage}
             key={(msg._id ? msg._id : i)}
           >

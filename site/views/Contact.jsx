@@ -59,24 +59,24 @@ export default class Contact extends React.Component {
             'contact_message': contactMessage
           },
           success: function(data) {
-            if (data.status && data.status === true) {
-              this.setState({
-                inProgress: false,
-                formSent: true
-              });
-            } else {
-              this.setState({
-                inProgress: false,
-                nameInputError: true,
-                emailInputError: true,
-                messageInputError: true,
-              });
-            }
+            setTimeout(() => {
+              if (data.status && data.status === true) {
+                this.setState({
+                  inProgress: false,
+                  formSent: true
+                });
+              } else {
+                this.setState({
+                  inProgress: false,
+                  nameInputError: true,
+                  emailInputError: true,
+                  messageInputError: true,
+                });
+              }
+            }, 1000); // timeout is for more peaceful loader icon change
           }.bind(this)
         });
       });
-
-
     } else {
       this.setState({
         nameInputError: nameInputErr,
@@ -125,7 +125,10 @@ export default class Contact extends React.Component {
             id="contact_message"
             placeholder="Your message">
           </textarea>
-          <input type="button" value="Send" id="contact_btn" disabled={this.state.inProgress} onClick={this.handleSend} />
+
+          {(this.state.inProgress === true)
+            ? <img src="./assets/images/loader.svg" alt="Saving the message..." width="50" />
+            : <input type="button" value="Send" id="contact_btn" onClick={this.handleSend} />}
 
           <div className="clear"></div>
         </form>

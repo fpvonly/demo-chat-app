@@ -12,7 +12,7 @@ export default class ChatAreaMessage extends React.Component {
     super(props);
 
     this.state = {
-      editMode: false
+      editMode: ''
     }
   }
 
@@ -42,11 +42,26 @@ export default class ChatAreaMessage extends React.Component {
     loginData: PropTypes.object
   };
 
-  handleEditClick = () => {
+  handleEditClick = (messageId, e) => {
+    e.preventDefault();
 
-    //this.props.editCallback.bind(undefined, this.props.messageId)
     this.setState({
-      editMode: true
+      editMode: 'EDIT'
+    });
+  }
+
+  handleSaveClick = (messageId, e) => {
+    e.preventDefault();
+
+    this.setState({
+      editMode: 'SAVING'
+    }, () => {
+      this.props.editCallback.bind(undefined, this.props.messageId)
+      setTimeout(() => {
+        this.setState({
+          editMode: ''
+        });
+      }, 1000);
     });
   }
 
@@ -67,10 +82,12 @@ export default class ChatAreaMessage extends React.Component {
         deleteBtn = <a href="#" className="delete_btn" onClick={this.props.deleteCallback.bind(undefined, this.props.messageId)}>Delete this message</a>;
       }
       if (isAdmin === true || this.props.allowSenderEdit === true) {
-        if (this.state.editMode === false) {
+        if (this.state.editMode === '') {
           editBtn = <a href="#" className="edit_btn" onClick={this.handleEditClick.bind(this, this.props.messageId)}>Edit this message</a>;
-        } else {
-          editBtn = <a href="#" className="save_btn" onClick={this.handleEditClick.bind(this, this.props.messageId)}>Save message</a>;
+        } else if (this.state.editMode === 'EDIT') {
+          editBtn = <a href="#" className="save_btn" onClick={this.handleSaveClick.bind(this, this.props.messageId)}>Save message</a>;
+        } else if (this.state.editMode === 'SAVING') {
+          editBtn = <img src="./assets/images/loader.svg" alt="Saving the message..." width="50" />;
         }
       }
 
@@ -78,9 +95,9 @@ export default class ChatAreaMessage extends React.Component {
         {this.props.timestamp && this.props.userName
           ? <span className="chat_name_span">{Utils.getCurrentTime(this.props.timestamp) + ' "' +  this.props.userName + '" says:'}</span>
           : null}
-        {(this.state.editMode === false)
+        {(this.state.editMode === '')
             ? <span className="message_text_span">{this.props.children}</span>
-            : <textarea defaultValue={this.props.children.toString()} />}
+            : <textarea defaultValue={this.props.children.toString()} autoFocus />}
         <div>{deleteBtn}</div>
         <div>{editBtn}</div>
       </div>;
