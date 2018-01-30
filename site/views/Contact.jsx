@@ -1,6 +1,5 @@
 import React from 'react';
 import {render} from 'react-dom';
-import $ from 'jquery';
 
 import Server from '../server/server_config.json'
 import Utils from '../components/Utils.js';
@@ -46,19 +45,14 @@ export default class Contact extends React.Component {
 
     if (nameInputErr == false && emailInputErr == false && messageInputErr === false) {
       this.setState({inProgress: true}, () => {
-        $.ajax({
-          xhrFields: {
-            withCredentials: true
-          },
-          type: "POST",
-          url: Utils.getUrl() + 'contact/send',
-          dataType: 'json',
-          data: {
+        Utils.post(
+          'contact/send',
+          {
             'contact_name': contactName,
             'contact_email': contactEmail,
             'contact_message': contactMessage
           },
-          success: function(data) {
+          (data) => {
             setTimeout(() => {
               if (data.status && data.status === true) {
                 this.setState({
@@ -74,7 +68,14 @@ export default class Contact extends React.Component {
                 });
               }
             }, 1000); // timeout is for more peaceful loader icon change
-          }.bind(this)
+          },
+          () => {
+            this.setState({
+              inProgress: false,
+              nameInputError: true,
+              emailInputError: true,
+              messageInputError: true,
+            });
         });
       });
     } else {

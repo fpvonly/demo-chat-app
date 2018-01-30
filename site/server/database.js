@@ -31,7 +31,6 @@ database.prototype.find = function(collection, criteria, options, callback) {
   }
 
   collection.find(criteria, options, function(err, cursor) {
-    //assert.equal(null, err);
     if (cursor && callback) {
       cursor.toArray(callback);
     }
@@ -41,8 +40,6 @@ database.prototype.find = function(collection, criteria, options, callback) {
 database.prototype.insert = function(data, collection, callback) {
   var collection = this.db.collection(collection);
   collection.insert(data, function(err, result) {
-      //assert.equal(err, null);
-      //assert.equal(1, result.insertedCount);
       if (typeof callback !== 'undefined') {
         if (err === null && result && result.insertedCount > 0) {
           callback(true, result);
@@ -53,9 +50,22 @@ database.prototype.insert = function(data, collection, callback) {
   }.bind(this));
 } // ENDS insert
 
+database.prototype.update = function(updatedData, collection, criteria, callback) {
+  var collection = this.db.collection(collection);
+  collection.update({ _id: MongoDB.ObjectId(criteria._id) }, { $set : updatedData }, function(err, result) {
+      if (typeof callback !== 'undefined') {
+        if (err === null) {
+          callback(true);
+        } else {
+          callback(false);
+        }
+      }
+  }.bind(this));
+} // ENDS update
+
 database.prototype.deleteOneById = function(collection, criteria, callback) {
   var collection = this.db.collection(collection);
-  collection.deleteOne({_id: MongoDB.ObjectId(criteria._id)},
+  collection.deleteOne({ _id: MongoDB.ObjectId(criteria._id) },
     function(err, result) {
       if (typeof callback !== 'undefined') {
         if(err !== null || result.deletedCount !== 1) {

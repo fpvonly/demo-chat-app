@@ -78,7 +78,9 @@ input[type="button"], input[type="submit"] {
 	background: #ffffff;
 	border: none;
 	border-radius: 5px;
-	opacity: 0.6;
+	background: #6c3;
+	color: #ffffff;
+	opacity: 1;
 	box-shadow: #000000 3px 3px 3px;
 	padding: 0.3rem 1rem;
 	margin-left: 0.8rem;
@@ -86,7 +88,10 @@ input[type="button"], input[type="submit"] {
 }
 
 input[type="button"]:hover, input[type="submit"]:hover {
-	box-shadow: 0px 0px 2px 3px rgba(255, 255, 255, 1); cursor:pointer; color: #ffffff; background-color: #000000; opacity: 0.5;
+	box-shadow: 0px 0px 2px 3px rgba(255, 255, 255, 1);
+	cursor:pointer;
+	color: #6c3;
+	background-color: #ffffff;
 	transition: box-shadow,color,opacity,background-color 0.5s;
 }
 
@@ -279,12 +284,21 @@ footer a
 	padding: 0 1em;
 }
 
-input[type="text"], textarea, input[type="password"] { padding:0.3em 1%; border-radius:5px 5px 5px 5px; }
+input[type="text"], input[type="password"], textarea {
+  transition: all 0.30s ease-in-out !important;
+  outline: none;
+	padding: 0.3em 1%;
+	border-radius: 5px 5px 5px 5px;
+  border: 1px solid #DDDDDD;
+}
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
+  box-shadow: 0 0 5px #6c3;
+  border: 1px solid #6c3;
+}
 
 #login_fields { float: left; width: 100%; padding: 1.0em 0 1.2em 0; }
 #login_fields input[type="text"], input[type="password"] { width:20%; }
-#login_fields input[type="submit"] { outline: none;  background: #ffffff;  border: none;  border-radius: 5px; opacity: 0.6;  box-shadow: #000000 3px 3px 3px;  padding: 0.25em 1em;  transition: box-shadow 0.5s;}
-#login_fields input[type="submit"]:hover{ box-shadow: 0px 0px 2px 3px rgba(255, 255, 255, 1); cursor:pointer; color: #ffffff; background-color: #000000; opacity: 0.5;  }
+#login_fields input[type="submit"] { outline: none; border-radius: 5px;  padding: 0.25em 1em;}
 #login_fields input[type="text"], #login_fields input[type="password"] { margin: 0rem 0.3rem;}
 
 #login_fields span, #login_fields a { color:#ffffff; font-size: 1.2em; }
@@ -293,10 +307,9 @@ input[type="text"], textarea, input[type="password"] { padding:0.3em 1%; border-
 
 /* chat */
 #chat_area { max-width:600px; margin: 0 auto;}
-#message_area { /*max-height:200px; overflow-y: scroll;*/ }
 #chat_funcs, #chat_reg { background: rgba(0, 0, 0, 0.75) none repeat scroll 0 0;  max-width: 1200px; margin: 0.5em 0;   padding: 1em; color:#ffffff; clear:both;  border-radius:5px; box-shadow: #000000 1px 3px 5px;}
 #chat_reg input[type="text"] { margin: 0rem 0.3rem;}
-#message_input {  width:70%; }
+#message_input { width:70%; font-style: italic; }
 label { font-size: 1.1em; }
 .chat_name_span { font-style:italic; }
 .message_text_span { display: block; font-weight: bold; margin-top:0.7em; }

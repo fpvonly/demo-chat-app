@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
 
 import Server from '../../server/server_config.json'
 import Utils from '../Utils.js';
 import ChatLogin from './ChatLogin.jsx';
 import ChatArea from './ChatArea.jsx';
+
+const LOGGEDOUT = 'LOGGEDOUT';
+const LOGGEDIN = 'LOGGEDIN';
+const LOADING = 'LOADING';
 
 export default class Chat extends React.Component {
 
@@ -16,7 +19,7 @@ export default class Chat extends React.Component {
     this.ws = null;
     this.form = null;
     this.state = {
-      ONLINE: false,
+      STATUS: LOGGEDOUT,
       messages: []
     }
   }
@@ -36,7 +39,7 @@ export default class Chat extends React.Component {
   componentDidMount() {
     if (typeof WebSocket !== "undefined") {
 			if(Utils.getlocalStorageItem('chat_name') === '' && Utils.getlocalStorageItem('email') === '') {
-				this.setState({ONLINE: false});
+				this.setState({STATUS: LOGGEDOUT});
 			}	else {
 				this.openWSConnection();
 			}
@@ -52,7 +55,7 @@ export default class Chat extends React.Component {
       }
 
       this.ws.onopen = () => {
-         this.setState({ONLINE: true});
+         this.setState({STATUS: LOADING});
       };
 
       this.ws.onmessage = (evt) => {
@@ -64,16 +67,27 @@ export default class Chat extends React.Component {
           newMessages = [receivedMsg].concat(newMessages); // single message
         }
 
-        this.setState({messages: newMessages});
+        if (this.state.STATUS === LOADING) {
+          setTimeout(() => {
+            this.setState({
+              messages: newMessages,
+              STATUS: LOGGEDIN
+            });
+          }, 1000); // more peaceful login animation this way
+        } else {
+          this.setState({
+            messages: newMessages
+          });
+        }
       };
 
        this.ws.onclose = () => {
-          this.setState({ONLINE: false});
+          this.setState({STATUS: LOGGEDOUT});
        };
 
       this.ws.onerror = () => {
         this.setState({
-          ONLINE: false,
+          STATUS: LOGGEDOUT,
           messages: [{custom: 'Sorry but there seems to be a problem with the chat server.', _id: 'custom_err_1'}]
         });
       };
@@ -81,7 +95,7 @@ export default class Chat extends React.Component {
     else
     {
       this.setState({
-        ONLINE: false,
+        STATUS: LOGGEDOUT,
         messages: [{custom: 'Sorry, your browser has no Websocket API support. Update the browser!', _id: 'custom_err_2'}]
       });
     }
@@ -102,15 +116,11 @@ export default class Chat extends React.Component {
     e.preventDefault();
 
     if (confirm('Are you sure you want to delete the message?') === true) {
-      $.ajax({
-        xhrFields: {
-          withCredentials: true
-        },
-        type: "POST",
-        url: Utils.getUrl() + 'admin/deletemessage/',
-        data: {id: messageId},
-        success: function(data) {
-          // if the delete was succesful, update the message list
+      Utils.post(
+        'admin/deletemessage/',
+        {id: messageId},
+        (data) => {
+          // if the delete was successful, update the message list
           if (data.deleted && data.deleted === true) {
             let messages = this.state.messages.slice();
             let newMessages = messages.filter(function(message) {
@@ -121,14 +131,40 @@ export default class Chat extends React.Component {
             });
             this.setState({messages: newMessages});
           }
-        }.bind(this),
-        dataType: 'json'
-      });
+        }
+      );
     }
   }
 
-  editMessage = (messageId, e) => {
-
+  editMessage = (messageId, newMessage = '') => {
+    return new Promise ((resolve, reject) => {
+      Utils.post(
+        'admin/editmessage/',
+        {
+          id: messageId,
+          message: newMessage
+        },
+        (data) => {
+          // if the edit was succesful, update the message list
+          if (data.edited && data.edited === true) {
+            let messages = this.state.messages.slice();
+            let newMessages = messages.map(function(msg) {
+              if (msg._id && msg._id === messageId) {
+                msg.message = newMessage;
+              }
+              return msg;
+            });
+            this.setState({messages: newMessages}, () => {
+              resolve(false);
+            });
+          } else {
+            resolve(true);
+          }
+        },
+        () => {
+          resolve(true);
+        });
+    });
   }
 
   render() {
@@ -139,11 +175,11 @@ export default class Chat extends React.Component {
         ref={(c) => { this.form = c; }}
         onSubmit={(e) => {e.preventDefault();}}>
           <ChatLogin
-            visible={!this.state.ONLINE}
+            visible={(this.state.STATUS === LOGGEDOUT || this.state.STATUS === LOADING ? true : false)}
             openWSConnection={this.openWSConnection} />
           <ChatArea
             siteLoginStatus={this.props.siteLoginStatus}
-            visible={this.state.ONLINE}
+            loginStatus={this.state.STATUS}
             validateAndSendMessage={this.validateAndSendMessage}
             editMessage={this.editMessage}
             deleteMessage={this.deleteMessage}

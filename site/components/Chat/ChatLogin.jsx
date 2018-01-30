@@ -40,7 +40,7 @@ export default class ChatLogin extends React.Component {
 
     // for now, email is optional
     if(name !== '' /*&& email !== ''*/) {
-      if(email === '' || Utils.isValidEmailAddress(email) === true) {        
+      if(email === '' || Utils.isValidEmailAddress(email) === true) {
         let rfc4122 = new RFC4122();
         let uid = rfc4122.v4f();
         Utils.setlocalStorageItem('chat_name', name, 1);

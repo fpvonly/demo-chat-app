@@ -1,8 +1,38 @@
+import $ from 'jquery';
+
 import Server from '../server/server_config.json';
 
 export default class Utils {
 
   constructor() {
+  }
+
+  static post = (action = '', payload = {}, success = () => {}, error = () => {}, dataType = 'json') => {
+    $.ajax({
+      xhrFields: {
+        withCredentials: true
+      },
+      type: 'POST',
+      url: Utils.getUrl() + action,
+      dataType: dataType,
+      data: payload,
+      success: success,
+      error: error
+    });
+  }
+
+  static get = (action = '', payload = {}, success = () => {}, error = () => {}) => {
+    /*$.ajax({
+      xhrFields: {
+        withCredentials: true
+      },
+      type: 'GET',
+      url: Utils.getUrl() + action,
+      dataType: 'json',
+      data: payload,
+      success: success,
+      error: error
+    });*/
   }
 
   static getUrl = () => {

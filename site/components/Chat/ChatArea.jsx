@@ -24,7 +24,7 @@ export default class ChatArea extends React.Component {
 
   static defaultProps = {
     siteLoginStatus: false,
-    visible: false,
+    loginStatus: '',
     validateAndSendMessage: () => {},
     deleteMessage: function() {},
     editMessage: function() {},
@@ -33,7 +33,7 @@ export default class ChatArea extends React.Component {
 
   static propTypes = {
     siteLoginStatus: PropTypes.bool,
-    visible: PropTypes.bool,
+    loginStatus: PropTypes.string,
     validateAndSendMessage: PropTypes.func,
     deleteMessage: PropTypes.func,
     editMessage: PropTypes.func,
@@ -96,7 +96,7 @@ export default class ChatArea extends React.Component {
     let messages = this.drawMessages();
     let chatArea = null;
 
-    if(this.props.visible === true) {
+    if(this.props.loginStatus === 'LOGGEDIN') {
       chatArea = <div>
             <div ref={(c) => { this.chat_funcs_area = $(c); }} id="chat_funcs">
               <input
@@ -104,7 +104,7 @@ export default class ChatArea extends React.Component {
                 type="text"
                 id="message_input"
                 maxLength="1000"
-                placeholder="Message"
+                placeholder="Your message..."
                 onKeyUp={this.handleKeyUp}
                 key={this.state.clearMsgFieldKey} />
               <input
@@ -125,7 +125,7 @@ export default class ChatArea extends React.Component {
               <div className="clear"></div>
             </div>
           </div>;
-    } else if(this.props.visible === false && this.props.messages.length === 1 && this.props.messages[0].custom) {
+    } else if (this.props.messages.length === 1 && this.props.messages[0].custom) {
       chatArea = <div>
           <div ref={(c) => { this.message_area = $(c); }} id="message_area">
             <ReactCSSTransitionGroup
@@ -137,6 +137,10 @@ export default class ChatArea extends React.Component {
             <div className="clear"></div>
           </div>
         </div>;
+    } else if (this.props.loginStatus === 'LOADING') {
+      chatArea = <div>
+        <img src="./assets/images/loader.svg" alt="Logging in..." width="50" />;
+      </div>;
     }
 
     return chatArea;

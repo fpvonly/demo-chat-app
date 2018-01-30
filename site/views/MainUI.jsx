@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {withRouter} from 'react-router';
 import {BrowserRouter, Link, Route, IndexRoute, Switch} from 'react-router-dom';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import $ from 'jquery';
 
 import Server from '../server/server_config.json'
 import Utils from '../components/Utils.js';
@@ -37,7 +36,6 @@ class App extends React.Component {
 
   logIn = (uname = null, passw = null, action = 'login/admin', afterLoginFailureCallback = () => {}) => {
     let params = {};
-
     if (uname !== false && passw !== false) {
       params = {
         username: uname,
@@ -45,29 +43,24 @@ class App extends React.Component {
       }
     }
 
-    $.ajax({
-      xhrFields: {
-        withCredentials: true
-      },
-      type: "POST",
-      url: Utils.getUrl() + action,
-      data: params,
-      success: function(data) {
-        if (data.login && data.login === true) {
+    Utils.post(
+      action,
+      params,
+      function(data) {
+        if (data.login && data.login === true) { // NORMAL LOGIN AND SESSION RESUME
           this.loginData = data;
           this.setState({loginStatus: true});
-        } else if (data.logout && data.logout === true) {
+        } else if (data.logout && data.logout === true) { // LOGOUT
           this.loginData = null;
           this.setState({loginStatus: false});
-        } else {
+        } else { // LOGIN/LOGOUT ERROR
           this.loginData = null;
           this.setState({loginStatus: false}, () => {
             afterLoginFailureCallback();
           });
         }
-      }.bind(this),
-      dataType: 'json'
-    });
+      }.bind(this)
+    );
   }
 
   render() {

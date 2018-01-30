@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import $ from 'jquery';
 
 import Utils from '../Utils.js';
 
@@ -11,8 +10,10 @@ export default class ChatAreaMessage extends React.Component {
   constructor(props) {
     super(props);
 
+    this.editMessageTextarea = null;
     this.state = {
-      editMode: ''
+      editMode: '',
+      saveError: false
     }
   }
 
@@ -52,17 +53,31 @@ export default class ChatAreaMessage extends React.Component {
 
   handleSaveClick = (messageId, e) => {
     e.preventDefault();
-
+    //e.persist();
     this.setState({
       editMode: 'SAVING'
     }, () => {
-      this.props.editCallback.bind(undefined, this.props.messageId)
-      setTimeout(() => {
-        this.setState({
-          editMode: ''
-        });
-      }, 1000);
+      let edit = this.props.editCallback;
+      edit.call(undefined, messageId, this.editMessageTextarea.value).then((saveError) => {
+        this.updateUIAfterSave(saveError);
+      });
     });
+  }
+
+  updateUIAfterSave = (saveError = false) => {
+    setTimeout(() => {
+      if (saveError === true) {
+        this.setState({
+          editMode: 'EDIT',
+          saveError: saveError
+        });
+      } else {
+        this.setState({
+          editMode: '',
+          saveError: saveError
+        });
+      }
+    }, 1000); // timeout for more graceful loader animation
   }
 
   render() {
@@ -70,6 +85,10 @@ export default class ChatAreaMessage extends React.Component {
     let deleteBtn = null;
     let editBtn = null;
     let isAdmin = (this.context.loginData && this.context.loginData.user_id) ? true : false;
+    let errorStyle = null;
+    if (this.state.saveError === true) {
+      errorStyle = {'border':'1px solid red'};
+    }
 
     if (this.props.custom  === true) {
       message = <div className={this.props.className}>
@@ -78,7 +97,7 @@ export default class ChatAreaMessage extends React.Component {
         </span>
       </div>;
     } else {
-      if (isAdmin === true) {
+      if (isAdmin === true && this.state.editMode !== 'SAVING') {
         deleteBtn = <a href="#" className="delete_btn" onClick={this.props.deleteCallback.bind(undefined, this.props.messageId)}>Delete this message</a>;
       }
       if (isAdmin === true || this.props.allowSenderEdit === true) {
@@ -97,13 +116,12 @@ export default class ChatAreaMessage extends React.Component {
           : null}
         {(this.state.editMode === '')
             ? <span className="message_text_span">{this.props.children}</span>
-            : <textarea defaultValue={this.props.children.toString()} autoFocus />}
+            : <textarea ref={(c) => { this.editMessageTextarea = c; }} defaultValue={this.props.children.toString()} autoFocus style={errorStyle} />}
         <div>{deleteBtn}</div>
         <div>{editBtn}</div>
       </div>;
     }
 
     return message;
-
   }
 }

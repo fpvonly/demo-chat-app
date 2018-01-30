@@ -279,6 +279,24 @@ fs.readFile('server_config.json', function( err, json ) {
   	}
   );
 
+  app.post('/admin/editmessage', function(req, res, next) {
+  //TODO USER DELETE
+  		if (isAuthenticated(req, res, next) === true) {
+        mongo.update({message: req.body.message}, 'messages', {_id: req.body.id}, function(status) {
+          res.contentType('application/json');
+          res.send({
+            'edited': status
+          });
+        });
+  		} else {
+        res.contentType('application/json');
+        res.send({
+          'edited': false
+        });
+  		}
+  	}
+  );
+
   /*
   app.post('/admin/upload', [ isAuthenticatedForUpload, upload.array('file'), finishUpload ], function (req, res, next) {
       res.sendStatus(204);
