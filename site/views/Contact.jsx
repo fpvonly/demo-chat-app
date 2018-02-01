@@ -1,11 +1,14 @@
 import React from 'react';
 import {render} from 'react-dom';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {sendContactMessage} from '../redux/actions/contact-actions';
 
 import Server from '../server/server_config.json'
 import Utils from '../components/Utils.js';
 import Translate from '../components/Translate.jsx';
 
-export default class Contact extends React.Component {
+class Contact extends React.Component {
 
   constructor(props) {
     super(props);
@@ -44,7 +47,8 @@ export default class Contact extends React.Component {
     }
 
     if (nameInputErr == false && emailInputErr == false && messageInputErr === false) {
-      this.setState({inProgress: true}, () => {
+      this.props.dispatch(sendContactMessage());
+    /*  this.setState({inProgress: true}, () => {
         Utils.post(
           'contact/send',
           {
@@ -77,7 +81,7 @@ export default class Contact extends React.Component {
               messageInputError: true,
             });
         });
-      });
+      });*/
     } else {
       this.setState({
         nameInputError: nameInputErr,
@@ -90,7 +94,7 @@ export default class Contact extends React.Component {
   render() {
     let errorStyle = null;
     let formContent = null;
-
+console.log('count: ', this.props.result);
     if (this.state.formSent === true) {
       formContent = <p className="contact_thanks">The form was succesfully sent!</p>;
     } else {
@@ -143,3 +147,11 @@ export default class Contact extends React.Component {
     </div>;
   }
 }
+
+
+function mapStateToProps(state){
+  return {
+    result: state.contactReducer,
+  };
+}
+export default connect(mapStateToProps)(Contact);

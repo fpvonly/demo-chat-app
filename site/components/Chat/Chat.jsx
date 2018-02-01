@@ -20,7 +20,7 @@ export default class Chat extends React.Component {
     this.form = null;
     this.state = {
       STATUS: LOGGEDOUT,
-      messages: []
+      messages: [] // no redux for chat functionality to keep it easily detachable, so local state implementation for now
     }
   }
 
