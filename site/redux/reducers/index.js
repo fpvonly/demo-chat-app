@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux';
-import contactReducer from './reducers';
+import contactReducer from './contact-reducer';
 
-const contactApp = combineReducers({
+const appState = combineReducers({
   contactReducer
-})
+});
 
 // TOO LOGIN ETC
 
-export default contactApp;
+export default appState;

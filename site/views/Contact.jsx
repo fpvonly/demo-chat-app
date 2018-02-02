@@ -1,8 +1,8 @@
 import React from 'react';
 import {render} from 'react-dom';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {sendContactMessage} from '../redux/actions/contact-actions';
+import {sendContactMessage, resetContactFormState} from '../redux/actions/contact-actions';
 
 import Server from '../server/server_config.json'
 import Utils from '../components/Utils.js';
@@ -21,9 +21,30 @@ class Contact extends React.Component {
       nameInputError: false,
       emailInputError: false,
       messageInputError: false,
-      inProgress: false,
-      formSent: false
+      inProgress: false
     }
+  }
+
+  static defaultProps = {
+    contactFormState: {
+      inProgress: false,
+      formSent: false,
+      sendError: false
+    }, // from store
+  };
+
+  static propTypes = {
+    contactFormState: PropTypes.object, // from store
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.contactFormState && nextProps.contactFormState.inProgress === false && this.props.contactFormState.inProgress !== false) {
+      this.setState({inProgress: false});
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch(resetContactFormState({}));
   }
 
   handleSend = (e) => {
@@ -47,41 +68,14 @@ class Contact extends React.Component {
     }
 
     if (nameInputErr == false && emailInputErr == false && messageInputErr === false) {
-      this.props.dispatch(sendContactMessage());
-    /*  this.setState({inProgress: true}, () => {
-        Utils.post(
-          'contact/send',
+      this.setState({inProgress: true}, () => {
+        this.props.dispatch(sendContactMessage(
           {
             'contact_name': contactName,
             'contact_email': contactEmail,
             'contact_message': contactMessage
-          },
-          (data) => {
-            setTimeout(() => {
-              if (data.status && data.status === true) {
-                this.setState({
-                  inProgress: false,
-                  formSent: true
-                });
-              } else {
-                this.setState({
-                  inProgress: false,
-                  nameInputError: true,
-                  emailInputError: true,
-                  messageInputError: true,
-                });
-              }
-            }, 1000); // timeout is for more peaceful loader icon change
-          },
-          () => {
-            this.setState({
-              inProgress: false,
-              nameInputError: true,
-              emailInputError: true,
-              messageInputError: true,
-            });
-        });
-      });*/
+          }));
+      });
     } else {
       this.setState({
         nameInputError: nameInputErr,
@@ -92,13 +86,14 @@ class Contact extends React.Component {
   }
 
   render() {
+    let formState = this.props.contactFormState;
     let errorStyle = null;
     let formContent = null;
-console.log('count: ', this.props.result);
-    if (this.state.formSent === true) {
+
+    if (formState.formSent && formState.formSent === true) {
       formContent = <p className="contact_thanks">The form was succesfully sent!</p>;
     } else {
-      if (this.state.nameInputError === true || this.state.emailInputError === true || this.state.messageInputError === true) {
+      if (formState.sendError === true || this.state.nameInputError === true || this.state.emailInputError === true || this.state.messageInputError === true) {
         errorStyle = {'border':'1px solid red'};
       }
 
@@ -109,7 +104,7 @@ console.log('count: ', this.props.result);
         <form id="contact_form" action="#">
           <input
             ref={(c) => { this.contactName = c; }}
-            style={(this.state.nameInputError === true ? errorStyle : null)}
+            style={(formState.sendError === true || this.state.nameInputError === true ? errorStyle : null)}
             type="text"
             name="contact_name"
             id="contact_name"
@@ -117,7 +112,7 @@ console.log('count: ', this.props.result);
             maxLength="128" />
           <input
             ref={(c) => { this.contactEmail = c; }}
-            style={(this.state.emailInputError === true ? errorStyle : null)}
+            style={(formState.sendError === true || this.state.emailInputError === true ? errorStyle : null)}
             type="text"
             name="contact_email"
             id="contact_email"
@@ -125,7 +120,7 @@ console.log('count: ', this.props.result);
             maxLength="40" />
           <textarea
             ref={(c) => { this.contactMessage = c; }}
-            style={(this.state.messageInputError === true ? errorStyle : null)}
+            style={(formState.sendError === true || this.state.messageInputError === true ? errorStyle : null)}
             name="contact_message"
             id="contact_message"
             placeholder="Your message">
@@ -151,7 +146,7 @@ console.log('count: ', this.props.result);
 
 function mapStateToProps(state){
   return {
-    result: state.contactReducer,
+    contactFormState: state.contactReducer,
   };
 }
 export default connect(mapStateToProps)(Contact);

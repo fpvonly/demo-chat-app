@@ -3,14 +3,14 @@
 Personal web "site" built on React, Expressjs and MongoDB. Compiled with Webpack for the use of npm-modules, JSX and ES6+ features in the client side.
 
 -----------------------------
-Database setup process:
+### Database setup process:
 -----------------------------
 
 Install  MongoDB database:
 https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-mongodb-on-ubuntu-16-04
 
 Create database users and collections:
-
+```
 mongo
 use admin;
 db.createUser(
@@ -33,20 +33,22 @@ mongo --port 27017 -u adminUser -p adminPass  --authenticationDatabase admin
 use site;
 db.createCollection('users');
 db.createCollection('messages');
-
+```
 --
 
 Database config-file:
 - Create a file named 'database_config.json' to 'server' directory with the following content structure:
+```
 {
   "db_username": "joe",
   "db_password": "foobar",
   "db_domain": "localhost",
   "db_port": "27017"
 }
+```
 
 -----------------------------
-Server setup process:
+### Server setup process:
 -----------------------------
 
 To run the backend server and setup mail sending for contact form:
