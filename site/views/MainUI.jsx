@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import {withRouter} from 'react-router';
 import {BrowserRouter, Link, Route, IndexRoute, Switch} from 'react-router-dom';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import {connect} from 'react-redux';
 
+import {logIn} from '../redux/actions/login-actions';
 import Server from '../server/server_config.json'
 import Utils from '../components/Utils.js';
 import Translate from '../components/Translate.jsx';
@@ -15,19 +17,26 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.loginData = null;
-    this.state = {
-      loginStatus: false
-    };
   }
 
+  static defaultProps = {
+    loginState: {
+      loginData: null,
+      loginStatus: false,
+      loginError: false
+    } // from store
+  };
+
+  static propTypes = {
+    loginState: PropTypes.object // from store
+  };
+
   static childContextTypes = {
-    loginData: PropTypes.object
+    loginState: PropTypes.object
   };
 
   getChildContext() {
-    return {loginData: this.loginData};
+    return {loginState: this.props.loginState};
   }
 
   componentWillMount() {
@@ -42,31 +51,14 @@ class App extends React.Component {
         password: passw
       }
     }
-
-    Utils.post(
-      action,
-      params,
-      function(data) {
-        if (data.login && data.login === true) { // NORMAL LOGIN AND SESSION RESUME
-          this.loginData = data;
-          this.setState({loginStatus: true});
-        } else if (data.logout && data.logout === true) { // LOGOUT
-          this.loginData = null;
-          this.setState({loginStatus: false});
-        } else { // LOGIN/LOGOUT ERROR
-          this.loginData = null;
-          this.setState({loginStatus: false}, () => {
-            afterLoginFailureCallback();
-          });
-        }
-      }.bind(this)
-    );
+    this.props.dispatch(logIn(action, params));
   }
 
   render() {
     const pathName = this.props.location.pathname;
+
     return <div>
-      <Header logIn={this.logIn} loginStatus={this.state.loginStatus} />
+      <Header logIn={this.logIn} loginStatus={this.props.loginState.loginStatus} loginError={this.props.loginState.loginError} />
   		<section className="parallax-window parallax">
   			<div className="parallax_content">
           <ReactCSSTransitionGroup
@@ -80,7 +72,7 @@ class App extends React.Component {
   				<p className="info">
             <Translate id="index_chat_text"/>
           </p>
-  				<Chat siteLoginStatus={this.state.loginStatus} />
+  				<Chat siteLoginStatus={this.props.loginState.loginStatus} />
     			<div className="footer_content">
             &copy; {new Date().getFullYear() + ' Ari Petäjäjärvi'}
             <Translate id="footer_text"/>
@@ -91,4 +83,10 @@ class App extends React.Component {
   }
 }
 
-export default withRouter(App)
+
+function mapStateToProps(state){
+  return {
+    loginState: state.loginReducer,
+  };
+}
+export default withRouter(connect(mapStateToProps)(App));

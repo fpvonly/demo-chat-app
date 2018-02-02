@@ -33,7 +33,7 @@ export default class Chat extends React.Component {
   };
 
   static contextTypes = {
-    loginData: PropTypes.object
+    loginState: PropTypes.object
   };
 
   componentDidMount() {
@@ -142,7 +142,8 @@ export default class Chat extends React.Component {
         'admin/editmessage/',
         {
           id: messageId,
-          message: newMessage
+          message: newMessage,
+          uid: Utils.getlocalStorageItem('uid')
         },
         (data) => {
           // if the edit was succesful, update the message list

@@ -2,8 +2,8 @@ import React from 'react';
 import {render} from 'react-dom';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {sendContactMessage, resetContactFormState} from '../redux/actions/contact-actions';
 
+import {sendContactMessage, resetContactFormState} from '../redux/actions/contact-actions';
 import Server from '../server/server_config.json'
 import Utils from '../components/Utils.js';
 import Translate from '../components/Translate.jsx';
@@ -30,7 +30,7 @@ class Contact extends React.Component {
       inProgress: false,
       formSent: false,
       sendError: false
-    }, // from store
+    } // from store
   };
 
   static propTypes = {
@@ -38,7 +38,7 @@ class Contact extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.contactFormState && nextProps.contactFormState.inProgress === false && this.props.contactFormState.inProgress !== false) {
+    if (nextProps.contactFormState.inProgress === false && this.state.inProgress === true) {
       this.setState({inProgress: false});
     }
   }

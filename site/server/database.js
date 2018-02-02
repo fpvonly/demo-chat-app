@@ -50,9 +50,11 @@ database.prototype.insert = function(data, collection, callback) {
   }.bind(this));
 } // ENDS insert
 
-database.prototype.update = function(updatedData, collection, criteria, callback) {
+database.prototype.update = function(updatedData, collection, criteriaId, criteriaObject = {}, callback) {
   var collection = this.db.collection(collection);
-  collection.update({ _id: MongoDB.ObjectId(criteria._id) }, { $set : updatedData }, function(err, result) {
+  criteriaObject['_id'] = MongoDB.ObjectId(criteriaId);
+
+  collection.update(criteriaObject, { $set : updatedData }, function(err, result) {
       if (typeof callback !== 'undefined') {
         if (err === null) {
           callback(true);

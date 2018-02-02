@@ -40,7 +40,7 @@ export default class ChatAreaMessage extends React.Component {
   };
 
   static contextTypes = {
-    loginData: PropTypes.object
+    loginState: PropTypes.object
   };
 
   handleEditClick = (messageId, e) => {
@@ -84,7 +84,7 @@ export default class ChatAreaMessage extends React.Component {
     let message = null;
     let deleteBtn = null;
     let editBtn = null;
-    let isAdmin = (this.context.loginData && this.context.loginData.user_id) ? true : false;
+    let isAdmin = (this.context.loginState.loginData && this.context.loginState.loginData.user_id) ? true : false;
     let errorStyle = null;
     if (this.state.saveError === true) {
       errorStyle = {'border':'1px solid red'};

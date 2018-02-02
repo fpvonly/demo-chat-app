@@ -14,16 +14,17 @@ export default class Header extends React.Component {
   static defaultProps = {
     logIn: () => {},
     loginStatus: false,
-    loginData: null
+    loginError: false
   };
 
   static propTypes = {
     logIn: PropTypes.func,
-    loginData: PropTypes.object
+    loginStatus: PropTypes.bool,
+    loginError: PropTypes.bool
   };
 
   static contextTypes = {
-    loginData: PropTypes.object
+    loginState: PropTypes.object
   };
 
   render() {
@@ -35,7 +36,7 @@ export default class Header extends React.Component {
           </a>
         </div>
         <Navigation loginStatus={this.props.loginStatus} />
-        <Login logIn={this.props.logIn} loginStatus={this.props.loginStatus} />
+        <Login logIn={this.props.logIn} loginStatus={this.props.loginStatus} loginError={this.props.loginError}/>
         <div className="clear"></div>
       </div>
     </header>

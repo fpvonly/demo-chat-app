@@ -20,16 +20,18 @@ class Login extends React.Component {
 
   static defaultProps = {
     logIn: () => {},
-    loginStatus: false
+    loginStatus: false,
+    loginError: false
   };
 
   static propTypes = {
     logIn: PropTypes.func,
-    loginStatus: PropTypes.bool
+    loginStatus: PropTypes.bool,
+    loginError: PropTypes.bool
   };
 
   static contextTypes = {
-    loginData: PropTypes.object
+    loginState: PropTypes.object
   };
 
   handleLoginClick = (e) => {
@@ -52,12 +54,7 @@ class Login extends React.Component {
       passwordInputError: passwordInputError
     }, () => {
       if (usernameInputError === false && passwordInputError === false)  {
-        this.props.logIn(uname, passw, 'login/admin', () => {
-          this.setState({
-            usernameInputError: true,
-            passwordInputError: true
-          });
-        });
+        this.props.logIn(uname, passw, 'login/admin');
       }
     });
   }
@@ -69,12 +66,13 @@ class Login extends React.Component {
 
   render() {
     let fields = null;
+    let loginState = this.context.loginState;
 
     // if user is succesfully logged in, display welcome message
     if (this.props.loginStatus === true) {
       fields = <div id="login_fields">
           <span className="welcome_text">
-            {'Welcome ' + (this.context.loginData !== null && this.context.loginData.username ? this.context.loginData.username : '')}
+            {'Welcome ' + (loginState.loginData && loginState.loginData.username ? loginState.loginData.username : '')}
             <br />
           </span>
           <a className='logout_link' href="#" onClick={this.handleLogOutClick}>Log out</a>
@@ -82,7 +80,7 @@ class Login extends React.Component {
     } // else if user us NOT loggedin but is in location /admin, show login fields
     else if (this.props.location.pathname.indexOf('/admin') !== -1) {
       let errorStyle = null;
-      if (this.state.usernameInputError === true || this.state.passwordInputError === true) {
+      if (this.state.usernameInputError === true || this.state.passwordInputError === true || this.props.loginError === true) {
         errorStyle = {'border':'1px solid red'};
       }
 
@@ -93,13 +91,13 @@ class Login extends React.Component {
               type="text"
               name="admin_username"
               placeholder="Username"
-              style={(this.state.usernameInputError === true ? errorStyle : null)} />
+              style={(this.state.usernameInputError === true || this.props.loginError === true ? errorStyle : null)} />
             <input
               ref={(c) => { this.password = c; }}
               type="password"
               name="admin_password"
               placeholder="Password"
-              style={(this.state.passwordInputError === true ? errorStyle : null)} />
+              style={(this.state.passwordInputError === true || this.props.loginError === true ? errorStyle : null)} />
             <input type="submit" name="log_in_btn" id="log_in_btn" value="Login" onClick={this.handleLoginClick} />
           </form>
         </div>;

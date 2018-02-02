@@ -41,7 +41,7 @@ export default class ChatArea extends React.Component {
   };
 
   static contextTypes = {
-    loginData: PropTypes.object
+    loginState: PropTypes.object
   };
 
   drawMessages = () => {

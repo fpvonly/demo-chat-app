@@ -239,12 +239,12 @@ fs.readFile('server_config.json', function( err, json ) {
               } else {
                 res.contentType('application/json');
                 res.cookie('utype', 0, { maxAge: 1, httpOnly: false });
-                res.send({'login': false});
+                res.send({'login': false, loginError: true});
               }
             } else {
               res.contentType('application/json');
               res.cookie('utype', 0, { maxAge: 1, httpOnly: false });
-              res.send({'login': false});
+              res.send({'login': false, loginError: true});
             }
         }); // ENDS func
     }
@@ -280,9 +280,12 @@ fs.readFile('server_config.json', function( err, json ) {
   );
 
   app.post('/admin/editmessage', function(req, res, next) {
-  //TODO USER DELETE
-  		if (isAuthenticated(req, res, next) === true) {
-        mongo.update({message: req.body.message}, 'messages', {_id: req.body.id}, function(status) {
+  		if (isAuthenticated(req, res, next) === true || req.body.uid) {
+        let criteriaObject = {};
+        if (isAuthenticated(req, res, next) === false) {
+          criteriaObject['uid'] = req.body.uid;
+        }
+        mongo.update({message: req.body.message}, 'messages', req.body.id, criteriaObject, function(status) {
           res.contentType('application/json');
           res.send({
             'edited': status

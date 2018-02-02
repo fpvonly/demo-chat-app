@@ -11,13 +11,11 @@ export const sendContactMessage = (payload) => {
         setTimeout(() => {
           if (data.status && data.status === true) {
             dispatch(resolvedSendContactMessage({
-              type: SEND_CONTACT_MESSAGE,
               inProgress: false,
               formSent: true
             }));
           } else {
             dispatch(resolvedSendContactMessage({
-              type: SEND_CONTACT_MESSAGE,
               inProgress: false,
               sendError: true
             }));
@@ -26,7 +24,6 @@ export const sendContactMessage = (payload) => {
       },
       () => {
         dispatch(resolvedSendContactMessage({
-          type: SEND_CONTACT_MESSAGE,
           inProgress: false,
           sendError: true
         }));
@@ -36,14 +33,14 @@ export const sendContactMessage = (payload) => {
 
 export const resolvedSendContactMessage = (data) => {
   return {
-    type: 'SEND_CONTACT_MESSAGE',
+    type: SEND_CONTACT_MESSAGE,
     payload: data
   }
 };
 
 export const resetContactFormState = (data) => {
   return {
-    type: 'RESET',
+    type: SEND_CONTACT_MESSAGE,
     payload: {
       sendError: false,
       formSent: false,
