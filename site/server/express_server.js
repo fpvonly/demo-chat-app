@@ -1,24 +1,24 @@
-var express = require('express');
-var session = require('express-session')
-var bodyParser =  require('body-parser');
-var multer = require('multer');
-var cookieParser = require('cookie-parser');
-var passwordHash = require('password-hash');
-var path = require('path');
-var fs = require('fs');
-var url = require('url');
-var nodemailer = require('nodemailer');
-var argv = require('yargs').argv
-var auth = require('http-auth');
-var socketserver = require('websocket').server;
-var database = require('./database');
+const express = require('express');
+const session = require('express-session')
+const bodyParser =  require('body-parser');
+const multer = require('multer');
+const cookieParser = require('cookie-parser');
+const passwordHash = require('password-hash');
+const path = require('path');
+const fs = require('fs');
+const url = require('url');
+const nodemailer = require('nodemailer');
+const argv = require('yargs').argv
+const auth = require('http-auth');
+const socketserver = require('websocket').server;
+const database = require('./database');
 
-var mongo = new database();
+const mongo = new database();
 
-var clients = {}; // for websockets chat
-var count = 0; // for websockets chat
+let clients = {}; // for websockets chat
+let count = 0; // for websockets chat
 
-var mailConfig = {
+let mailConfig = {
   'user': '',
   'password': ''
 };
@@ -31,19 +31,19 @@ if (typeof argv.gmail !== 'undefined') {
 }
 
 // auth
-var basic = auth.basic({
+let basic = auth.basic({
   realm: "Private area!",
   file: __dirname + "/htpasswd",
   type: "basic"
 });
 
 // start server
-var app = express();
+let app = express();
 fs.readFile('server_config.json', function( err, json ) {
-  var config = JSON.parse(json);
-  var server = app.listen(config.server_port, function() {
-  	var host = server.address().address;
-  	var port = server.address().port;
+  let config = JSON.parse(json);
+  let server = app.listen(config.server_port, function() {
+  	let host = server.address().address;
+  	let port = server.address().port;
   });
 
   // basic auth for new user account (type -> admin) creation
@@ -56,16 +56,16 @@ fs.readFile('server_config.json', function( err, json ) {
   });
 
   // multipart file upload settings
-  var storage = multer.diskStorage({
+  let storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
-    	var file_name = file.originalname.split('.').join('-' + Date.now() + '.');
+    	let file_name = file.originalname.split('.').join('-' + Date.now() + '.');
       cb(null, file_name );
     }
   })
-  var upload = multer({ storage: storage });
+  let upload = multer({ storage: storage });
 
   // serve css, images, js etc
   app.use('/assets', express.static( path.resolve('../assets')));
@@ -101,7 +101,7 @@ fs.readFile('server_config.json', function( err, json ) {
   // GET routes ->
 
   app.get('/admin/create/:username/:password', function(req, res) {
-  	var hashedPassword = passwordHash.generate(req.params.password);
+  	let hashedPassword = passwordHash.generate(req.params.password);
 
     mongo.insert({
         username: req.params.username,
@@ -147,7 +147,7 @@ fs.readFile('server_config.json', function( err, json ) {
     	 	fs.readdir( __dirname + '/uploads/', function(err, items) {
   		    console.log(items);
 
-  		    for (var i=0; i<items.length; i++) {
+  		    for (let i=0; i<items.length; i++) {
   		        console.log(items[i]);
   		    }
   		});
@@ -165,7 +165,7 @@ fs.readFile('server_config.json', function( err, json ) {
 
   app.post('/contact/send', function(req, res) {
     try {
-      var transporter = nodemailer.createTransport({
+      let transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
           user: mailConfig.user,
@@ -307,14 +307,14 @@ fs.readFile('server_config.json', function( err, json ) {
 
   app.post( '/admin/:action', function( req, res ) {
   		fs.readFile( './views/menu.js', function( err, json ) {
-  			var menuObj = JSON.parse( json );
+  			let menuObj = JSON.parse( json );
 
   			if( req.params.action == 'login' )
   			{
   				if( req.body.admin_username && req.body.admin_password )
   				{
   					database.query("SELECT count(user.id) AS cnt, user.* FROM (SELECT * from users) AS user WHERE username=" + database.escape( req.body.admin_username ) + "", function(err, rows, fields) {
-  						for( var r in rows )
+  						for( let r in rows )
   						{
   							if( rows[r].cnt == 1 )
   							{
@@ -387,8 +387,8 @@ fs.readFile('server_config.json', function( err, json ) {
   function finishUpload(req, res, next) {
   	fs.readdir(__dirname + '/uploads/', function(err, items) {
   	    //console.log(items);
-  	    var list = '<ul>';
-  	    for(var i = 0; i < items.length; i++) {
+  	    let list = '<ul>';
+  	    for(let i = 0; i < items.length; i++) {
   	        list += '<li><a target="_blank" href="' + req.protocol + '://' + req.hostname + '/uploads/' + items[i] + '">' + items[i] + '</a></li>';
   	    }
   	    list += '</ul>';
@@ -397,10 +397,10 @@ fs.readFile('server_config.json', function( err, json ) {
   }
 
   getCurrentTime = (date) => {
-    var d = (date ? new Date(date) : new Date());
-    var offset = (new Date().getTimezoneOffset() / 60) * -1;
-    var n = new Date(d.getTime() + offset);
-    var time = n.getDate() + '.' + (n.getMonth() + 1) + '.' + n.getFullYear() + '  '
+    let d = (date ? new Date(date) : new Date());
+    let offset = (new Date().getTimezoneOffset() / 60) * -1;
+    let n = new Date(d.getTime() + offset);
+    let time = n.getDate() + '.' + (n.getMonth() + 1) + '.' + n.getFullYear() + '  '
       + (n.getHours() < 10 ? '0' : '') + n.getHours() + ':' + (n.getMinutes() < 10 ? '0' : '') + n.getMinutes();
     return time;
   };
@@ -408,7 +408,7 @@ fs.readFile('server_config.json', function( err, json ) {
 
   // WEB SOCKETS FUNCTIONALITY, chat -->
 
-  var socket = new socketserver({
+  let socket = new socketserver({
   	httpServer: server
   });
 

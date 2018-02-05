@@ -1,6 +1,8 @@
 import Utils from '../../components/Utils.js';
 
 const SEND_CONTACT_MESSAGE = 'SEND_CONTACT_MESSAGE';
+const SEND_CONTACT_MESSAGE_ERROR = 'SEND_CONTACT_MESSAGE_ERROR';
+const RESET = 'RESET';
 
 export const sendContactMessage = (payload) => {
   return dispatch => {
@@ -10,41 +12,28 @@ export const sendContactMessage = (payload) => {
       (data) => {
         setTimeout(() => {
           if (data.status && data.status === true) {
-            dispatch(resolvedSendContactMessage({
-              inProgress: false,
-              formSent: true
-            }));
+            dispatch(resolvedSendContactMessage(SEND_CONTACT_MESSAGE, null));
           } else {
-            dispatch(resolvedSendContactMessage({
-              inProgress: false,
-              sendError: true
-            }));
+            dispatch(resolvedSendContactMessage(SEND_CONTACT_MESSAGE_ERROR, null));
           }
         }, 500); // timeout is for more peaceful loader icon change
       },
       () => {
-        dispatch(resolvedSendContactMessage({
-          inProgress: false,
-          sendError: true
-        }));
+        dispatch(resolvedSendContactMessage(SEND_CONTACT_MESSAGE_ERROR, null));
     });
   }
 }
 
-export const resolvedSendContactMessage = (data) => {
+export const resolvedSendContactMessage = (type, data) => {
   return {
-    type: SEND_CONTACT_MESSAGE,
+    type: type,
     payload: data
   }
 };
 
 export const resetContactFormState = (data) => {
   return {
-    type: SEND_CONTACT_MESSAGE,
-    payload: {
-      sendError: false,
-      formSent: false,
-      inProgress: false
-    }
+    type: RESET,
+    payload: null
   }
 };

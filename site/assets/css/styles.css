@@ -312,7 +312,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 #message_input { width:70%; font-style: italic; }
 label { font-size: 1.1em; }
 .chat_name_span { font-style:italic; }
-.message_text_span { display: block; font-weight: bold; margin-top:0.7em; }
+.message_text_span { display: block; font-weight: bold; margin-top:0.7em; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; -ms-hyphens: auto; -moz-hyphens: auto; -webkit-hyphens: auto; hyphens: auto; }
 .message .delete_btn { display: inline-block; border: 0; transition: color,background-color 0.5s; min-width: 10rem; color: #ffffff; background-color: #e70000; padding: 0.6rem; margin: 0.5rem 0.2rem 0rem 0.2rem; font-weight: bold; font-size: 0.7rem; }
 .message .delete_btn:hover { border: 0; transition: color, background-color 0.5s; background-color: #ffffff; color: #e70000; }
 .message .edit_btn { display: inline-block; border: 0; transition: color,background-color 0.5s; color: #ffffff; background-color: #43a4f9; min-width: 10rem; padding: 0.6rem; margin: 0.5rem 0.2rem 0rem 0.2rem; font-weight: bold; font-size: 0.7rem; }

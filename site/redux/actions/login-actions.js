@@ -1,6 +1,8 @@
 import Utils from '../../components/Utils.js';
 
 const LOGIN = 'LOGIN';
+const LOGOUT = 'LOGOUT';
+const LOGIN_ERROR = 'LOGIN_ERROR';
 
 export const logIn = (action, payload) => {
   return dispatch => {
@@ -9,32 +11,20 @@ export const logIn = (action, payload) => {
       payload,
       function(data) {
         if (data.login && data.login === true) { // NORMAL LOGIN AND SESSION RESUME
-          dispatch(resolvedlogIn({
-              loginStatus: true,
-              loginData: data,
-              loginError: false
-          }));
+          dispatch(resolvedlogIn(LOGIN, data));
         } else if (data.loginError && data.loginError === true) { // LOGIN ERROR
-          dispatch(resolvedlogIn({
-              loginStatus: false,
-              loginData: null,
-              loginError: true
-          }));
+          dispatch(resolvedlogIn(LOGIN_ERROR, null));
         } else if (data.logout && data.logout === true) { // LOGOUT
-            dispatch(resolvedlogIn({
-              loginStatus: false,
-              loginData: null,
-              loginError: false
-            }));
+          dispatch(resolvedlogIn(LOGOUT, null));
         }
       }
     );
   }
 }
 
-export const resolvedlogIn = (data) => {
+export const resolvedlogIn = (type, data) => {
   return {
-    type: LOGIN,
+    type: type,
     payload: data
   }
 };

@@ -16,7 +16,6 @@ function database(db = 'site') {
       this.db = mongo.db(db);
       var collection = this.db.collection('messages');
       console.log("Connected successfully to mongodb-server");
-      //client.close();
     }.bind(this));
   }.bind(this));
 };  // ENDS constructor
