@@ -1,5 +1,4 @@
 import $ from 'jquery';
-
 import Server from '../../server/server_config.json';
 
 export default class Utils {

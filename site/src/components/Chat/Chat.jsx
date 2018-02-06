@@ -37,7 +37,7 @@ export default class Chat extends React.Component {
   };
 
   componentDidMount() {
-    if (typeof WebSocket !== "undefined") {
+    if (typeof window.WebSocket !== "undefined") {
 			if(Utils.getlocalStorageItem('chat_name') === '' && Utils.getlocalStorageItem('email') === '') {
 				this.setState({STATUS: LOGGEDOUT});
 			}	else {
@@ -47,7 +47,7 @@ export default class Chat extends React.Component {
   }
 
   openWSConnection = () => {
-    if(typeof WebSocket !== "undefined") {
+    if(typeof window.WebSocket !== "undefined") {
       if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
         this.ws = new WebSocket("ws://localhost:80/echo");
       } else {
