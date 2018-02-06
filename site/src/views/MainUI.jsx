@@ -7,7 +7,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {connect} from 'react-redux';
 
 import {logIn} from '../redux/actions/login-actions';
-import Server from '../server/server_config.json'
+import Server from '../../server/server_config.json'
 import Utils from '../components/Utils.js';
 import Translate from '../components/Translate.jsx';
 import Header from '../components/Header.jsx'

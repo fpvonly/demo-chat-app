@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-import Server from '../../server/server_config.json'
+import Server from '../../../server/server_config.json'
 import Utils from '../Utils.js';
 import ChatLogin from './ChatLogin.jsx';
 import ChatArea from './ChatArea.jsx';

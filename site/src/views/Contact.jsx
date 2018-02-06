@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {sendContactMessage, resetContactFormState} from '../redux/actions/contact-actions';
-import Server from '../server/server_config.json'
+import Server from '../../server/server_config.json'
 import Utils from '../components/Utils.js';
 import Translate from '../components/Translate.jsx';
 

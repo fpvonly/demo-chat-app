@@ -5,7 +5,6 @@ const initialState = {
 }
 
 const contactReducer = (state = initialState, action) => {
-  let newState;
   switch (action.type) {
     case 'SEND_CONTACT_MESSAGE':
       return {
