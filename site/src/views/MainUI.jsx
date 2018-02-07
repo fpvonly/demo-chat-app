@@ -84,7 +84,7 @@ class App extends React.Component {
 }
 
 
-function mapStateToProps(state){
+function mapStateToProps(state) {
   return {
     loginState: state.loginReducer,
   };

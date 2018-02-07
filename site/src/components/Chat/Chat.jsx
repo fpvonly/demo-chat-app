@@ -91,9 +91,7 @@ export default class Chat extends React.Component {
           messages: [{custom: 'Sorry but there seems to be a problem with the chat server.', _id: 'custom_err_1'}]
         });
       };
-    }
-    else
-    {
+    } else {
       this.setState({
         STATUS: LOGGEDOUT,
         messages: [{custom: 'Sorry, your browser has no Websocket API support. Update the browser!', _id: 'custom_err_2'}]

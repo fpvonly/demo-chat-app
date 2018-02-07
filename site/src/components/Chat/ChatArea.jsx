@@ -65,9 +65,8 @@ export default class ChatArea extends React.Component {
             messageId={msg._id}
             editCallback={this.props.editMessage}
             deleteCallback={this.props.deleteMessage}
-            key={(msg._id ? msg._id : i)}
-          >
-            {msg.message}
+            key={(msg._id ? msg._id : i)}>
+              {msg.message}
         </Message>);
       }
     }

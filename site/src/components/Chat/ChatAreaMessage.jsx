@@ -98,13 +98,26 @@ export default class ChatAreaMessage extends React.Component {
       </div>;
     } else {
       if (isAdmin === true && this.state.editMode !== 'SAVING') {
-        deleteBtn = <a href="#" className="delete_btn" onClick={this.props.deleteCallback.bind(undefined, this.props.messageId)}>Delete this message</a>;
+        deleteBtn = <a
+          href="#"
+          className="delete_btn"
+          onClick={this.props.deleteCallback.bind(undefined, this.props.messageId)}>
+            Delete this message
+        </a>;
       }
       if (isAdmin === true || this.props.allowSenderEdit === true) {
         if (this.state.editMode === '') {
-          editBtn = <a href="#" className="edit_btn" onClick={this.handleEditClick.bind(this, this.props.messageId)}>Edit this message</a>;
+          editBtn = <a href="#"
+            className="edit_btn"
+            onClick={this.handleEditClick.bind(this, this.props.messageId)}>
+              Edit this message
+          </a>;
         } else if (this.state.editMode === 'EDIT') {
-          editBtn = <a href="#" className="save_btn" onClick={this.handleSaveClick.bind(this, this.props.messageId)}>Save message</a>;
+          editBtn = <a href="#"
+            className="save_btn"
+            onClick={this.handleSaveClick.bind(this, this.props.messageId)}>
+              Save message
+          </a>;
         } else if (this.state.editMode === 'SAVING') {
           editBtn = <img src="./assets/images/loader.svg" alt="Saving the message..." width="50" />;
         }
@@ -116,7 +129,12 @@ export default class ChatAreaMessage extends React.Component {
           : null}
         {(this.state.editMode === '')
             ? <span className="message_text_span">{this.props.children}</span>
-            : <textarea ref={(c) => { this.editMessageTextarea = c; }} defaultValue={this.props.children.toString()} autoFocus style={errorStyle} />}
+            : <textarea
+                ref={(c) => { this.editMessageTextarea = c; }}
+                className='edit_message_textarea'
+                defaultValue={this.props.children.toString()}
+                autoFocus
+                style={errorStyle} />}
         <div>{deleteBtn}</div>
         <div>{editBtn}</div>
       </div>;
