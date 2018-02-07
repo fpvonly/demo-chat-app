@@ -1,42 +1,25 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { expect } from 'chai';
-import { mount } from 'enzyme';
-import ReactRouterEnzymeContext from 'react-router-enzyme-context';
-import assert from 'assert';
+const React = require('react');
+const {expect} = require('chai');
+const {mount} = require('enzyme');
+const ReactRouterEnzymeContext = require('react-router-enzyme-context');
+const TestServer = require('../chat-test-server.js');
 
 import Utils from '../../src/components/Utils.js';
 import Chat from '../../src/components/Chat/Chat.jsx';
-const TestServer = require('../chat-test-server.js');
 
-// global window stuff..
-const { JSDOM } = require('jsdom');
-const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
-const { window } = jsdom;
-function copyProps(src, target) {
-  const props = Object.getOwnPropertyNames(src)
-    .filter(prop => typeof target[prop] === 'undefined')
-    .reduce((result, prop) => ({
-      ...result,
-      [prop]: Object.getOwnPropertyDescriptor(src, prop),
-    }), {});
-  Object.defineProperties(target, props);
-}
-global.window = window;
-global.document = window.document;
-global.navigator = {
-  userAgent: 'node.js',
-};
-copyProps(window, global);
+// start chat test server (not the actual production server)
+TestServer();
 
 describe('<Chat> component and sub-components', function() {
+
+  after(() => {
+    TestServer.stop();
+  });
+
+  Utils.setlocalStorageItem('chat_name', 'John Doe', 86400); // set chat login credentials
   const options = new ReactRouterEnzymeContext();
-  let wrapper;
 
-  // set chat login credentials
-  Utils.setlocalStorageItem('chat_name', 'John Doe', 86400);
-
-  wrapper = mount(<Chat siteLoginStatus={false} />, options.get());
+  let wrapper = mount(<Chat siteLoginStatus={false} />, options.get());
   wrapper.setContext({
     loginState: {
       loginData: {
@@ -48,18 +31,18 @@ describe('<Chat> component and sub-components', function() {
   describe('STATE: LOADING', function() {
     it('component state is correct while logging in', (done) =>  {
       setTimeout(() => {
-        assert.equal(wrapper.state('STATUS'), 'LOADING');
+        expect(wrapper.state('STATUS')).to.equal('LOADING');
         wrapper.update(); // force child component to re-render
         done();
       }, 5);
     });
 
     it('<ChatLogin> should have login fields still visible', function() {
-      assert.equal(wrapper.find('#chat_reg').length, 1);
+      expect(wrapper.find('#chat_reg').length).to.equal(1);
     });
 
     it('<ChatArea> should have loader icon visible', function() {
-      assert.equal(wrapper.find('.chat_message_loader').length, 1);
+      expect(wrapper.find('.chat_message_loader').length).to.equal(1);
     });
   });
 });

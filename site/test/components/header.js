@@ -1,12 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { expect } from 'chai';
-import { mount } from 'enzyme';
-import ReactRouterEnzymeContext from 'react-router-enzyme-context';
-
+const React = require('react');
+const {expect} = require('chai');
 const assert = require('assert');
-import Header from '../../src/components/Header.jsx';
+const {mount} = require('enzyme');
+const ReactRouterEnzymeContext = require('react-router-enzyme-context');
 
+import Header from '../../src/components/Header.jsx';
 
 describe('<Header> component', function() {
   this.jsdom = require('jsdom-global')();
@@ -29,5 +27,5 @@ describe('<Header> component', function() {
     expect(wrapper.prop('loginError')).to.equal(false);
     expect(wrapper.prop('logIn')).to.equal(logInMock);
   });
-
+  
 });

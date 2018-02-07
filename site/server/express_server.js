@@ -37,13 +37,25 @@ let basic = auth.basic({
   type: "basic"
 });
 
-// start server
 let app = express();
+let socket = null;
 fs.readFile('server_config.json', function( err, json ) {
+
   let config = JSON.parse(json);
   let server = app.listen(config.server_port, function() {
-  	let host = server.address().address;
-  	let port = server.address().port;
+  	//let host = server.address().address;
+  	//let port = server.address().port;
+
+    process.on('SIGTERM', function() {
+      socket.shutDown();
+      server.close(() => {
+        process.exit(0);
+      });
+    });
+  }); // ENDS app.listen
+
+  socket = new socketserver({
+    httpServer: server
   });
 
   // basic auth for new user account (type -> admin) creation
@@ -407,10 +419,6 @@ fs.readFile('server_config.json', function( err, json ) {
 
 
   // WEB SOCKETS FUNCTIONALITY, chat -->
-
-  let socket = new socketserver({
-  	httpServer: server
-  });
 
   socket.on('request', function(request) {
   	let connection = request.accept(null, request.origin);
