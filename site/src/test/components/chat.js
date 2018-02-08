@@ -4,11 +4,11 @@ const {mount} = require('enzyme');
 const ReactRouterEnzymeContext = require('react-router-enzyme-context');
 const TestServer = require('../chat-test-server.js');
 
-import Utils from '../../src/components/Utils.js';
-import Chat from '../../src/components/Chat/Chat.jsx';
-import ChatArea from '../../src/components/Chat/ChatArea.jsx';
-import ChatLogin from '../../src/components/Chat/ChatLogin.jsx';
-import ChatAreaMessage from '../../src/components/Chat/ChatAreaMessage.jsx';
+import Utils from '../../components/Utils.js';
+import Chat from '../../components/Chat/Chat.jsx';
+import ChatArea from '../../components/Chat/ChatArea.jsx';
+import ChatLogin from '../../components/Chat/ChatLogin.jsx';
+import ChatAreaMessage from '../../components/Chat/ChatAreaMessage.jsx';
 
 // start chat test server (not the actual production server)
 TestServer();

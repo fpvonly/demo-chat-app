@@ -4,7 +4,7 @@ const assert = require('assert');
 const {mount} = require('enzyme');
 const ReactRouterEnzymeContext = require('react-router-enzyme-context');
 
-import Header from '../../src/components/Header.jsx';
+import Header from '../../components/Header.jsx';
 
 describe('<Header> component', function() {
   this.jsdom = require('jsdom-global')();
@@ -27,5 +27,5 @@ describe('<Header> component', function() {
     expect(wrapper.prop('loginError')).to.equal(false);
     expect(wrapper.prop('logIn')).to.equal(logInMock);
   });
-  
+
 });

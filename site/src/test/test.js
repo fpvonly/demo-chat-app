@@ -26,7 +26,7 @@ global.navigator = {
 copyProps(window, global);
 
 // the actual tests...
-fs.readdirSync(path.resolve('test/components')).forEach(file => {
+fs.readdirSync(path.resolve('src/test/components')).forEach(file => {
   if (file.indexOf('.js') !== -1) {
     require('./components/' + file);
   }

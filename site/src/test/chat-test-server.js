@@ -1,6 +1,6 @@
-const express = require('../server/node_modules/express');
-const session = require('../server/node_modules/express-session');
-const socketserver = require('../server/node_modules/websocket').server;
+const express = require('../../server/node_modules/express');
+const session = require('../../server/node_modules/express-session');
+const socketserver = require('../../server/node_modules/websocket').server;
 
 function TestServer() {
   let app = express();
