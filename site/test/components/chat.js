@@ -15,16 +15,15 @@ TestServer();
 
 describe('<Chat> component and sub-components', function() {
 
-  after(() => {
-    TestServer.stop();
-  });
-
-  Utils.setlocalStorageItem('chat_name', '', 86400); // set chat login credentials
+  //Utils.setlocalStorageItem('chat_name', '', 86400); // set chat login credentials
   const options = new ReactRouterEnzymeContext();
-
   let wrapper = mount(<Chat siteLoginStatus={false} />, options.get());
   wrapper.setContext({
     loginState: {}
+  });
+
+  after(() => {
+    TestServer.stop();
   });
 
   describe('STATE: LOGGEDOUT', function() {
@@ -34,8 +33,8 @@ describe('<Chat> component and sub-components', function() {
     });
 
     it('<ChatLogin> should have login fields and button visible', function() {
-      expect(wrapper.find('#chat_reg').length).to.equal(1);
-      expect(wrapper.find('#reg_btn').length).to.equal(1);
+      expect(wrapper.find(ChatLogin).render().find('#chat_name').length).to.equal(1);
+      expect(wrapper.find(ChatLogin).render().find('#reg_btn').length).to.equal(1);
     });
 
     it('<ChatArea> should NOT have loader icon visible', function() {
@@ -53,16 +52,15 @@ describe('<Chat> component and sub-components', function() {
       wrapper.find('#reg_btn').simulate('click');
     });
 
-    it('component state is correct while logging in', (done) =>  {
+    it('component state is correct while logging in', (done) => {
       setTimeout(() => {
         expect(wrapper.state('STATUS')).to.equal('LOADING');
-        //wrapper.update(); // force child component to re-render
         done();
       }, 500);
     });
 
     it('<ChatLogin> should have login fields still visible', function() {
-      expect(wrapper.find('#chat_reg').length).to.equal(1);
+      expect(wrapper.find(ChatLogin).render().find('#chat_name').length).to.equal(1);
     });
 
     it('<ChatArea> should have loader icon visible', function() {
@@ -73,18 +71,17 @@ describe('<Chat> component and sub-components', function() {
 
   describe('STATE: LOGGEDIN', function() {
 
-    it('component state is correct after logging in', (done) =>  {
+    it('component state is correct after logging in', (done) => {
       setTimeout(() => {
         expect(wrapper.state('STATUS')).to.equal('LOGGEDIN');
         expect(wrapper.state('messages').length).to.equal(1);
         expect(wrapper.state('messages')[0].custom).to.equal('Welcome. Logged in.');
-        wrapper.update(); // force child component to re-render
         done();
       }, 1500);
     });
 
-    it('<ChatLogin> should have login NO fields visible', function() {
-      expect(wrapper.find('#chat_reg').length).to.equal(0);
+    it('<ChatLogin> should have NO login fields visible', function() {
+      expect(wrapper.find(ChatLogin).render().find('#chat_name').length).to.equal(0);
     });
 
     it('<ChatArea> should have NO loader icon visible', function() {
@@ -92,8 +89,8 @@ describe('<Chat> component and sub-components', function() {
     });
 
     it('<ChatArea> should have message text input field and send button visible', function() {
-      expect(wrapper.find('#message_input').length).to.equal(1);
-      expect(wrapper.find('#message_send_btn').length).to.equal(1);
+      expect(wrapper.find(ChatArea).render().find('#message_input').length).to.equal(1);
+      expect(wrapper.find(ChatArea).render().find('#message_send_btn').length).to.equal(1);
     });
 
     it('<ChatAreaMessage> welcome message should have been rendered in the message area', function() {
@@ -105,18 +102,18 @@ describe('<Chat> component and sub-components', function() {
   describe('STATE: LOGGEDIN - sending a message', function() {
 
     before(() => {
+      wrapper.update(); // a must because .render() has no simulation ability???
       let input = wrapper.find('#message_input');
       input.instance().value = 'test message content';
       wrapper.find('#message_send_btn').simulate('click');
     });
 
-    it('component state is correct while logging in', (done) =>  {
+    it('component state is correct', (done) => {
       setTimeout(() => {
         expect(wrapper.state('STATUS')).to.equal('LOGGEDIN');
         expect(wrapper.state('messages').length).to.equal(2);
         expect(wrapper.state('messages')[1].custom).to.equal('Welcome. Logged in.');
         expect(wrapper.state('messages')[0].message).to.equal('test message content');
-        //wrapper.update(); // force child component to re-render
         done();
       }, 500);
     });
@@ -161,11 +158,9 @@ describe('<Chat> component and sub-components', function() {
       TestServer.stop();
     });
 
-    it('component state is correct while logging in', (done) =>  {
+    it('component state is correct after websocket connection closed', (done) =>  {
       setTimeout(() => {
-        wrapper.update();
         expect(wrapper.state('STATUS')).to.equal('LOGGEDOUT');
-        //wrapper.update(); // force child component to re-render
         done();
       }, 500);
     });
@@ -175,8 +170,8 @@ describe('<Chat> component and sub-components', function() {
     });
 
     it('<ChatLogin> should have login fields and button visible again', function() {
-      expect(wrapper.find('#chat_reg').length).to.equal(1);
-      expect(wrapper.find('#reg_btn').length).to.equal(1);
+      expect(wrapper.find(ChatLogin).render().find('#chat_name').length).to.equal(1);
+      expect(wrapper.find(ChatLogin).render().find('#reg_btn').length).to.equal(1);
     });
 
   }); // ENDS STATE: LOGGEDOUT - connection closed
