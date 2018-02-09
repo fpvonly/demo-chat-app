@@ -36,7 +36,7 @@ export default class Header extends React.Component {
           </a>
         </div>
         <Navigation loginStatus={this.props.loginStatus} />
-        <Login logIn={this.props.logIn} loginStatus={this.props.loginStatus} loginError={this.props.loginError}/>
+        <Login logIn={this.props.logIn} loginStatus={this.props.loginStatus} loginError={this.props.loginError} />
         <div className="clear"></div>
       </div>
     </header>

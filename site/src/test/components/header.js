@@ -7,13 +7,9 @@ const ReactRouterEnzymeContext = require('react-router-enzyme-context');
 import Header from '../../components/Header.jsx';
 
 describe('<Header> component', function() {
-  this.jsdom = require('jsdom-global')();
   const options = new ReactRouterEnzymeContext();
-
-  let wrapper;
-  let logInMock = function() {};
-
-  wrapper = mount(<Header loginStatus={true} loginError={false} logIn={logInMock} />, options.get());
+  let logInMock = () => {};
+  let wrapper = mount(<Header loginStatus={true} loginError={false} logIn={logInMock} />, options.get());
 
   it('should have correct html structure', function() {
     assert.equal(wrapper.find('.full_header').first().length, 1);

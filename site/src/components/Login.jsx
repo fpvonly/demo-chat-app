@@ -75,7 +75,7 @@ class Login extends React.Component {
             {'Welcome ' + (loginState.loginData && loginState.loginData.username ? loginState.loginData.username : '')}
             <br />
           </span>
-          <a className='logout_link' href="#" onClick={this.handleLogOutClick}>Log out</a>
+          <a id='logout_link' href="#" onClick={this.handleLogOutClick}>Log out</a>
         </div>;
     } // else if user us NOT loggedin but is in location /admin, show login fields
     else if (this.props.location.pathname.indexOf('/admin') !== -1) {
@@ -107,4 +107,5 @@ class Login extends React.Component {
   }
 }
 
-export default withRouter(Login)
+export default withRouter(Login);
+export { Login }; // pure component. used in tests

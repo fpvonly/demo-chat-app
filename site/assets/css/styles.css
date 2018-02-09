@@ -59,15 +59,12 @@ img { max-width: 100%; }
 
 a { text-decoration:none; border-bottom: 1px solid #b7b9bc; padding-bottom: 2px; color: #b7b9bc; }
 a:hover { border-bottom: 1px solid #ffffff; color: #ffffff;}
-a.logo {text-decoration:none; border-bottom: 0; padding-bottom: 0; }
-a.logout_link { display: inline-block; margin: 0.5rem 0 0; }
-a.admin_login_link { border-bottom: 0 !important; box-shadow: none !important;}
-a.admin_login_link img { width: 1rem; border-bottom: 0; }
+a.logo { text-decoration:none; border-bottom: 0; padding-bottom: 0; }
+a#logout_link { display: inline-block; margin: 0.5rem 0 0; }
+a#admin_login_link { border-bottom: 0 !important; box-shadow: none !important;}
+a#admin_login_link img { width: 1rem; border-bottom: 0; }
 
-p
-{
-	font-size:3em;
-}
+p { font-size:3em; }
 
 input[type="button"], input[type="submit"] {
 	font-size: 0.8rem;
@@ -105,17 +102,14 @@ header {
 	z-index:9999;
 }
 
-header h1
-{
+header h1 {
 	font-size:3em;
 	font-family: Helvetica,Arial,sans-serif;
 	color:#ffffff;
 	padding: 1em 1.5em;
 }
 
-
-.wrapper_navi
-{
+.wrapper_navi {
 	height:auto;
 	min-height:inherit;
 	max-width:600px;
@@ -124,37 +118,27 @@ header h1
 	background: rgba(0, 0, 0, 0.75) none repeat scroll 0 0;
 	box-shadow: #000000 1px 3px 5px;
 	border-radius:0 0 5px 5px;
-
 }
 
-.main_logo
-{
+.main_logo {
 	position:relative;
 	float:left;
 	width:200px;
 	margin:1em 0;
 }
 
-.main_logo img
-{
-
-}
-
-nav
-{
+nav {
 	position:relative;
 	float:right;
 	width:60%;
 	margin: 1em;
 }
 
-nav ul
-{
+nav ul {
 	float:right;
 }
 
-nav ul li
-{
+nav ul li {
 	position:relative;
 	float:left;
 	font-family: Helvetica,Arial,sans-serif;
@@ -162,8 +146,7 @@ nav ul li
 	margin: 0 0 15px;
 }
 
-nav ul li a
-{
+nav ul li a {
 	color:#ffffff;
 	font-weight: bold;
 	white-space:nowrap;
@@ -174,13 +157,11 @@ nav ul li a
 	transition: border 0.5s;
 }
 
-nav ul li a:hover
-{
+nav ul li a:hover {
 	border-bottom: 3px solid #ffffff;
 }
 
-nav ul li a.main_link_active
-{
+nav ul li a.main_link_active {
 	border-bottom: 3px solid #ffffff;
 }
 
@@ -196,24 +177,21 @@ footer {
 	font-size:1.4em;
 }
 
-footer a
-{
+footer a {
 	color:rgb(136,136,136);
 }
 
 .clear { clear:both; }
 
-.parallax
-{
+.parallax {
 	height: 100%;
-    min-height: 100%;
+  min-height: 100%;
 	position:relative;
 	/*background: #ffffff url("img/paral1.jpg") no-repeat fixed center center; not for parallax plugin */
 	background-size:cover;
 }
 
-.parallax_content
-{
+.parallax_content {
 	max-width:1200px;
 	padding: 7em 1em 0 1em;
 	min-height:500px;
@@ -222,23 +200,20 @@ footer a
 	color:#000000;
 }
 
-.parallax_content p.info
-{
+.parallax_content p.info {
 	text-shadow: #000000 3px 2px 4px;
   color: #ffffff;
 }
 
-.parallax_content p.info_left
-{
+.parallax_content p.info_left {
 	text-shadow: #000000 1px 2px 1px;
-    color: #ffffff;
+  color: #ffffff;
 	text-align:left;
 	padding: 0.6em 1.3em;
 	font-size:1.7em;
 }
 
-.page_load_content
-{
+.page_load_content {
 	background: rgba(0, 0, 0, 0.75) none no-repeat scroll 0 0;
 	min-height:200px;
 	max-width: 600px;
@@ -250,7 +225,7 @@ footer a
 	opacity: 1;
 }
 
-.fade-enter {opacity: 0.01;}
+.fade-enter { opacity: 0.01; }
 .page_load_content.fade-enter.fade-enter-active {
   opacity: 1;
   transition: opacity 500ms ease-in;
@@ -263,9 +238,7 @@ footer a
   transition: opacity 500ms ease-in;
 }
 
-
-.parallax_content h1
-{
+.parallax_content h1 {
 	font-size:7em;
 	font-family: Helvetica,Arial,sans-serif;
 	color:#3B72EB;
@@ -274,9 +247,7 @@ footer a
 	padding: 1em 1.5em;
 }
 
-
-.wrapper_content
-{
+.wrapper_content {
 	height:auto;
 	min-height:inherit;
 	max-width:1200px;
@@ -345,14 +316,13 @@ p.contact_thanks{ margin-top: 5rem; color: #ffffff; }
 .content_part {  padding:0.4em 0;}
 .content_part .info {  padding-top: 1.3em; font-size:1.7em; }
 
-.footer_content
-{
+.footer_content {
 	max-width: 1200px;
-    padding: 4.5em 1em 0 1em;
-    min-height: 50px;
-    margin: 0 auto;
-    text-align: center;
-    color: #000000;
+  padding: 4.5em 1em 0 1em;
+  min-height: 50px;
+  margin: 0 auto;
+  text-align: center;
+  color: #000000;
 	font-size:1.1em;
 }
 
