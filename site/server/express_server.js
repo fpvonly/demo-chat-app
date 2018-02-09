@@ -135,44 +135,6 @@ fs.readFile('server_config.json', function( err, json ) {
     }
   );
 
-
-  /*
-  app.get( '/dataload/:page', function( req, res ) {
-  	renderViewAndLoc( res, req.params.page, req.params.page+'_text', LANG, {} );
-  });
-
-  app.get('/uploads/:filename', function (req, res, next ) {
-   	if( isAuthenticated( req, res, next ) )
-  	{
-    	 	res.sendFile( __dirname + '/uploads/'+req.params.filename );
-    	}
-    	else
-    	{
-    		res.send(401);
-    	}
-  });
-  */
-  /*
-  app.get('/uploaded_files/', function (req, res, next ) {
-   	if( isAuthenticated( req, res, next ) )
-  	{
-    	 	fs.readdir( __dirname + '/uploads/', function(err, items) {
-  		    console.log(items);
-
-  		    for (let i=0; i<items.length; i++) {
-  		        console.log(items[i]);
-  		    }
-  		});
-    	}
-    	else
-    	{
-    		res.send(401);
-    	}
-  });
-  */
-
-
-
   // POST routes
 
   app.post('/contact/send', function(req, res) {
@@ -196,8 +158,8 @@ fs.readFile('server_config.json', function( err, json ) {
           res.contentType('application/json');
           res.send({'status': false});
         } else {
-            res.contentType('application/json');
-        		res.send({'status': true});
+          res.contentType('application/json');
+      		res.send({'status': true});
         }
       });
     } catch (err) {
@@ -312,58 +274,6 @@ fs.readFile('server_config.json', function( err, json ) {
   	}
   );
 
-  /*
-  app.post('/admin/upload', [ isAuthenticatedForUpload, upload.array('file'), finishUpload ], function (req, res, next) {
-      res.sendStatus(204);
-  });
-
-  app.post( '/admin/:action', function( req, res ) {
-  		fs.readFile( './views/menu.js', function( err, json ) {
-  			let menuObj = JSON.parse( json );
-
-  			if( req.params.action == 'login' )
-  			{
-  				if( req.body.admin_username && req.body.admin_password )
-  				{
-  					database.query("SELECT count(user.id) AS cnt, user.* FROM (SELECT * from users) AS user WHERE username=" + database.escape( req.body.admin_username ) + "", function(err, rows, fields) {
-  						for( let r in rows )
-  						{
-  							if( rows[r].cnt == 1 )
-  							{
-  								if( passwordHash.verify( req.body.admin_password, rows[r].password ) )
-  								{
-  									req.session.user_id = rows[r].id;
-  									req.session.username = rows[r].username;
-  									res.cookie('utype', 1, { maxAge: 86400000, httpOnly: false });
-
-  									//console.log("user_ID:" +req.session.user_id);
-  									break;
-  								}
-  							}
-  						}
-
-  						if( typeof req.session.user_id != 'undefined' && req.session.user_id > 0 )
-  						{
-  							renderViewAndLoc( res, 'admin_index', 'index_chat_text', LANG, { type:'admin', auth_obj: { user_id: req.session.user_id, username: req.session.username }, username: '', password: '', domain: req.protocol + '://' + req.hostname, footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
-  						}
-  						else
-  						{
-  							renderViewAndLoc( res, 'admin_index', 'index_chat_text', LANG, { type:'admin', auth_obj: {}, username: req.body.admin_username, password: req.body.admin_password, domain: req.protocol + '://' + req.get('host'), footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
-  						}
-
-
-  					});
-  				}
-  				else
-  				{
-  					renderViewAndLoc( res, 'admin_index', 'index_chat_text', LANG, { type:'admin', auth_obj: {}, username: req.body.admin_username, password: req.body.admin_password, domain: req.protocol + '://' + req.get('host'), footer_text: '© ' + new Date().getFullYear() + ' Ari Petäjäjärvi', menu: menuObj.menu} );
-  				}
-  			}
-  		});
-  	}
-  );
-  */
-
   // Special cases -->
 
   // 404
@@ -375,7 +285,6 @@ fs.readFile('server_config.json', function( err, json ) {
   app.use(function(err, req, res, next) {
   	res.status(500).send('Something broke! ' + err.stack);
   });
-
 
   // Helper functions -->
 
@@ -539,3 +448,34 @@ fs.readFile('server_config.json', function( err, json ) {
   });
 
 }); // ENDS load server_config
+
+/*
+app.get('/uploads/:filename', function (req, res, next ) {
+  if( isAuthenticated( req, res, next ) )
+  {
+      res.sendFile( __dirname + '/uploads/'+req.params.filename );
+    }
+    else
+    {
+      res.send(401);
+    }
+});
+*/
+/*
+app.get('/uploaded_files/', function (req, res, next ) {
+  if( isAuthenticated( req, res, next ) )
+  {
+      fs.readdir( __dirname + '/uploads/', function(err, items) {
+        console.log(items);
+
+        for (let i=0; i<items.length; i++) {
+            console.log(items[i]);
+        }
+    });
+    }
+    else
+    {
+      res.send(401);
+    }
+});
+*/

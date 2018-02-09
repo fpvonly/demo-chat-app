@@ -40,6 +40,20 @@ describe('<Login> component', function() {
 
   });// ENDS Logged out state
 
+  describe('Logging in', function() {
+
+    before(() => {
+      wrapper.find('#login_fields form input[name="admin_username"]').instance().value = 'testname';
+      wrapper.find('#login_fields form input[name="admin_password"]').instance().value = 'testpass';
+      wrapper.find('#login_fields #log_in_btn').simulate('click');
+    });
+
+    it('should have correct value from login callback functionality', function() {
+      expect(loginStatus).to.equal('login/admin');
+    });
+
+  }); // ENDS Logging in
+
   describe('Logged in state', function() {
 
     before(() => {
@@ -56,7 +70,7 @@ describe('<Login> component', function() {
 
   }); // ENDS Logged in state
 
-  describe('simulate log out click', function() {
+  describe('Simulate log out click', function() {
 
     before(() => {
       wrapper.find('#logout_link').simulate('click');

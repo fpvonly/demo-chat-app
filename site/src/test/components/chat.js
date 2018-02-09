@@ -2,7 +2,7 @@ const React = require('react');
 const {expect} = require('chai');
 const {mount} = require('enzyme');
 const ReactRouterEnzymeContext = require('react-router-enzyme-context');
-const TestServer = require('../chat-test-server.js');
+const TestServer = require('../test-server.js');
 
 import Utils from '../../components/Utils.js';
 import Chat from '../../components/Chat/Chat.jsx';

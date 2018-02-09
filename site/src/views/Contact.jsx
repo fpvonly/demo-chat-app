@@ -127,7 +127,7 @@ class Contact extends React.Component {
           </textarea>
 
           {(this.state.inProgress === true)
-            ? <img src="./assets/images/loader.svg" alt="Saving the message..." width="50" />
+            ? <img src="./assets/images/loader.svg" className='contact_form_loader' alt="Saving the message..." width="50" />
             : <input type="button" value="Send" id="contact_btn" onClick={this.handleSend} />}
 
           <div className="clear"></div>
@@ -143,10 +143,10 @@ class Contact extends React.Component {
   }
 }
 
-
 function mapStateToProps(state){
   return {
     contactFormState: state.contactReducer,
   };
 }
 export default connect(mapStateToProps)(Contact);
+export { Contact }; // pure component. used in tests

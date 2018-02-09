@@ -26,8 +26,18 @@ global.navigator = {
 copyProps(window, global);
 
 // the actual tests...
-fs.readdirSync(path.resolve('src/test/components')).forEach(file => {
-  if (file.indexOf('.js') !== -1) {
-    require('./components/' + file);
+let tests = {
+  components: [],
+  views: []
+}
+tests.components = fs.readdirSync(path.resolve('src/test/components'));
+tests.views = fs.readdirSync(path.resolve('src/test/views'));
+
+for (let folder in tests) {
+  let folderTests = tests[folder];
+  for (let testFile of folderTests) {
+    if (testFile.indexOf('.js') !== -1) {
+      require('./' + folder + '/' + testFile);
+    }
   }
-});
+}
