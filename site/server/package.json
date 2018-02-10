@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "description": "Personal web site - server",
+  "description": "demo-chat-app server",
   "main": "express_server.js",
   "dependencies": {
     "cookie-parser": "^1.4.3",

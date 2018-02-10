@@ -69,16 +69,16 @@ class App extends React.Component {
             transitionLeave={false}>
               {React.cloneElement(this.props.children, {key: pathName})}
           </ReactCSSTransitionGroup>
-          <p className="info">
+          <p className="info_shout">
             <Translate id="index_chat_text"/>
           </p>
           <Chat siteLoginStatus={this.props.loginState.loginStatus} />
-          <div className="footer_content">
-            &copy; {new Date().getFullYear() + ' Ari Petäjäjärvi'}
-            <Translate id="footer_text"/>
-          </div>
         </div>
       </section>
+      <footer>
+        &copy; {new Date().getFullYear() + ' Ari Petäjäjärvi'}
+        <Translate id="footer_text"/>
+      </footer>
     </div>
   }
 }
