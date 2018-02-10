@@ -49,7 +49,7 @@ Database config-file:
 
 
 ## Production server setup process:
-- Create a file named 'server_config.json' into 'server' directory with the following content structure:
+- Edit the file named 'server_config.json' with the correct server info (this is also used in the client-side production code build bundle):
 
 ``` js
 {
@@ -61,6 +61,8 @@ Database config-file:
 To run the backend server and setup mail sending for contact form:
 
 ``` js
+/* server is not bundled, so it need npm packages installed */
+npm install
 npm run prodbackend -- --gmail=<username,password>
 ```
 

@@ -42,8 +42,14 @@ let app = express();
 fs.readFile('server_config.json', function( err, json ) {
 
   /* ############## START HTTP SERVER ############## */
-  let config = JSON.parse(json);
-  let server = app.listen(config.server_port, function() {
+  let serverPort = null;
+  if (process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
+    serverPort = 80;
+  } else {
+    serverPort = JSON.parse(json).server_port
+  }
+  
+  let server = app.listen(serverPort, function() {
     // start websocket server for Chat functionality
     let socketServer = startSocketServer(server);
 
@@ -65,7 +71,6 @@ fs.readFile('server_config.json', function( err, json ) {
   // basic auth for new user account (type -> admin) creation
   app.use(function(req, res, next) {
       if (req.path.indexOf('/admin/create') !== -1 ||
-        req.path.indexOf('/admin/server/stop') !== -1 ||
         req.path.indexOf('/admin/server/restart') !== -1) {
         (auth.connect(basic))(req, res, next);
       } else {
