@@ -132,7 +132,7 @@ fs.readFile('server_config.json', function( err, json ) {
   });
 
   app.get('/admin/create/:username/:password', function(req, res) {
-  	let hashedPassword = passwordHash.generate(req.params.password);
+    let hashedPassword = passwordHash.generate(req.params.password);
 
     mongo.insert(
       {
@@ -252,42 +252,40 @@ fs.readFile('server_config.json', function( err, json ) {
   });
 
   app.post('/admin/deletemessage', function(req, res, next) {
-  		if (isAuthenticated(req, res, next) === true) {
-        mongo.deleteOneById('messages', {_id: req.body.id}, function(status) {
-          res.contentType('application/json');
-          res.send({
-            'deleted': status
-          });
-        });
-  		} else {
+    if (isAuthenticated(req, res, next) === true) {
+      mongo.deleteOneById('messages', {_id: req.body.id}, function (status) {
         res.contentType('application/json');
         res.send({
-          'deleted': false
+          'deleted': status
         });
-  		}
-  	}
-  );
+      });
+    } else {
+      res.contentType('application/json');
+      res.send({
+        'deleted': false
+      });
+    }
+  });
 
   app.post('/admin/editmessage', function(req, res, next) {
-  		if (isAuthenticated(req, res, next) === true || req.body.uid) {
-        let criteriaObject = {};
-        if (isAuthenticated(req, res, next) === false) {
-          criteriaObject['uid'] = req.body.uid;
-        }
-        mongo.update({message: req.body.message}, 'messages', req.body.id, criteriaObject, function(status) {
-          res.contentType('application/json');
-          res.send({
-            'edited': status
-          });
-        });
-  		} else {
+    if (isAuthenticated(req, res, next) === true || req.body.uid) {
+      let criteriaObject = {};
+      if (isAuthenticated(req, res, next) === false) {
+        criteriaObject['uid'] = req.body.uid;
+      }
+      mongo.update({message: req.body.message}, 'messages', req.body.id, criteriaObject, function (status) {
         res.contentType('application/json');
         res.send({
-          'edited': false
+          'edited': status
         });
-  		}
-  	}
-  );
+      });
+    } else {
+      res.contentType('application/json');
+      res.send({
+        'edited': false
+      });
+    }
+  });
 
   // Special cases -->
 

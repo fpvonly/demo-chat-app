@@ -69,7 +69,7 @@ p { font-size:3em; }
 input[type="button"], input[type="submit"] {
 	font-size: 0.8rem;
 	font-weight: bold;
-  line-height: 1rem;
+	line-height: 1rem;
 	margin-left: 0.8rem;
 	outline: none;
 	background: #ffffff;
@@ -153,7 +153,7 @@ nav ul li a {
 	margin-left:2.5em;
 	font-size: 1.3em;
 	box-shadow: 1px 2px 3px #000000;
-  border-bottom: 3px solid #525252;
+	border-bottom: 3px solid #525252;
 	transition: border 0.5s;
 }
 
@@ -185,7 +185,7 @@ footer a {
 
 .view {
 	height: 100%;
-  min-height: 100%;
+	min-height: 100%;
 	position:relative;
 	background-size:cover;
 }
@@ -201,12 +201,12 @@ footer a {
 
 .view_content p.info {
 	text-shadow: #000000 3px 2px 4px;
-  color: #ffffff;
+	color: #ffffff;
 }
 
 .view_content p.info_left {
 	text-shadow: #000000 1px 2px 1px;
-  color: #ffffff;
+	color: #ffffff;
 	text-align:left;
 	padding: 0.6em 1.3em;
 	font-size:1.7em;
@@ -218,7 +218,7 @@ footer a {
 	max-width: 600px;
 	margin: 0 auto;
 	position: relative;
-  top: -7em;
+	top: -7em;
 	border-radius: 0 0 5px 5px;
 	box-shadow: #000000 1px 3px 5px;
 	opacity: 1;
@@ -226,15 +226,15 @@ footer a {
 
 .fade-enter { opacity: 0.01; }
 .page_load_content.fade-enter.fade-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
+	opacity: 1;
+	transition: opacity 500ms ease-in;
 }
 .page_load_content.fade-leave {
-  opacity: 1;
+	opacity: 1;
 }
 .page_load_content.fade-leave.fade-leave-active {
-  opacity: 0.01;
-  transition: opacity 500ms ease-in;
+	opacity: 0.01;
+	transition: opacity 500ms ease-in;
 }
 
 .view_content h1 {
@@ -255,15 +255,15 @@ footer a {
 }
 
 input[type="text"], input[type="password"], textarea {
-  transition: all 0.30s ease-in-out !important;
-  outline: none;
+	transition: all 0.30s ease-in-out !important;
+	outline: none;
 	padding: 0.3em 1%;
 	border-radius: 5px 5px 5px 5px;
-  border: 1px solid #DDDDDD;
+	border: 1px solid #DDDDDD;
 }
 input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
-  box-shadow: 0 0 5px #6c3;
-  border: 1px solid #6c3;
+	box-shadow: 0 0 5px #6c3;
+	border: 1px solid #6c3;
 }
 
 #login_fields { float: left; width: 100%; padding: 1.0em 0 1.2em 0; }
@@ -295,33 +295,33 @@ label { font-size: 1.1em; }
 .message_delete_link { color:red; font-weight:bold; ]}
 .message.fade-enter {opacity: 0;}
 .message.fade-enter.fade-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
+	opacity: 1;
+	transition: opacity 500ms ease-in;
 }
 .message.fade-leave {
-  opacity: 1;
+	opacity: 1;
 }
 .message.fade-leave.fade-leave-active {
-  opacity: 0;
-  transition: opacity 500ms ease-in;
+	opacity: 0;
+	transition: opacity 500ms ease-in;
 }
 
 /* contact form */
-#contact_form {  padding: 2.5%;}
+#contact_form { padding: 2.5%; }
 #contact_form p { color:#ffffff; }
-#contact_form input[type="text"], textarea{ display:block;     padding: 0.3em 1% 0.3em 1%; margin: 1em 1.5%; width: 95%; }
+#contact_form input[type="text"], textarea{ display:block; padding: 0.3em 1% 0.3em 1%; margin: 1em 1.5%; width: 95%; }
 p.contact_thanks{ margin-top: 5rem; color: #ffffff; }
 
-.content_part {  padding:0.4em 0;}
-.content_part .info {  padding-top: 1.3em; font-size:1.7em; }
+.content_part { padding:0.4em 0;}
+.content_part .info { padding-top: 1.3em; font-size:1.7em; }
 
 .footer_content {
 	max-width: 1200px;
-  padding: 4.5em 1em 0 1em;
-  min-height: 50px;
-  margin: 0 auto;
-  text-align: center;
-  color: #000000;
+	padding: 4.5em 1em 0 1em;
+	min-height: 50px;
+	margin: 0 auto;
+	text-align: center;
+	color: #000000;
 	font-size:1.1em;
 }
 
