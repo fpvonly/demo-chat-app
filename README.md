@@ -19,21 +19,6 @@ db.createUser(
   }
 );
 
-/* If more users needed -> */
-db.grantRolesToUser(
-   "username",
-   [
-     "userAdminAnyDatabase",
-     "userAdmin",
-     "readWrite",
-     "dbAdmin",
-     "clusterAdmin",
-     "readWriteAnyDatabase",
-     "dbAdminAnyDatabase"
-   ]
-)
-/* <- */
-
 mongo --port 27017 -u adminUser -p adminPass  --authenticationDatabase admin
 
 use site;
