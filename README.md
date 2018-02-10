@@ -58,10 +58,10 @@ Database config-file:
 }
 ```
 
-To run the backend server and setup mail sending for contact form:
+To run the backend server and setup mail sending for contact form (run in 'server' -folder):
 
 ``` js
-/* server is not bundled, so it need npm packages installed */
+/* server is not bundled, so it needs npm packages installed */
 npm install
 npm run prodbackend -- --gmail=<username,password>
 ```
@@ -69,7 +69,7 @@ npm run prodbackend -- --gmail=<username,password>
 ## NPM scripts for development, testing and build (client related code):
 
 ``` js
-/* Install npm packages in site -directory */
+/* Install npm packages in 'site' -directory */
 npm install
 ```
 
@@ -100,7 +100,7 @@ npm run test
 ## NPM scripts for development and build (backend related code):
 
 ``` js
-/* Install npm packages in site/server -directory */
+/* Install npm packages in 'site/server' -directory */
 npm install
 ```
 
