@@ -22,7 +22,15 @@ db.createUser(
 /* If more users needed -> */
 db.grantRolesToUser(
    "username",
-   [ "userAdminAnyDatabase","userAdmin","readWrite","dbAdmin","clusterAdmin","readWriteAnyDatabase","dbAdminAnyDatabase" ]
+   [
+     "userAdminAnyDatabase",
+     "userAdmin",
+     "readWrite",
+     "dbAdmin",
+     "clusterAdmin",
+     "readWriteAnyDatabase",
+     "dbAdminAnyDatabase"
+   ]
 )
 /* <- */
 
