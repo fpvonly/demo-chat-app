@@ -102,14 +102,14 @@ npm run test
 npm install
 ```
 
-Start a server used for development
+Start a server used for development (e.g. uses nodemon, debug logs, etc)
 
 ``` js
-npm run devbackend
+npm run devbackend -- --gmail=<username,password> /* setting up email is optional */
 ```
 
 Start a production server (uses forever)
 
 ``` js
-npm run prodbackend
+npm run prodbackend -- --gmail=<username,password>
 ```
