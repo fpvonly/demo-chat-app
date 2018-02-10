@@ -38,12 +38,12 @@ export default class Chat extends React.Component {
 
   componentDidMount() {
     if (typeof window.WebSocket !== "undefined") {
-			if(Utils.getlocalStorageItem('chat_name') === '' && Utils.getlocalStorageItem('email') === '') {
-				this.setState({STATUS: LOGGEDOUT});
-			}	else {
-				this.openWSConnection();
-			}
-		}
+      if(Utils.getlocalStorageItem('chat_name') === '' && Utils.getlocalStorageItem('email') === '') {
+        this.setState({STATUS: LOGGEDOUT});
+      }	else {
+        this.openWSConnection();
+      }
+    }
   }
 
   openWSConnection = () => {

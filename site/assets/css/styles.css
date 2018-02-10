@@ -61,8 +61,8 @@ a { text-decoration:none; border-bottom: 1px solid #b7b9bc; padding-bottom: 2px;
 a:hover { border-bottom: 1px solid #ffffff; color: #ffffff;}
 a.logo { text-decoration:none; border-bottom: 0; padding-bottom: 0; }
 a#logout_link { display: inline-block; margin: 0.5rem 0 0; }
-a#admin_login_link { border-bottom: 0 !important; box-shadow: none !important;}
-a#admin_login_link img { width: 1rem; border-bottom: 0; }
+a.admin_login_link { border-bottom: 0 !important; box-shadow: none !important;}
+a.admin_login_link img { width: 1rem; border-bottom: 0; }
 
 p { font-size:3em; }
 
@@ -183,15 +183,14 @@ footer a {
 
 .clear { clear:both; }
 
-.parallax {
+.view {
 	height: 100%;
   min-height: 100%;
 	position:relative;
-	/*background: #ffffff url("img/paral1.jpg") no-repeat fixed center center; not for parallax plugin */
 	background-size:cover;
 }
 
-.parallax_content {
+.view_content {
 	max-width:1200px;
 	padding: 7em 1em 0 1em;
 	min-height:500px;
@@ -200,12 +199,12 @@ footer a {
 	color:#000000;
 }
 
-.parallax_content p.info {
+.view_content p.info {
 	text-shadow: #000000 3px 2px 4px;
   color: #ffffff;
 }
 
-.parallax_content p.info_left {
+.view_content p.info_left {
 	text-shadow: #000000 1px 2px 1px;
   color: #ffffff;
 	text-align:left;
@@ -238,7 +237,7 @@ footer a {
   transition: opacity 500ms ease-in;
 }
 
-.parallax_content h1 {
+.view_content h1 {
 	font-size:7em;
 	font-family: Helvetica,Arial,sans-serif;
 	color:#3B72EB;

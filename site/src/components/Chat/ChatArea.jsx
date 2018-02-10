@@ -67,7 +67,8 @@ export default class ChatArea extends React.Component {
             deleteCallback={this.props.deleteMessage}
             key={(msg._id ? msg._id : i)}>
               {msg.message}
-        </Message>);
+          </Message>
+        );
       }
     }
     return messages;

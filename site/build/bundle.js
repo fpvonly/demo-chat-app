@@ -36671,10 +36671,10 @@ var App = function (_React$Component) {
         _react2.default.createElement(_Header2.default, { logIn: this.logIn, loginStatus: this.props.loginState.loginStatus, loginError: this.props.loginState.loginError }),
         _react2.default.createElement(
           'section',
-          { className: 'parallax-window parallax' },
+          { className: 'view' },
           _react2.default.createElement(
             'div',
-            { className: 'parallax_content' },
+            { className: 'view_content' },
             _react2.default.createElement(
               _reactAddonsCssTransitionGroup2.default,
               {
@@ -50733,6 +50733,22 @@ var Menu = function (_React$Component) {
       return items;
     };
 
+    _this.getAdminLoginLink = function () {
+      if (_this.props.loginStatus === false) {
+        return _react2.default.createElement(
+          'li',
+          { className: 'navi_list_element' },
+          _react2.default.createElement(
+            _reactRouterDom.NavLink,
+            { to: '/admin', className: 'main_link admin_login_link', title: 'Admin login' },
+            _react2.default.createElement('img', { src: '../../assets/images/settings-icon.png' })
+          )
+        );
+      } else {
+        return null;
+      }
+    };
+
     return _this;
   }
 
@@ -50746,15 +50762,7 @@ var Menu = function (_React$Component) {
           'ul',
           null,
           this.getMenuItems(),
-          this.props.loginStatus === false ? _react2.default.createElement(
-            'li',
-            { className: 'navi_list_element' },
-            _react2.default.createElement(
-              _reactRouterDom.NavLink,
-              { to: '/admin', className: 'main_link admin_login_link', title: 'Admin login' },
-              _react2.default.createElement('img', { src: '../../assets/images/settings-icon.png' })
-            )
-          ) : null
+          this.getAdminLoginLink()
         )
       );
     }
@@ -50787,6 +50795,7 @@ module.exports = {"menu":[{"href":"#","dataTarget":"info","text":"Info","target"
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.Login = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -50880,7 +50889,7 @@ var Login = function (_React$Component) {
           ),
           _react2.default.createElement(
             'a',
-            { className: 'logout_link', href: '#', onClick: this.handleLogOutClick },
+            { id: 'logout_link', href: '#', onClick: this.handleLogOutClick },
             'Log out'
           )
         );
@@ -50939,6 +50948,7 @@ Login.contextTypes = {
   loginState: _propTypes2.default.object
 };
 exports.default = (0, _reactRouter.withRouter)(Login);
+exports.Login = Login; // pure component. used in tests
 
 /***/ }),
 /* 598 */
@@ -60334,6 +60344,70 @@ var ChatAreaMessage = function (_React$Component) {
       }, 1000); // timeout for more graceful loader animation
     };
 
+    _this.getDeleteBtn = function () {
+      var deleteBtn = null;
+      var isAdmin = _this.context.loginState.loginData && _this.context.loginState.loginData.user_id ? true : false;
+
+      if (isAdmin === true && _this.state.editMode !== 'SAVING') {
+        deleteBtn = _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'a',
+            { href: '#',
+              className: 'delete_btn',
+              onClick: _this.props.deleteCallback.bind(undefined, _this.props.messageId) },
+            'Delete this message'
+          )
+        );
+      }
+
+      return deleteBtn;
+    };
+
+    _this.getEditBtn = function () {
+      var editBtn = null;
+      var isAdmin = _this.context.loginState.loginData && _this.context.loginState.loginData.user_id ? true : false;
+
+      if (isAdmin === true || _this.props.allowSenderEdit === true) {
+        // if normal '' initial state
+        if (_this.state.editMode === '') {
+          editBtn = _react2.default.createElement(
+            'div',
+            null,
+            _react2.default.createElement(
+              'a',
+              { href: '#',
+                className: 'edit_btn',
+                onClick: _this.handleEditClick.bind(_this, _this.props.messageId) },
+              'Edit this message'
+            )
+          );
+        } else if (_this.state.editMode === 'EDIT') {
+          // else edit state and ready for save
+          editBtn = _react2.default.createElement(
+            'div',
+            null,
+            _react2.default.createElement(
+              'a',
+              { href: '#',
+                className: 'save_btn',
+                onClick: _this.handleSaveClick.bind(_this, _this.props.messageId) },
+              'Save message'
+            )
+          );
+        } else if (_this.state.editMode === 'SAVING') {
+          editBtn = _react2.default.createElement(
+            'div',
+            null,
+            _react2.default.createElement('img', { src: './assets/images/loader.svg', alt: 'Saving the message...', width: '50' })
+          );
+        }
+      }
+
+      return editBtn;
+    };
+
     _this.editMessageTextarea = null;
     _this.state = {
       editMode: '',
@@ -60348,14 +60422,12 @@ var ChatAreaMessage = function (_React$Component) {
       var _this2 = this;
 
       var message = null;
-      var deleteBtn = null;
-      var editBtn = null;
-      var isAdmin = this.context.loginState.loginData && this.context.loginState.loginData.user_id ? true : false;
       var errorStyle = null;
       if (this.state.saveError === true) {
         errorStyle = { 'border': '1px solid red' };
       }
 
+      // if the message is not a user sent message but a system generated one
       if (this.props.custom === true) {
         message = _react2.default.createElement(
           'div',
@@ -60367,38 +60439,7 @@ var ChatAreaMessage = function (_React$Component) {
           )
         );
       } else {
-        if (isAdmin === true && this.state.editMode !== 'SAVING') {
-          deleteBtn = _react2.default.createElement(
-            'a',
-            {
-              href: '#',
-              className: 'delete_btn',
-              onClick: this.props.deleteCallback.bind(undefined, this.props.messageId) },
-            'Delete this message'
-          );
-        }
-        if (isAdmin === true || this.props.allowSenderEdit === true) {
-          if (this.state.editMode === '') {
-            editBtn = _react2.default.createElement(
-              'a',
-              { href: '#',
-                className: 'edit_btn',
-                onClick: this.handleEditClick.bind(this, this.props.messageId) },
-              'Edit this message'
-            );
-          } else if (this.state.editMode === 'EDIT') {
-            editBtn = _react2.default.createElement(
-              'a',
-              { href: '#',
-                className: 'save_btn',
-                onClick: this.handleSaveClick.bind(this, this.props.messageId) },
-              'Save message'
-            );
-          } else if (this.state.editMode === 'SAVING') {
-            editBtn = _react2.default.createElement('img', { src: './assets/images/loader.svg', alt: 'Saving the message...', width: '50' });
-          }
-        }
-
+        // else the message is user sent message (and editable)
         message = _react2.default.createElement(
           'div',
           { className: this.props.className },
@@ -60419,16 +60460,8 @@ var ChatAreaMessage = function (_React$Component) {
             defaultValue: this.props.children.toString(),
             autoFocus: true,
             style: errorStyle }),
-          _react2.default.createElement(
-            'div',
-            null,
-            deleteBtn
-          ),
-          _react2.default.createElement(
-            'div',
-            null,
-            editBtn
-          )
+          this.getDeleteBtn(),
+          this.getEditBtn()
         );
       }
 
@@ -60524,6 +60557,7 @@ exports.default = Index;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.Contact = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -60690,7 +60724,7 @@ var Contact = function (_React$Component) {
               name: 'contact_message',
               id: 'contact_message',
               placeholder: 'Your message' }),
-            this.state.inProgress === true ? _react2.default.createElement('img', { src: './assets/images/loader.svg', alt: 'Saving the message...', width: '50' }) : _react2.default.createElement('input', { type: 'button', value: 'Send', id: 'contact_btn', onClick: this.handleSend }),
+            this.state.inProgress === true ? _react2.default.createElement('img', { src: './assets/images/loader.svg', className: 'contact_form_loader', alt: 'Saving the message...', width: '50' }) : _react2.default.createElement('input', { type: 'button', value: 'Send', id: 'contact_btn', onClick: this.handleSend }),
             _react2.default.createElement('div', { className: 'clear' })
           )
         );
@@ -60728,6 +60762,7 @@ function mapStateToProps(state) {
   };
 }
 exports.default = (0, _reactRedux.connect)(mapStateToProps)(Contact);
+exports.Contact = Contact; // pure component. used in tests
 
 /***/ }),
 /* 694 */

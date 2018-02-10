@@ -41,7 +41,7 @@ export default class Menu extends React.Component {
   getAdminLoginLink = () => {
     if (this.props.loginStatus === false) {
       return <li className="navi_list_element">
-          <NavLink to="/admin" className="main_link" id="admin_login_link" title="Admin login">
+          <NavLink to="/admin" className="main_link admin_login_link" title="Admin login">
             <img src="../../assets/images/settings-icon.png" />
           </NavLink>
       </li>

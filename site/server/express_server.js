@@ -1,3 +1,4 @@
+const exec = require('child_process').exec;
 const express = require('express');
 const session = require('express-session');
 const bodyParser =  require('body-parser');
@@ -38,29 +39,34 @@ let basic = auth.basic({
 });
 
 let app = express();
-let socket = null;
 fs.readFile('server_config.json', function( err, json ) {
 
+  /* ############## START HTTP SERVER ############## */
   let config = JSON.parse(json);
   let server = app.listen(config.server_port, function() {
-  	//let host = server.address().address;
-  	//let port = server.address().port;
+    // start websocket server for Chat functionality
+    let socketServer = startSocketServer(server);
 
+    process.on('SIGINT', function() {
+      socketServer.shutDown();
+      server.close(() => {
+        process.exit(0);
+      });
+    });
     process.on('SIGTERM', function() {
-      socket.shutDown();
+      socketServer.shutDown();
       server.close(() => {
         process.exit(0);
       });
     });
   }); // ENDS app.listen
-
-  socket = new socketserver({
-    httpServer: server
-  });
+/* ############## ############## ############## */
 
   // basic auth for new user account (type -> admin) creation
   app.use(function(req, res, next) {
-      if (req.path.indexOf('/admin/create') !== -1) {
+      if (req.path.indexOf('/admin/create') !== -1 ||
+        req.path.indexOf('/admin/server/stop') !== -1 ||
+        req.path.indexOf('/admin/server/restart') !== -1) {
         (auth.connect(basic))(req, res, next);
       } else {
         next();
@@ -68,7 +74,7 @@ fs.readFile('server_config.json', function( err, json ) {
   });
 
   // multipart file upload settings
-  let storage = multer.diskStorage({
+  /*let storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'uploads/');
     },
@@ -77,7 +83,7 @@ fs.readFile('server_config.json', function( err, json ) {
       cb(null, file_name );
     }
   })
-  let upload = multer({ storage: storage });
+  let upload = multer({ storage: storage });*/
 
   // serve css, images, js etc
   app.use('/assets', express.static( path.resolve('../assets')));
@@ -112,56 +118,65 @@ fs.readFile('server_config.json', function( err, json ) {
 
   // GET routes ->
 
-  app.get('/admin/create/:username/:password', function(req, res) {
-  	let hashedPassword = passwordHash.generate(req.params.password);
-
-    mongo.insert({
-        username: req.params.username,
-        password: hashedPassword,
-        timestamp: new Date()
-    },
-    'users',
-    function(result) {
-      if (result === true) {
-        res.send('User created');
+  // maintenance purposes only
+  app.get('/admin/server/restart', function(req, res) {
+    child = exec("cd " + __dirname + "&& npm run foreverrestart", function (error, stdout, stderr) {
+      if (error !== null) {
+        res.contentType('application/json');
+        res.send({'restart': false});
       } else {
-        res.send('error');
+        res.contentType('application/json');
+        res.send({'restart': true});
       }
     });
   });
 
+  app.get('/admin/create/:username/:password', function(req, res) {
+  	let hashedPassword = passwordHash.generate(req.params.password);
+
+    mongo.insert(
+      {
+        username: req.params.username,
+        password: hashedPassword,
+        timestamp: new Date()
+      },
+      'users',
+      function(result) {
+        if (result === true) {
+          res.send('User created');
+        } else {
+          res.send('error');
+        }
+      }
+    );
+  });
+
   app.get('/*', function(req, res) {
-      res.sendFile(path.resolve('../index.html'));
-    }
-  );
+    res.sendFile(path.resolve('../index.html'));
+  });
 
   // POST routes
 
   app.post('/contact/send', function(req, res) {
     try {
-      let transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-          user: mailConfig.user,
-          pass: mailConfig.pass
+      let transporter = nodemailer.createTransport({ service: 'Gmail', auth: { user: mailConfig.user, pass: mailConfig.pass } });
+      transporter.sendMail(
+        {
+          from: 'contact@petajajarvi.net',
+          to: 'aripetaj@gmail.com',
+          subject: 'New contact message',
+          text: new Date() + ' ' + req.body.contact_name + ':\n\n'+ req.body.contact_message + '\n\nemail: ' + req.body.contact_email
+        },
+        function(error, info) {
+          if (error) {
+            res.contentType('application/json');
+            res.send({'status': false});
+          } else {
+            res.contentType('application/json');
+        		res.send({'status': true});
+          }
         }
-      });
-
-      transporter.sendMail({
-        from: 'contact@petajajarvi.net',
-        to: 'aripetaj@gmail.com',
-        subject: 'New contact message',
-        text: new Date() + ' ' + req.body.contact_name + ':\n\n'+ req.body.contact_message + '\n\nemail: ' + req.body.contact_email
-      },
-      function(error, info){
-        if (error) {
-          res.contentType('application/json');
-          res.send({'status': false});
-        } else {
-          res.contentType('application/json');
-      		res.send({'status': true});
-        }
-      });
+      );
     } catch (err) {
       res.contentType('application/json');
       res.send({'status': false});
@@ -186,7 +201,7 @@ fs.readFile('server_config.json', function( err, json ) {
     } else if(req.params.action === 'admin' && req.body.username && req.body.password) {
         mongo.find(
           'users',
-          {username: req.body.username},
+          { username: req.body.username },
           {
             fields: {
               username: 1, password: 1
@@ -278,62 +293,37 @@ fs.readFile('server_config.json', function( err, json ) {
 
   // 404
   app.use(function(req, res, next) {
-  	res.status(404).send('Sorry! Nothing found :(');
+    res.status(404).send('Sorry! Nothing found :(');
   });
 
   // errors (for example file not found)
   app.use(function(err, req, res, next) {
-  	res.status(500).send('Something broke! ' + err.stack);
+    res.status(500).send('Something broke! ' + err.stack);
   });
 
   // Helper functions -->
 
   function isAuthenticated(req, res, next) {
-  	if(typeof req.session.user_id !== 'undefined') {
-  		return true;
-  	}	else {
-  		return false;
-  	}
+    if (typeof req.session.user_id !== 'undefined') {
+      return true;
+    }	else {
+      return false;
+    }
   }
 
-  // File upload helper functions
-  function isAuthenticatedForUpload(req, res, next) {
-  	if(typeof req.session.user_id != 'undefined' && req.session.user_id > 0) {
-  		next();
-  	}	else {
-  		res.sendStatus(401);
-  	}
-  }
+}); // ENDS load server_config
 
-  function finishUpload(req, res, next) {
-  	fs.readdir(__dirname + '/uploads/', function(err, items) {
-  	    //console.log(items);
-  	    let list = '<ul>';
-  	    for(let i = 0; i < items.length; i++) {
-  	        list += '<li><a target="_blank" href="' + req.protocol + '://' + req.hostname + '/uploads/' + items[i] + '">' + items[i] + '</a></li>';
-  	    }
-  	    list += '</ul>';
-  	    res.send( list );
-  	});
-  }
+/* Websocket functionality (for Chat) */
+startSocketServer = (httpServer) => {
+  let socketServer = new socketserver({
+    httpServer: httpServer
+  });
 
-  getCurrentTime = (date) => {
-    let d = (date ? new Date(date) : new Date());
-    let offset = (new Date().getTimezoneOffset() / 60) * -1;
-    let n = new Date(d.getTime() + offset);
-    let time = n.getDate() + '.' + (n.getMonth() + 1) + '.' + n.getFullYear() + '  '
-      + (n.getHours() < 10 ? '0' : '') + n.getHours() + ':' + (n.getMinutes() < 10 ? '0' : '') + n.getMinutes();
-    return time;
-  };
-
-
-  // WEB SOCKETS FUNCTIONALITY, chat -->
-
-  socket.on('request', function(request) {
-  	let connection = request.accept(null, request.origin);
-  	count++;
-  	connection.id = count;
-  	clients[count] = connection;
+  socketServer.on('request', function(request) {
+    let connection = request.accept(null, request.origin);
+    count++;
+    connection.id = count;
+    clients[count] = connection;
 
     mongo.find(
       'messages',
@@ -367,88 +357,96 @@ fs.readFile('server_config.json', function( err, json ) {
           }
         }
         //console.log("RESULTS", results);
-    });
+      }
+    );
 
-  	connection.on('message', function(message) {
-  		if(mongo)	{
-  			// 0: message
-  			// 1: chat name
-  			// 2: email
-  			let msg_parts = message.utf8Data.split(';');
-  			let message_text = msg_parts[0];
-  			let chat_name = msg_parts[1];
-  			let email = msg_parts[2];
+    connection.on('message', function(message) {
+      if(mongo)	{
+        // 0: message
+        // 1: chat name
+        // 2: email
+        let msg_parts = message.utf8Data.split(';');
+        let message_text = msg_parts[0];
+        let chat_name = msg_parts[1];
+        let email = msg_parts[2];
         let uid = msg_parts[3];
 
-        mongo.insert({
+        mongo.insert(
+          {
             message: message_text,
             user_name: chat_name,
             email: email,
             uid: uid,
             ip: request.remoteAddress,
             timestamp: new Date()
-        },
-        'messages',
-        function(status, result) {
-          if (result) {
-            console.log( chat_name + ':' + message_text );
-            for(let i in clients)	{
-              clients[i].sendUTF(
-                JSON.stringify({
-                  message: result.ops[0].message,
-                  timestamp: result.ops[0].timestamp,
-                  user_name: result.ops[0].user_name,
-                  uid: result.ops[0].uid,
-                  _id: result.ops[0]._id
-                })
-              );
-      			}
+          },
+          'messages',
+          function(status, result) {
+            if (result) {
+              for(let i in clients)	{
+                clients[i].sendUTF(
+                  JSON.stringify({
+                    message: result.ops[0].message,
+                    timestamp: result.ops[0].timestamp,
+                    user_name: result.ops[0].user_name,
+                    uid: result.ops[0].uid,
+                    _id: result.ops[0]._id
+                  })
+                );
+              }
+            }
           }
-        });
+        );
 
         try {
-          let transporter = nodemailer.createTransport({
-            service: 'Gmail',
-            auth: {
-              user: mailConfig.user,
-              pass: mailConfig.pass
+          let transporter = nodemailer.createTransport({service: 'Gmail', auth: { user: mailConfig.user, pass: mailConfig.pass }});
+          transporter.sendMail(
+            {
+              from: 'chat@petajajarvi.net',
+              to: 'aripetaj@gmail.com',
+              subject: 'New chat message',
+              text: new Date() + ' ' + chat_name + ':\n\n'+ message_text + '\n\nemail: ' + email
+            },
+            function(error, info) {
+              if (error) {
+                console.log('MAIL SEND ERROR', error);
+              } else {
+                //console.log('Message sent: ' + info.response);
+              }
             }
-          });
-
-          transporter.sendMail({
-            from: 'chat@petajajarvi.net',
-            to: 'aripetaj@gmail.com',
-            subject: 'New chat message',
-            text: new Date() + ' ' + chat_name + ':\n\n'+ message_text + '\n\nemail: ' + email
-          },
-          function(error, info){
-            if (error) {
-              console.log('MAIL SEND ERROR', error);
-            } else {
-              console.log('Message sent: ' + info.response);
-            }
-          });
+          );
         } catch (err) {};
+      }
+    });
 
-  		}
-  	});
+    connection.on('close', function( reasonCode, description ) {
+      //console.log('\nCLIENT IDS ACTIVE:\n ');
+      for(let i in clients) {
+        if(i == connection.id) {
+          delete clients[i]; // delete the closed connection object from the client OBJECT LITERAL
+        }	else {
+          //console.log( i );
+        }
+      }
+      //console.log('connection closed');
+    });
 
-  	connection.on('close', function( reasonCode, description ) {
-  		//console.log('\nCLIENT IDS ACTIVE:\n ');
-  		for(let i in clients) {
-  			if(i == connection.id) {
-  				 delete clients[i]; // delete the closed connection object from the client OBJECT LITERAL
-  			}	else {
-  				//console.log( i );
-  			}
-  		}
-  		//console.log('connection closed');
-  	});
+  }); // ENDS on request
 
-  });
+  return socketServer;
+}
 
-}); // ENDS load server_config
+getCurrentTime = (date) => {
+  let d = (date ? new Date(date) : new Date());
+  let offset = (new Date().getTimezoneOffset() / 60) * -1;
+  let n = new Date(d.getTime() + offset);
+  let time = n.getDate() + '.' + (n.getMonth() + 1) + '.' + n.getFullYear() + '  '
+    + (n.getHours() < 10 ? '0' : '') + n.getHours() + ':' + (n.getMinutes() < 10 ? '0' : '') + n.getMinutes();
+  return time;
+};
 
+
+// TODO: refactor for use in future???
 /*
 app.get('/uploads/:filename', function (req, res, next ) {
   if( isAuthenticated( req, res, next ) )

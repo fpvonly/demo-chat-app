@@ -59,30 +59,29 @@ class App extends React.Component {
 
     return <div>
       <Header logIn={this.logIn} loginStatus={this.props.loginState.loginStatus} loginError={this.props.loginState.loginError} />
-  		<section className="parallax-window parallax">
-  			<div className="parallax_content">
+      <section className="view">
+        <div className="view_content">
           <ReactCSSTransitionGroup
             transitionName="fade"
             transitionAppear={true}
             transitionAppearTimeout={500}
             transitionEnterTimeout={500}
             transitionLeave={false}>
-               {React.cloneElement(this.props.children, {key: pathName})}
+              {React.cloneElement(this.props.children, {key: pathName})}
           </ReactCSSTransitionGroup>
-  				<p className="info">
+          <p className="info">
             <Translate id="index_chat_text"/>
           </p>
-  				<Chat siteLoginStatus={this.props.loginState.loginStatus} />
-    			<div className="footer_content">
+          <Chat siteLoginStatus={this.props.loginState.loginStatus} />
+          <div className="footer_content">
             &copy; {new Date().getFullYear() + ' Ari Petäjäjärvi'}
             <Translate id="footer_text"/>
           </div>
         </div>
-  		</section>
+      </section>
     </div>
   }
 }
-
 
 function mapStateToProps(state) {
   return {
