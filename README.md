@@ -7,7 +7,7 @@ Personal web app demo platform with websockets chat functionality. Built on Reac
 Install  MongoDB database:
 https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-mongodb-on-ubuntu-16-04
 
-Create database users and collections:
+Create database, database user and collections:
 ``` js
 mongo
 use admin;
@@ -36,7 +36,7 @@ db.createCollection('messages');
 
 
 Database config-file:
-- Create a file named 'database_config.json' to 'server' directory with the following content structure:
+- Create a file named 'database_config.json' into 'server' directory with the following content structure:
 
 ``` js
 {
@@ -48,10 +48,68 @@ Database config-file:
 ```
 
 
-## Server setup process:
+## Production server setup process:
+- Create a file named 'server_config.json' into 'server' directory with the following content structure:
+
+``` js
+{
+  "server_domain": "146.185.148.22",
+  "server_port": "80"
+}
+```
 
 To run the backend server and setup mail sending for contact form:
 
 ``` js
 npm run prodbackend -- --gmail=<username,password>
+```
+
+## NPM scripts for development, testing and build (client related code):
+
+``` js
+/* Install npm packages in site -directory */
+npm install
+```
+
+Start Webpack Dev server
+
+``` js
+npm run dev
+```
+
+Do a development build (testing a normal build bundle with NODE_ENV=development set for localhost connections)
+
+``` js
+npm run devbuild
+```
+
+Do a production build (using server_config.json settings)
+
+``` js
+npm run prodbuild
+```
+
+Run tests
+
+``` js
+npm run test
+```
+
+## NPM scripts for development and build (backend related code):
+
+``` js
+/* Install npm packages in site/server -directory */
+npm install
+```
+
+Start a server used for development
+
+``` js
+npm run devbackend
+```
+
+Start a production server (uses forever)
+
+``` js
+npm run prodbackend
 ```
