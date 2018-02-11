@@ -47,7 +47,7 @@
     "dev": "set NODE_ENV=development&& webpack-dev-server",
     "devbuild": "set NODE_ENV=development&& webpack",
     "prodbuild": "set NODE_ENV=production&& webpack",
-    "test": "set NODE_ENV=development&& mocha --require babel-register src/test/*.js"
+    "test": "set NODE_ENV=development&& mocha -t 1000000 --require babel-register src/test/*.js"
   },
   "repository": {
     "type": "git",
