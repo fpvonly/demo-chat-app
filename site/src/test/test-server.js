@@ -32,6 +32,7 @@ function TestServer() {
   });
 
   socket.on('request', function(request) {
+    console.log('Websocket test server - client connected');
     let connection = request.accept(null, request.origin);
     count++;
     connection.id = count;
