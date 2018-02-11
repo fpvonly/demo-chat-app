@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
+var GitRevisionPlugin = require('git-revision-webpack-plugin')
 
 var BUILD_DIR = path.resolve(__dirname, 'build');
 var APP_DIR  = path.resolve(__dirname, '');
@@ -38,7 +39,8 @@ if (process.env.NODE_ENV === 'production') {
   config.devtool = 'source-map'
   config.devServer = {}
   config.plugins = config.plugins.concat([
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.UglifyJsPlugin(),
+    new GitRevisionPlugin()
   ])
 }
 
