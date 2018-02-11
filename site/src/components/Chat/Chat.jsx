@@ -86,6 +86,7 @@ export default class Chat extends React.Component {
        };
 
       this.ws.onerror = () => {
+        console.log('Websockets connection error');
         this.setState({
           STATUS: LOGGEDOUT,
           messages: [{custom: 'Sorry but there seems to be a problem with the chat server.', _id: 'custom_err_1'}]
