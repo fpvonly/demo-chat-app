@@ -4,7 +4,7 @@ const socketserver = require('../../server/node_modules/websocket').server;
 
 function TestServer() {
   let app = express();
-  let server = app.listen(80, function() {
+  let server = app.listen(3000, function() {
     let host = server.address().address;
     let port = server.address().port;
   });
