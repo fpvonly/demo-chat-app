@@ -1,5 +1,7 @@
 # Demo chat app
 
+[ ![Codeship Status for fpvonly/demo-chat-app](https://app.codeship.com/projects/e415c5b0-f091-0135-7e6b-7607cfa71e55/status?branch=master)](https://app.codeship.com/projects/271255)
+
 Personal web app demo platform with websockets chat functionality. Built on React, Expressjs and MongoDB. Compiled with Webpack for the use of npm-modules and ES6+ features in the client side.
 
 ## Database setup process:
@@ -108,3 +110,8 @@ Start a production server (uses forever)
 ``` js
 npm run prodbackend -- --gmail=<username,password>
 ```
+
+Note! It is not _necessary_ to run tests and make the production build manually when there are changes ready for the production.
+Codeship CI takes care of it via hook that automatically fetches newest code from GitHub after every commit to master-branch.
+Codeship runs the tests and creates the production build to production server.
+To avoid CI-process, use --skip-ci in the commit message (e.g. git commit -m "Message content --skip-ci")

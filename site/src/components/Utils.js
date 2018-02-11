@@ -20,8 +20,9 @@ export default class Utils {
     });
   }
 
+  /*
   static get = (action = '', payload = {}, success = () => {}, error = () => {}) => {
-    /*$.ajax({
+    $.ajax({
       xhrFields: {
         withCredentials: true
       },
@@ -31,8 +32,8 @@ export default class Utils {
       data: payload,
       success: success,
       error: error
-    });*/
-  }
+    });
+  }*/
 
   static getUrl = () => {
     let url = '';
@@ -98,5 +99,4 @@ export default class Utils {
     + (n.getHours() < 10 ? '0' : '') + n.getHours() + ':' + (n.getMinutes() < 10 ? '0' : '') + n.getMinutes();
     return time;
   }
-
 }
