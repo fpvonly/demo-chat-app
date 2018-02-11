@@ -1,4 +1,4 @@
-/*const React = require('react');
+const React = require('react');
 const {expect} = require('chai');
 const {mount} = require('enzyme');
 const ReactRouterEnzymeContext = require('react-router-enzyme-context');
@@ -176,4 +176,4 @@ describe('<Chat> component and sub-components', function() {
 
   }); // ENDS STATE: LOGGEDOUT - connection closed
 
-});*/
+});
