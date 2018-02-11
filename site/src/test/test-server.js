@@ -7,6 +7,7 @@ function TestServer() {
   let server = app.listen(3000, function() {
     let host = server.address().address;
     let port = server.address().port;
+    console.log('Test server started');
   });
   let clients = {}; // for websockets chat
   let count = 0; // for websockets chat

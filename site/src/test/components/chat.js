@@ -10,8 +10,6 @@ import ChatArea from '../../components/Chat/ChatArea.jsx';
 import ChatLogin from '../../components/Chat/ChatLogin.jsx';
 import ChatAreaMessage from '../../components/Chat/ChatAreaMessage.jsx';
 
-// start chat test server (not the actual production server)
-TestServer();
 
 describe('<Chat> component and sub-components', function() {
 
@@ -20,6 +18,12 @@ describe('<Chat> component and sub-components', function() {
   let wrapper = mount(<Chat siteLoginStatus={false} />, options.get());
   wrapper.setContext({
     loginState: {}
+  });
+
+  before(() => {
+    // start chat test server (not the actual production server)
+    TestServer();
+    this.timeout(10000);
   });
 
   after(() => {
