@@ -22,8 +22,7 @@ describe('<Chat> component and sub-components', function() {
 
   before(() => {
     // start chat test server (not the actual production server)
-    TestServer();
-    this.timeout(10000);
+    let server = TestServer();
   });
 
   after(() => {
@@ -74,7 +73,7 @@ describe('<Chat> component and sub-components', function() {
   }); // ENDS STATE: LOADING
 
   describe('STATE: LOGGEDIN', function() {
-    
+
     before(() => {
       // set necessary chat login data
       let input = wrapper.find('#chat_name');
@@ -88,7 +87,7 @@ describe('<Chat> component and sub-components', function() {
         expect(wrapper.state('messages').length).to.equal(1);
         expect(wrapper.state('messages')[0].custom).to.equal('Welcome. Logged in.');
         done();
-      }, 5000);
+      }, 10000);
     });
 
     it('<ChatLogin> should have NO login fields visible', function() {

@@ -93,6 +93,8 @@ function TestServer() {
       process.exit(0);
     });
   });
+
+  return server;
 }
 
 module.exports = TestServer;
