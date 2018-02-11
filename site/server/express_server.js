@@ -44,11 +44,11 @@ fs.readFile('server_config.json', function( err, json ) {
   /* ############## START HTTP SERVER ############## */
   let serverPort = null;
   if (process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
-    serverPort = 80;
+    serverPort = 3000;
   } else {
     serverPort = JSON.parse(json).server_port
   }
-  
+
   let server = app.listen(serverPort, function() {
     // start websocket server for Chat functionality
     let socketServer = startSocketServer(server);
