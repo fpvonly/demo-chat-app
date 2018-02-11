@@ -15,14 +15,14 @@
 			"class":"main_link"
 		},
 		{
-			"href":"https://github.com/fpvonly/personalSite",
+			"href":"https://github.com/fpvonly/demo-chat-app",
 			"dataTarget":"",
 			"text":"GitHub",
 			"target":"_blank",
 			"class":"main_link ext"
 		},
 		{
-			"href":"http://128.199.45.96:29/",
+			"href":"http://146.185.148.22:29//",
 			"dataTarget":"",
 			"text":"Ping Pong",
 			"target":"_blank",
