@@ -53,10 +53,11 @@ describe('<Chat> component and sub-components', function() {
     });
 
     it('component state is correct while logging in', (done) => {
+      this.timeout(1000);
       setTimeout(() => {
         expect(wrapper.state('STATUS')).to.equal('LOADING');
         done();
-      }, 500);
+      }, 1000);
     });
 
     it('<ChatLogin> should have login fields still visible', function() {
