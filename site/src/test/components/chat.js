@@ -10,7 +10,9 @@ import ChatArea from '../../components/Chat/ChatArea.jsx';
 import ChatLogin from '../../components/Chat/ChatLogin.jsx';
 import ChatAreaMessage from '../../components/Chat/ChatAreaMessage.jsx';
 
+let server = TestServer();
 
+setTimeout(() => {
 describe('<Chat> component and sub-components', function() {
 
   //Utils.setlocalStorageItem('chat_name', '', 86400); // set chat login credentials
@@ -22,7 +24,7 @@ describe('<Chat> component and sub-components', function() {
 
   before(() => {
     // start chat test server (not the actual production server)
-    let server = TestServer();
+
   });
 
   after(() => {
@@ -187,3 +189,6 @@ describe('<Chat> component and sub-components', function() {
   }); // ENDS STATE: LOGGEDOUT - connection closed
 
 });
+
+run();
+}, 5000);
