@@ -43,6 +43,7 @@ describe('<Chat> component and sub-components', function() {
 
     it('<ChatArea> should NOT have loader icon visible', function() {
       expect(wrapper.find(ChatArea).render().find('.chat_message_loader').length).to.equal(0);
+      wrapper.update();
     });
 
   }); // ENDS STATE: LOGGEDOUT
@@ -57,7 +58,7 @@ describe('<Chat> component and sub-components', function() {
     });
 
     it('component state is correct while logging in', (done) => {
-      this.timeout(10000);
+      this.timeout(100000);
       setTimeout(() => {
         expect(wrapper.state('STATUS')).to.equal('LOADING');
         done();
