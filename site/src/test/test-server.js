@@ -4,8 +4,7 @@ const socketserver = require('../../server/node_modules/websocket').server;
 
 function TestServer() {
   let app = express();
-  let clients = {}; // for websockets chat
-  let count = 0; // for websockets chat
+  let client = null; // for websockets chat
   let socket;
 
   app.use(function(req, res, next) {
@@ -20,7 +19,9 @@ function TestServer() {
   let server = app.listen(3000, function() {
     let host = server.address().address;
     let port = server.address().port;
+    console.log('####################');
     console.log('Test server started');
+    console.log('####################');
   });
 
   socket = new socketserver({
@@ -28,12 +29,12 @@ function TestServer() {
   });
 
   socket.on('request', function(request) {
+    console.log('##########################################');
     console.log('Websocket test server - client connected');
+    console.log('##########################################');
 
     let connection = request.accept(null, request.origin);
-    count++;
-    connection.id = count;
-    clients[count] = connection;
+    client = connection;
 
     connection.sendUTF(JSON.stringify({custom: 'Welcome. Logged in.', _id: 'custom_welcome'}));
 
@@ -47,27 +48,19 @@ function TestServer() {
       let email = msg_parts[2];
       let uid = msg_parts[3];
 
-      for(let i in clients) {
-        clients[i].sendUTF(
-          JSON.stringify({
-            message: message_text,
-            timestamp: new Date(),
-            user_name: chat_name,
-            uid: uid,
-            _id: '42r2f34g3'
-          })
-        );
-      }
+      client.sendUTF(
+        JSON.stringify({
+          message: message_text,
+          timestamp: new Date(),
+          user_name: chat_name,
+          uid: uid,
+          _id: '42r2f34g3'
+        })
+      );
     });
 
     connection.on('close', function(reasonCode, description) {
-      for (let i in clients) {
-        if (i == connection.id) {
-          delete clients[i];
-        }	else {
-          //console.log( i );
-        }
-      }
+      client = null;
     });
 
   });

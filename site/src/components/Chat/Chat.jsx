@@ -49,10 +49,8 @@ export default class Chat extends React.Component {
   openWSConnection = () => {
     if(typeof window.WebSocket !== "undefined") {
       if(process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
-        console.log('openWSConnection DEV');
         this.ws = new WebSocket("ws://localhost:3000/echo");
       } else {
-        console.log('openWSConnection PROD');
         this.ws = new WebSocket("ws://" + Server.server_domain + ":" + Server.server_port + "/echo");
       }
 
