@@ -72,14 +72,7 @@ setTimeout(() => {
     }); // ENDS STATE: LOADING
 
     describe('STATE: LOGGEDIN', function() {
-
-      before(() => {
-        // set necessary chat login data
-        let input = wrapper.find('#chat_name');
-        input.instance().value = 'test';
-        wrapper.find('#reg_btn').simulate('click');
-      });
-
+      
       it('component state is correct after logging in', (done) => {
         setTimeout(() => {
           expect(wrapper.state('STATUS')).to.equal('LOGGEDIN');

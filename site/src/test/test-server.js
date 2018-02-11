@@ -4,7 +4,8 @@ const socketserver = require('../../server/node_modules/websocket').server;
 
 function TestServer() {
   let app = express();
-  let client = null; // for websockets chat
+  let clients = {}; // for websockets chat
+  let count = 0; // for websockets chat
   let socket;
 
   app.use(function(req, res, next) {
@@ -29,12 +30,17 @@ function TestServer() {
   });
 
   socket.on('request', function(request) {
+    let acceptConn = request.accept(null, request.origin);
+  });
+
+  socket.on('connect', function(connection) {
     console.log('##########################################');
     console.log('Websocket test server - client connected');
     console.log('##########################################');
-
-    let connection = request.accept(null, request.origin);
-    client = connection;
+    
+    count++;
+    connection.id = count;
+    clients[count] = connection;
 
     connection.sendUTF(JSON.stringify({custom: 'Welcome. Logged in.', _id: 'custom_welcome'}));
 
@@ -48,19 +54,27 @@ function TestServer() {
       let email = msg_parts[2];
       let uid = msg_parts[3];
 
-      client.sendUTF(
-        JSON.stringify({
-          message: message_text,
-          timestamp: new Date(),
-          user_name: chat_name,
-          uid: uid,
-          _id: '42r2f34g3'
-        })
-      );
+      for(let i in clients) {
+        clients[i].sendUTF(
+          JSON.stringify({
+            message: message_text,
+            timestamp: new Date(),
+            user_name: chat_name,
+            uid: uid,
+            _id: '42r2f34g3'
+          })
+        );
+      }
     });
 
     connection.on('close', function(reasonCode, description) {
-      client = null;
+      for (let i in clients) {
+        if (i == connection.id) {
+          delete clients[i];
+        }	else {
+          //console.log( i );
+        }
+      }
     });
 
   });

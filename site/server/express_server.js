@@ -323,7 +323,10 @@ startSocketServer = (httpServer) => {
   });
 
   socketServer.on('request', function(request) {
-    let connection = request.accept(null, request.origin);
+    let acceptConn = request.accept(null, request.origin);
+  });
+
+  socketServer.on('connect', function(connection) {
     count++;
     connection.id = count;
     clients[count] = connection;
@@ -380,7 +383,7 @@ startSocketServer = (httpServer) => {
             user_name: chat_name,
             email: email,
             uid: uid,
-            ip: request.remoteAddress,
+            ip: connection.remoteAddress,
             timestamp: new Date()
           },
           'messages',
@@ -434,7 +437,7 @@ startSocketServer = (httpServer) => {
       //console.log('connection closed');
     });
 
-  }); // ENDS on request
+  }); // ENDS on connect
 
   return socketServer;
 }
