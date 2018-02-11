@@ -1,13 +1,17 @@
 const express = require('../../server/node_modules/express');
 const session = require('../../server/node_modules/express-session');
 const socketserver = require('../../server/node_modules/websocket').server;
-
+ const http            = require('http');
 function TestServer() {
   let app = express();
   let clients = {}; // for websockets chat
   let count = 0; // for websockets chat
   let socket;
 
+  app.listen = function(){
+    var server = http.createServer(this);
+    return server.listen.apply(server, arguments);
+  };
   let server = app.listen(3000, function() {
 
   });
