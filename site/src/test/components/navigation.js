@@ -29,7 +29,7 @@ describe('<Navigation> component', function() {
       // external link
       link = wrapper.find('#navigation .navi_list_element').at(2).find('a');
       expect(link.instance().className).to.equal('main_link ext');
-      expect(link.instance().href).to.equal('https://github.com/fpvonly/personalSite');
+      expect(link.instance().href).to.equal('https://github.com/fpvonly/demo-chat-app');
       expect(link.instance().textContent).to.equal('GitHub');
     });
 
