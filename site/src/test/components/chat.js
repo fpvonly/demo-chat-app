@@ -53,7 +53,7 @@ describe('<Chat> component and sub-components', function() {
     });
 
     it('component state is correct while logging in', (done) => {
-      this.timeout(1000);
+      this.timeout(10000);
       setTimeout(() => {
         expect(wrapper.state('STATUS')).to.equal('LOADING');
         done();
