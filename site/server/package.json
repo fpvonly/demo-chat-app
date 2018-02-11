@@ -24,7 +24,7 @@
     "devbackend": "cross-env NODE_ENV=development nodemon express_server.js",
     "prodbackend": "forever start -o out.log -ae err.log express_server.js",
     "foreverstop": "forever stopall",
-    "foreverrestart": "forever restart",
+    "foreverrestart": "forever restartall",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
