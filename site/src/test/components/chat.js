@@ -49,12 +49,12 @@ describe('<Chat> component and sub-components', function() {
 
   describe('STATE: LOADING', function() {
 
-    before(() => {
+    /*before(() => {
       // set necessary chat login data
       let input = wrapper.find('#chat_name');
       input.instance().value = 'test';
       wrapper.find('#reg_btn').simulate('click');
-    });
+    });*/
 
     /*it('component state is correct while logging in', (done) => {
       setTimeout(() => {
@@ -62,18 +62,25 @@ describe('<Chat> component and sub-components', function() {
         done();
       }, 500);
     });*/
-
+/*
     it('<ChatLogin> should have login fields still visible', function() {
       expect(wrapper.find(ChatLogin).render().find('#chat_name').length).to.equal(1);
     });
 
     it('<ChatArea> should have loader icon visible', function() {
       expect(wrapper.find(ChatArea).render().find('.chat_message_loader').length).to.equal(1);
-    });
+    });*/
 
   }); // ENDS STATE: LOADING
 
   describe('STATE: LOGGEDIN', function() {
+    
+    before(() => {
+      // set necessary chat login data
+      let input = wrapper.find('#chat_name');
+      input.instance().value = 'test';
+      wrapper.find('#reg_btn').simulate('click');
+    });
 
     it('component state is correct after logging in', (done) => {
       setTimeout(() => {
