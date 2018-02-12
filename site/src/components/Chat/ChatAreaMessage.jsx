@@ -38,7 +38,7 @@ export default class ChatAreaMessage extends React.Component {
     className: PropTypes.string,
     siteLoginStatus: PropTypes.bool,
     deleteCallback: PropTypes.func,
-    editCallback: PropTypes.func,
+    editCallback: PropTypes.func
   };
 
   static contextTypes = {
