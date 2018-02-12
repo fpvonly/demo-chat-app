@@ -28,6 +28,7 @@ var config = {
     open: true,
     historyApiFallback: true
   },
+  bail: true,
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
@@ -40,8 +41,17 @@ if (process.env.NODE_ENV === 'production') {
   config.devServer = {}
   config.plugins = config.plugins.concat([
     new webpack.optimize.UglifyJsPlugin(),
-    new GitRevisionPlugin()
-  ])
+    new GitRevisionPlugin(),
+    function () {
+      this.plugin("done", function (stats) {
+        if (stats.compilation.errors && stats.compilation.errors.length) {
+          console.log('### Webpack build failed! ###');
+          console.log(stats.compilation.errors);
+          process.exit(1);
+        }
+      });
+    }
+  ]);
 }
 
 module.exports = config;
