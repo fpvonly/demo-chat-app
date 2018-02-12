@@ -41,17 +41,8 @@ if (process.env.NODE_ENV === 'production') {
   config.devServer = {}
   config.plugins = config.plugins.concat([
     new webpack.optimize.UglifyJsPlugin(),
-    new GitRevisionPlugin(),
-    function () {
-      this.plugin("done", function (stats) {
-        if (stats.compilation.errors && stats.compilation.errors.length) {
-          console.log('### Webpack build failed! ###');
-          console.log(stats.compilation.errors);
-          process.exit(1);
-        }
-      });
-    }
-  ]);
+    new GitRevisionPlugin()
+  ])
 }
 
 module.exports = config;
