@@ -18,25 +18,25 @@ export default class ChatAreaMessage extends React.Component {
   }
 
   static defaultProps = {
+    siteLoginStatus: false,
     allowSenderEdit: false,
     custom: false,
     messageId: '',
     timestamp: '',
     userName: '',
     className: 'message msg_right',
-    siteLoginStatus: false,
     deleteCallback: () => {},
     editCallback: () => {}
   };
 
   static propTypes = {
+    siteLoginStatus: PropTypes.bool,
     allowSenderEdit: PropTypes.bool,
     custom: PropTypes.bool,
     messageId: PropTypes.string,
     timestamp: PropTypes.string,
     userName: PropTypes.string,
     className: PropTypes.string,
-    siteLoginStatus: PropTypes.bool,
     deleteCallback: PropTypes.func,
     editCallback: PropTypes.func
   };
@@ -46,7 +46,7 @@ export default class ChatAreaMessage extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    // if admin user has logged out from main site, reset edit state
+    // if the admin user has logged out from main site, reset edit state
     if (nextProps.siteLoginStatus === false && this.props.siteLoginStatus === true) {
       this.setState({editMode: ''});
     }
