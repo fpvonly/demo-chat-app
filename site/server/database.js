@@ -64,9 +64,9 @@ database.prototype.update = function(updatedData, collection, criteriaId, criter
   }.bind(this));
 } // ENDS update
 
-database.prototype.deleteOneById = function(collection, criteria, callback) {
+database.prototype.deleteOneById = function(collection, criteriaId, callback) {
   var collection = this.db.collection(collection);
-  collection.deleteOne({ _id: MongoDB.ObjectId(criteria._id) },
+  collection.deleteOne({ _id: MongoDB.ObjectId(criteriaId) },
     function(err, result) {
       if (typeof callback !== 'undefined') {
         if(err !== null || result.deletedCount !== 1) {
@@ -76,6 +76,6 @@ database.prototype.deleteOneById = function(collection, criteria, callback) {
         }
       }
     });
-} // ENDS deleteOne
+} // ENDS deleteOneById
 
 module.exports = database;

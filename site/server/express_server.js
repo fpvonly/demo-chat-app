@@ -258,7 +258,7 @@ fs.readFile('server_config.json', function( err, json ) {
 
   app.post('/admin/deletemessage', function(req, res, next) {
     if (isAuthenticated(req, res, next) === true) {
-      mongo.deleteOneById('messages', {_id: req.body.id}, function (status) {
+      mongo.deleteOneById('messages', req.body.id, function (status) {
         res.contentType('application/json');
         res.send({
           'deleted': status
