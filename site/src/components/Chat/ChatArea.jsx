@@ -60,6 +60,7 @@ export default class ChatArea extends React.Component {
           <Message
             className={'message ' + align_class}
             allowSenderEdit={(msg.uid === Utils.getlocalStorageItem('uid'))}
+            siteLoginStatus={this.props.siteLoginStatus}
             timestamp={msg.timestamp}
             userName={msg.user_name}
             messageId={msg._id}
