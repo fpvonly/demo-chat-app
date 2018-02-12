@@ -77,8 +77,7 @@ class Login extends React.Component {
           </span>
           <a id='logout_link' href="#" onClick={this.handleLogOutClick}>Log out</a>
         </div>;
-    } // else if user us NOT loggedin but is in location /admin, show login fields
-    else if (this.props.location.pathname.indexOf('/admin') !== -1) {
+    } else if (this.props.location.pathname.indexOf('/admin') !== -1) { // else if the user is NOT logged in but is in location /admin, show login fields
       let errorStyle = null;
       if (this.state.usernameInputError === true || this.state.passwordInputError === true || this.props.loginError === true) {
         errorStyle = {'border':'1px solid red'};
