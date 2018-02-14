@@ -12,6 +12,7 @@ import Utils from '../components/Utils.js';
 import Translate from '../components/Translate.jsx';
 import Header from '../components/Header.jsx'
 import Chat from '../components/Chat/Chat.jsx'
+import ClockWidget from '../components/ClockWidget/ClockWidget.jsx'
 
 class App extends React.Component {
 
@@ -79,6 +80,7 @@ class App extends React.Component {
         &copy; {new Date().getFullYear() + ' Ari Petäjäjärvi'}
         <Translate id="footer_text"/>
       </footer>
+      <ClockWidget />
     </div>
   }
 }

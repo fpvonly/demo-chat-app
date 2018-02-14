@@ -28,8 +28,6 @@ var config = {
     open: true,
     historyApiFallback: true
   },
-  bail: true,
-  stats: 'verbose',
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
@@ -38,12 +36,14 @@ var config = {
 };
 
 if (process.env.NODE_ENV === 'production') {
-  config.devtool = 'source-map'
-  config.devServer = {}
+  config.devtool = 'source-map';
+  config.devServer = {};
+  config.bail = true;
+  config.stats = 'verbose';
   config.plugins = config.plugins.concat([
     new webpack.optimize.UglifyJsPlugin(),
     new GitRevisionPlugin()
-  ])
+  ]);
 }
 
 module.exports = config;
