@@ -58,7 +58,7 @@ setTimeout(() => {
           expect(wrapper.state('STATUS')).to.equal('LOADING');
         //  wrapper.update();
           done();
-        }, 50);
+        }, 500);
       });
 
       it('<ChatLogin> should have login fields still visible', function() {

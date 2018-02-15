@@ -50,12 +50,17 @@ export default class ClockWidget extends React.Component {
 
   componentDidMount() {
     this.storagePos = this.overridePositionIfNotVisible(this.storagePos);
-    //Utils.setlocalStorageItem('widgetClockPosition', JSON.stringify(this.storagePos));
     this.interval = setInterval(this.tickTock, 1000);
   }
 
   handleWindowResize = () => {
-    this.storagePos = this.overridePositionIfNotVisible(this.storagePos);
+    let widgetPosStorage = Utils.getlocalStorageItem('widgetClockPosition');
+    if (widgetPosStorage !== '') {
+      widgetPosStorage = JSON.parse(widgetPosStorage);
+      this.storagePos = this.overridePositionIfNotVisible(widgetPosStorage);
+    } else {
+      this.storagePos = this.overridePositionIfNotVisible(this.storagePos);
+    }
   }
 
   tickTock = () => {
@@ -85,7 +90,7 @@ export default class ClockWidget extends React.Component {
 
   handleWidgetDrag = (e) => {
     let leftPos = e.pageX - $(this.widget).width()/2;
-    let topPos = e.pageY - $(this.widget).height()/2;
+    let topPos = e.pageY - $(this.widget).height()/2 - window.pageYOffset;
     this.storagePos = {
       'left': leftPos,
       'top': topPos
@@ -94,8 +99,8 @@ export default class ClockWidget extends React.Component {
   }
 
   handleWidgetDragEnd = (e) => {
+    Utils.setlocalStorageItem('widgetClockPosition', JSON.stringify(this.storagePos)); // save the  original drop position even if out of bounds
     this.storagePos = this.overridePositionIfNotVisible(this.storagePos);
-    Utils.setlocalStorageItem('widgetClockPosition', JSON.stringify(this.storagePos));
     $(this.widget).css(this.storagePos);
     window.removeEventListener("mousemove", this.handleWidgetDrag, false);
   }

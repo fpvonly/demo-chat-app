@@ -60,16 +60,15 @@ export default class ChatAreaMessage extends React.Component {
     });
   }
 
-  handleSaveClick = (messageId, e) => {
+  handleSaveClick = async (messageId, e) => {
     e.preventDefault();
     //e.persist();
     this.setState({
       editMode: 'SAVING'
-    }, () => {
+    }, async () => {
       let edit = this.props.editCallback;
-      edit.call(undefined, messageId, this.editMessageTextarea.value).then((saveError) => {
-        this.updateUIAfterSave(saveError);
-      });
+      let saveError = await edit.call(undefined, messageId, this.editMessageTextarea.value);
+      this.updateUIAfterSave(saveError);
     });
   }
 
