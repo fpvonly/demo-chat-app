@@ -27,7 +27,6 @@ describe('<Login> component', function() {
     });
   }); // ENDS before
 
-
   describe('Logged out state', function() {
 
     it('should have login fields visible', function() {
@@ -74,6 +73,10 @@ describe('<Login> component', function() {
 
     before(() => {
       wrapper.find('#logout_link').simulate('click');
+    });
+
+    after(() => {
+      wrapper.unmount();
     });
 
     it('should have correct value from logout functionality', function() {

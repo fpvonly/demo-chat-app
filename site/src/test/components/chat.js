@@ -163,6 +163,10 @@ setTimeout(() => {
         TestServer.stop();
       });
 
+      after(() => {
+        wrapper.unmount();
+      });
+
       it('component state is correct after websocket connection closed', (done) =>  {
         setTimeout(() => {
           expect(wrapper.state('STATUS')).to.equal('LOGGEDOUT');
@@ -184,4 +188,4 @@ setTimeout(() => {
   });
 
   run();
-}, 5000); // wait for test server properly init
+}, 2500); // wait for test server properly init

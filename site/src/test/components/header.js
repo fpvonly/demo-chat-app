@@ -11,6 +11,10 @@ describe('<Header> component', function() {
   let logInMock = () => {};
   let wrapper = mount(<Header loginStatus={true} loginError={false} logIn={logInMock} />, options.get());
 
+  after(() => {
+    wrapper.unmount();
+  });
+
   it('should have correct html structure', function() {
     assert.equal(wrapper.find('.full_header').first().length, 1);
     assert.equal(wrapper.find('.full_header').find('.wrapper_navi').length, 1);
