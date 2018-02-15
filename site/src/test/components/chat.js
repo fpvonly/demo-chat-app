@@ -72,7 +72,7 @@ setTimeout(() => {
     }); // ENDS STATE: LOADING
 
     describe('STATE: LOGGEDIN', function() {
-      
+
       it('component state is correct after logging in', (done) => {
         setTimeout(() => {
           expect(wrapper.state('STATUS')).to.equal('LOGGEDIN');

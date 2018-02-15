@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 
-import Utils from '../Utils';
+import Utils from './Utils';
 
 export default class ClockWidget extends React.Component {
   constructor(props) {
@@ -13,11 +13,16 @@ export default class ClockWidget extends React.Component {
     this.bgRotate = null;
     this.bg = null;
     this.interval = null;
+    this.storagePos = {
+      'left': 50,
+      'top': 50
+    };
+    this.spinnerPos = {'opacity': 0.76, 'transform': 'rotate(-87.5deg)'};
 
     this.state = {
       hours: '00',
       minutes: '00',
-      seconds: '',
+      seconds: '00',
       day: '',
       month: '',
       year: ''
@@ -25,15 +30,32 @@ export default class ClockWidget extends React.Component {
   }
 
   componentWillMount() {
+    let widgetPosStorage = Utils.getlocalStorageItem('widgetClockPosition');
+    if (widgetPosStorage !== '') {
+      widgetPosStorage = JSON.parse(widgetPosStorage);
+      this.storagePos = {
+        'left': widgetPosStorage.left,
+        'top': widgetPosStorage.top
+      };
+    }
+
     this.tickTock();
+    window.addEventListener("resize", this.handleWindowResize, false);
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
+    window.removeEventListener("resize", this.handleWindowResize, false);
   }
 
   componentDidMount() {
+    this.storagePos = this.overridePositionIfNotVisible(this.storagePos);
+    //Utils.setlocalStorageItem('widgetClockPosition', JSON.stringify(this.storagePos));
     this.interval = setInterval(this.tickTock, 1000);
+  }
+
+  handleWindowResize = () => {
+    this.storagePos = this.overridePositionIfNotVisible(this.storagePos);
   }
 
   tickTock = () => {
@@ -55,54 +77,26 @@ export default class ClockWidget extends React.Component {
     });
   }
 
-  calculateSpinnerDragStyles = (e) => {
-    let cssValues = {'opacity': 0.7, 'transform': 'rotate(-108deg)'};
-    let widgetSpinnerSettings = Utils.getlocalStorageItem('widgetClockSpinner');
-    if (widgetSpinnerSettings && widgetSpinnerSettings !== null) {
-      widgetSpinnerSettings = JSON.parse(widgetSpinnerSettings);
-      if (widgetSpinnerSettings && widgetSpinnerSettings.opacity && widgetSpinnerSettings.transform) {
-        cssValues['opacity'] = widgetSpinnerSettings.opacity;
-        cssValues['transform'] = widgetSpinnerSettings.transform;
-      }
-    }
-
-    if (e) {
-      let wrapper = $(this.widget);
-      let wrapperCenter = [wrapper.offset().left + wrapper.width()/2, wrapper.offset().top + wrapper.height()/2];
-      let angle = Math.atan2(e.pageX - wrapperCenter[0], - (e.pageY - wrapperCenter[1]) ) * (180/Math.PI);
-      let opacity = 0;
-
-      if (angle >= 0 && angle <= 180) {
-        opacity = (angle/180)/2;
-      } else if (angle < 0 && angle >= -180) {
-        opacity = (1 - (Math.abs(angle)/180)/2);
-      }
-      cssValues['opacity'] = opacity;
-      cssValues['transform'] = 'rotate(' + angle + 'deg)';
-    }
-
-    return cssValues;
-  }
-
   // WIDGET POSITION DRAGGING ->
   handleWidgetDragStart = (e) => {
-    $(this.widget).css({'right': window.innerWidth - (e.pageX + $(this.widget).width()/2), 'top': e.pageY - $(this.widget).height()/2});
     window.addEventListener("mousemove", this.handleWidgetDrag, false);
     window.addEventListener("mouseup", this.handleWidgetDragEnd, false);
   }
 
   handleWidgetDrag = (e) => {
-    let rightPos = window.innerWidth - (e.pageX + $(this.widget).width()/2);
+    let leftPos = e.pageX - $(this.widget).width()/2;
     let topPos = e.pageY - $(this.widget).height()/2;
-    let storageVals = {
-      'right': rightPos,
+    this.storagePos = {
+      'left': leftPos,
       'top': topPos
     };
-    Utils.setlocalStorageItem('widgetClockPosition', JSON.stringify(storageVals));
-    $(this.widget).css({'right': rightPos, 'top': topPos});
+    $(this.widget).css(this.storagePos);
   }
 
   handleWidgetDragEnd = (e) => {
+    this.storagePos = this.overridePositionIfNotVisible(this.storagePos);
+    Utils.setlocalStorageItem('widgetClockPosition', JSON.stringify(this.storagePos));
+    $(this.widget).css(this.storagePos);
     window.removeEventListener("mousemove", this.handleWidgetDrag, false);
   }
   // <- END WIDGET POSITION DRAGGING
@@ -126,21 +120,59 @@ export default class ClockWidget extends React.Component {
   }
   // <- END SPINNER HANDLE POSITION DRAGGING
 
-  getWidgetPosition = () => {
-    let widgetPosition = Utils.getlocalStorageItem('widgetClockPosition');
-    if (widgetPosition && widgetPosition !== null) {
-      widgetPosition = JSON.parse(widgetPosition);
+  calculateSpinnerDragStyles = (e) => {
+    let cssValues = this.spinnerPos; // defaults
+    let widgetSpinnerSettings = Utils.getlocalStorageItem('widgetClockSpinner');
+    if (widgetSpinnerSettings !== '') {
+      widgetSpinnerSettings = JSON.parse(widgetSpinnerSettings);
+      if (widgetSpinnerSettings && widgetSpinnerSettings.opacity && widgetSpinnerSettings.transform) {
+        cssValues['opacity'] = widgetSpinnerSettings.opacity;
+        cssValues['transform'] = widgetSpinnerSettings.transform;
+      }
     }
 
-    return {
-      'right': (widgetPosition !== null && widgetPosition.right ? widgetPosition.right : 150),
-      'top': (widgetPosition !== null && widgetPosition.top ? widgetPosition.top : 100)
+    if (e) {
+      let wrapper = $(this.widget);
+      let wrapperCenter = [wrapper.offset().left + wrapper.width()/2, wrapper.offset().top + wrapper.height()/2];
+      let angle = Math.atan2(e.pageX - wrapperCenter[0], - (e.pageY - wrapperCenter[1])) * (180/Math.PI);
+      let opacity = 0;
+
+      if (angle >= 0 && angle <= 180) {
+        opacity = (angle/180)/2;
+      } else if (angle < 0 && angle >= -180) {
+        opacity = (1 - (Math.abs(angle)/180)/2);
+      }
+      cssValues['opacity'] = opacity;
+      cssValues['transform'] = 'rotate(' + angle + 'deg)';
     }
+
+    return cssValues;
+  }
+
+  overridePositionIfNotVisible = (currentPosition) => {
+    let newPos= {
+      left: currentPosition.left,
+      top: currentPosition.top
+    }
+
+    if (currentPosition.left < 0) {
+      newPos.left = 20;
+    }
+    if (currentPosition.left > window.innerWidth - $(this.widget).width()) {
+      newPos.left = window.innerWidth - $(this.widget).width() - 20;
+    }
+    if (currentPosition.top < 0) {
+      newPos.top = 20;
+    }
+    if (currentPosition.top > window.innerHeight - $(this.widget).height()) {
+      newPos.top = window.innerHeight - $(this.widget).height() - 20;
+    }
+
+    return newPos;
   }
 
   render() {
-
-    return <div ref={(c) => { this.widget = c;}} className='widget_clock' onMouseDown={this.handleWidgetDragStart} style={this.getWidgetPosition()}>
+    return <div ref={(c) => { this.widget = c;}} className='widget_clock' onMouseDown={this.handleWidgetDragStart} style={this.storagePos}>
       <div ref={(c) => { this.bgRotate = c;}} className='bg' style={{'transform': this.calculateSpinnerDragStyles()['transform']}}>
         <div ref={(c) => { this.bg = c;}} className='bg_color' style={{'opacity': this.calculateSpinnerDragStyles()['opacity']}} />
         <div className='handle' onMouseDown={this.handleSpinnerDragStart} />

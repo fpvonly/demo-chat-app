@@ -12,7 +12,7 @@ import Utils from '../components/Utils.js';
 import Translate from '../components/Translate.jsx';
 import Header from '../components/Header.jsx'
 import Chat from '../components/Chat/Chat.jsx'
-import ClockWidget from '../components/ClockWidget/ClockWidget.jsx'
+import ClockWidget from '../components/ClockWidget.jsx'
 
 class App extends React.Component {
 
