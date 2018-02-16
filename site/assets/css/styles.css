@@ -86,7 +86,7 @@ input[type="button"], input[type="submit"] {
   transition: box-shadow,color,opacity,background-color 0.5s;
 }
 
-input[type="button"]:hover, input[type="submit"]:hover {
+body.no-touch input[type="button"]:hover, body.no-touch input[type="submit"]:hover {
   box-shadow: 0px 0px 2px 3px rgba(255, 255, 255, 1);
   cursor:pointer;
   color: #6c3;
@@ -152,7 +152,7 @@ nav ul li a {
   transition: border 0.5s;
 }
 
-nav ul li a:hover {
+body.no-touch nav ul li a:hover {
   border-bottom: 3px solid #ffffff;
 }
 
@@ -195,6 +195,13 @@ nav ul li a.main_link_active {
   text-align:left;
   padding: 0.6rem 1.4rem;
   font-size: 1.6rem;
+}
+
+.view_content p.info_left img {
+  max-width: 99.2%;
+  background: #545454;
+  border-radius: 0.5rem;
+  padding: 0.4%;
 }
 
 .page_load_content {
@@ -241,7 +248,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 #login_fields input[type="text"], #login_fields input[type="password"] { margin: 0rem 0.48rem;}
 
 #login_fields span, #login_fields a { color:#ffffff; font-size: 1.28rem; }
-#login_fields a:hover { border-bottom: 3px solid #ffffff; }
+body.no-touch #login_fields a:hover { border-bottom: 3px solid #ffffff; }
 #login_fields a { box-shadow: 1px 2px 3px #000000; border-bottom: 3px solid #525252; }
 
 /* chat */
@@ -251,13 +258,13 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
 #message_input { width:70%; font-style: italic; }
 label { font-size: 0.88rem; }
 .chat_name_span { font-style:italic; }
-.message_text_span { display: block; font-weight: bold; margin-top: 0.8rem; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; -ms-hyphens: auto; -moz-hyphens: auto; -webkit-hyphens: auto; hyphens: auto; }
+.message_text_span { display: block; font-weight: bold; padding: 0.8rem 0; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; -ms-hyphens: auto; -moz-hyphens: auto; -webkit-hyphens: auto; hyphens: auto; }
 .message .delete_btn { border-radius: 0.5rem; display: inline-block; border: 0; transition: color,background-color 0.5s; min-width: 16rem; color: #ffffff; background-color: #e70000; padding: 0.96rem; margin: 0.8rem 0.32rem 0rem 0.32rem; font-weight: bold; font-size: 1.12rem; }
-.message .delete_btn:hover { border: 0; transition: color, background-color 0.5s; background-color: #ffffff; color: #e70000; }
+body.no-touch .message .delete_btn:hover { border: 0; transition: color, background-color 0.5s; background-color: #ffffff; color: #e70000; }
 .message .edit_btn { border-radius: 0.5rem; display: inline-block; border: 0; transition: color,background-color 0.5s; color: #ffffff; background-color: #43a4f9; min-width: 16rem; padding: 0.96rem; margin: 0.8rem 0.32rem 0rem 0.32rem; font-weight: bold; font-size: 1.12rem; }
-.message .edit_btn:hover { border: 0; transition: color, background-color 0.5s; background-color: #ffffff; color: #43a4f9; }
+body.no-touch .message .edit_btn:hover { border: 0; transition: color, background-color 0.5s; background-color: #ffffff; color: #43a4f9; }
 .message .save_btn { border-radius: 0.5rem; display: inline-block; border: 0; transition: color,background-color 0.5s; color: #ffffff; background-color: #6c3; min-width: 16rem; padding: 0.96rem; margin: 0.8rem 0.32rem 0rem 0.32rem; font-weight: bold; font-size: 1.12rem; }
-.message .save_btn:hover { border: 0; transition: color, background-color 0.5s; background-color: #ffffff; color: #6c3; }
+body.no-touch .message .save_btn:hover { border: 0; transition: color, background-color 0.5s; background-color: #ffffff; color: #6c3; }
 .message { background: rgba(0, 0, 0, 0.75) none repeat scroll 0 0; width: 250px; margin: 0.64rem 0; padding: 0.96rem; border-radius:5px; color:#ffffff; clear:both; font-size: 1.12rem; box-shadow: #000000 1px 3px 5px;}
 .msg_left { float:left; clear:both;}
 .msg_right { float:right; clear:both; }
@@ -278,7 +285,7 @@ label { font-size: 0.88rem; }
 /* contact form */
 #contact_form { padding: 0 1.6rem 1.6rem 1.6rem; }
 #contact_form p { color:#ffffff; }
-#contact_form input[type="text"], textarea{ display:block; padding: 0.48rem 1% 0.48rem 1%; margin: 1.6rem 1.5%; width: 95%; }
+#contact_form input[type="text"], textarea{ display:block; padding: 1.1rem 1% 1.1rem 1%; margin: 1.6rem 1.5%; width: 95%; }
 p.contact_thanks{ margin-top: 4.5rem; font-size: 2rem; color: #ffffff; }
 
 .content_part { padding: 0.64rem 0;}
@@ -296,22 +303,16 @@ footer {
 }
 
 @media screen and (max-width: 650px) {
-  #message_send_btn, #contact_btn, #reg_btn { width: 70%; margin-left: 0; margin-top:1.6rem;  }
-  #message_input { width:90%; }
+  #message_send_btn, #contact_btn, #reg_btn { width: 70%; margin-left: 0; margin-top:1.6rem; line-height: 3rem;  }
+  #message_input { width:90%; padding: 1.1rem; }
   #reg_btn { display: block; margin: 1.6rem auto 0 auto;  }
-  #email, #chat_name { clear:both; margin-top:1.6rem !important; width:90%; }
+  #email, #chat_name { clear:both; margin-top:1.6rem !important; width:90%; padding: 1.1rem !important; }
   nav#navigation { float:left; clear:both; width:100%;  }
   nav ul { float:left; }
   nav ul li a { margin-left:0; margin-right: 3.2rem; }
 }
 
 /* Widget clock */
-@media screen and (max-width: 1280px) {
-  .widget_clock {
-    display: none;
-    opacity: 0;
-  }
-}
 .widget_clock {
   position: fixed;
   z-index: 9999;
@@ -358,7 +359,7 @@ footer {
   cursor: pointer;
   transition: all 0.3s ease-in !important;
 }
-.widget_clock .handle:hover, .widget_clock .handle:active {
+body.no-touch .widget_clock .handle:hover, .widget_clock .handle:active {
   background-color: rgba(255,255,255,1);
 }
 .widget_clock .inner_circle {
@@ -390,4 +391,10 @@ footer {
 .widget_clock .seconds_display {
   font-size: 2.5rem;
   text-shadow: 0px 0px 3px rgba(150, 150, 150, 1);
+}
+@media screen and (max-width: 1024px) {
+  .widget_clock {
+    display: none;
+    opacity: 0;
+  }
 }
