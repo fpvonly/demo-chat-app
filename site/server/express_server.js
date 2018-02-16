@@ -128,6 +128,7 @@ fs.readFile('server_config.json', function( err, json ) {
   // maintenance purposes only
   app.get('/admin/server/restart', function(req, res) {
     child = exec("cd $HOME && cd demo-chat-app/site/server && sudo npm run foreverrestart", function (error, stdout, stderr) {
+      /* TODO: Process exits before callback now. Fix if needed in the future */
       if (error !== null) {
         res.contentType('application/json');
         res.send({'restart': false});

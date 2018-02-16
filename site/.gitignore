@@ -3,5 +3,3 @@ server/node_modules/
 server/database_config.json
 server/err.log
 server/out.log
-server/forever.log
-server/restart_log.log
