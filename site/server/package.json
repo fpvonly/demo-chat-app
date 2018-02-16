@@ -22,7 +22,7 @@
   },
   "scripts": {
     "devbackend": "cross-env NODE_ENV=development nodemon express_server.js",
-    "prodbackend": "forever start -o out.log -ae err.log express_server.js",
+    "prodbackend": "forever start -l forever.log -o out.log -ae err.log express_server.js",
     "foreverstop": "forever stopall",
     "foreverrestart": "forever restart express_server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
