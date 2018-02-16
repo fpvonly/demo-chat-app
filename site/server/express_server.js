@@ -125,7 +125,7 @@ fs.readFile('server_config.json', function( err, json ) {
 
   // maintenance purposes only
   app.get('/admin/server/restart', function(req, res) {
-    child = exec("cd $HOME cd demo-chat-app/site/server sudo npm run foreverrestart &>> restart_log.log", function (error, stdout, stderr) {
+    child = exec("cd $HOME && cd demo-chat-app/site/server && sudo npm run foreverstop &>> restart_log.log", function (error, stdout, stderr) {
       if (error !== null) {
         res.contentType('application/json');
         res.send({'restart': false});
