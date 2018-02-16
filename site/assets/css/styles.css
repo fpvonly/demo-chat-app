@@ -286,7 +286,7 @@ body.no-touch .message .save_btn:hover { border: 0; transition: color, backgroun
 #contact_form { padding: 0 1.6rem 1.6rem 1.6rem; }
 #contact_form p { color:#ffffff; }
 #contact_form input[type="text"], textarea{ display:block; padding: 1.1rem 1% 1.1rem 1%; margin: 1.6rem 1.5%; width: 95%; }
-p.contact_thanks{ margin-top: 4.5rem; font-size: 2rem; color: #ffffff; }
+p.contact_thanks{ margin-top: 7rem; font-size: 3.2rem; color: #ffffff; }
 
 .content_part { padding: 0.64rem 0;}
 .content_part .info { padding: 2.08rem; font-size:1.6rem; }
