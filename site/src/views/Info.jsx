@@ -9,8 +9,8 @@ export default class Info extends React.Component {
     return <div className="page_load_content">
         <section className="content_part">
           <Translate id="info_text"/>
-          <p className="info_left"><img src="/assets/images/edit_pic.png" /></p>
-          <p className="info_left"><img src="/assets/images/save_pic.png" /></p>
+          <p className="info_left"><img src="./assets/images/edit_example.png" /></p>
+          <p className="info_left"><img src="./assets/images/save_example.png" /></p>
           <Translate id="git_url"/>
         </section>
       </div>;
