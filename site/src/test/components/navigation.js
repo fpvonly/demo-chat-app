@@ -29,12 +29,12 @@ describe('<Navigation> component', function() {
       // external link
       link = wrapper.find('#navigation .navi_list_element').at(2).find('a');
       expect(link.instance().className).to.equal('main_link ext');
-      expect(link.instance().href).to.equal('https://github.com/fpvonly/demo-chat-app');
-      expect(link.instance().textContent).to.equal('GitHub');
+      expect(link.instance().href).to.equal('http://146.185.148.22:31/');
+      expect(link.instance().textContent).to.equal('e.spaceX');
     });
 
     it('it has correct amount of main navigation links', function() {
-      expect(wrapper.find('#navigation .navi_list_element').length).to.equal(6);
+      expect(wrapper.find('#navigation .navi_list_element').length).to.equal(5);
     });
 
   });// ENDS Logged out state
@@ -50,7 +50,7 @@ describe('<Navigation> component', function() {
     });
 
     it('it has correct amount of main navigation links', function() {
-      expect(wrapper.find('#navigation .navi_list_element').length).to.equal(5); // no admin login link visible when logged in
+      expect(wrapper.find('#navigation .navi_list_element').length).to.equal(4); // no admin login link visible when logged in
     });
 
   });// ENDS Logged out state
