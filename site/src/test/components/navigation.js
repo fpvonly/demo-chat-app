@@ -34,7 +34,7 @@ describe('<Navigation> component', function() {
     });
 
     it('it has correct amount of main navigation links', function() {
-      expect(wrapper.find('#navigation .navi_list_element').length).to.equal(5);
+      expect(wrapper.find('#navigation .navi_list_element').length).to.equal(6);
     });
 
   });// ENDS Logged out state
