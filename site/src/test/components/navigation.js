@@ -29,8 +29,8 @@ describe('<Navigation> component', function() {
       // external link
       link = wrapper.find('#navigation .navi_list_element').at(2).find('a');
       expect(link.instance().className).to.equal('main_link ext');
-      expect(link.instance().href).to.equal('http://146.185.148.22:31/');
-      expect(link.instance().textContent).to.equal('e.spaceX');
+      expect(link.instance().href).to.equal('https://github.com/fpvonly/');
+      expect(link.instance().textContent).to.equal('GitHub');
     });
 
     it('it has correct amount of main navigation links', function() {
