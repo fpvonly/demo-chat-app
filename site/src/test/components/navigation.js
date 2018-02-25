@@ -50,7 +50,7 @@ describe('<Navigation> component', function() {
     });
 
     it('it has correct amount of main navigation links', function() {
-      expect(wrapper.find('#navigation .navi_list_element').length).to.equal(4); // no admin login link visible when logged in
+      expect(wrapper.find('#navigation .navi_list_element').length).to.equal(5); // no admin login link visible when logged in
     });
 
   });// ENDS Logged out state
