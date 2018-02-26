@@ -123,7 +123,8 @@ class Contact extends React.Component {
             style={(formState.sendError === true || this.state.messageInputError === true ? errorStyle : null)}
             name="contact_message"
             id="contact_message"
-            placeholder="Your message">
+            placeholder="Your message"
+            rows="5">
           </textarea>
 
           {(this.state.inProgress === true)
