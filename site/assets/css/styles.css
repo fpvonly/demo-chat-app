@@ -105,9 +105,12 @@ header {
 }
 
 .wrapper_navi {
+  display: flex;
+  flex-wrap: wrap;
   height:auto;
   min-height:inherit;
   max-width:600px;
+  min-width: 370px;
   margin:0 auto;
   padding: 0 0.8rem;
   background: rgba(0, 0, 0, 0.75) none repeat scroll 0 0;
@@ -116,36 +119,34 @@ header {
 }
 
 .main_logo {
-  position:relative;
-  float:left;
-  width:200px;
+  position: relative;
   margin: 0.8rem 0;
+  flex: 1;
+  max-width: 250px;
 }
 
 nav {
-  position:relative;
-  float:right;
-  width:60%;
+  display: flex;
+  justify-content: flex-end;
+  flex: 2;
   margin: 0.8rem;
 }
 
 nav ul {
-  float:right;
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
 }
 
 nav ul li {
-  position:relative;
-  float:left;
   font-family: Helvetica,Arial,sans-serif;
-  color:#ffffff;
-  margin: 0 0 15px;
+  color: #ffffff;
 }
 
 nav ul li a {
   color:#ffffff;
   font-weight: bold;
   white-space:nowrap;
-  margin-left: 2.4rem;
   font-size: 1.28rem;
   box-shadow: 1px 2px 3px #000000;
   border-bottom: 3px solid #525252;
@@ -171,6 +172,7 @@ nav ul li a.main_link_active {
 
 .view_content {
   max-width:1200px;
+  min-width: 370px;
   padding: 5.6rem 0.8rem 0 0.8rem;
   min-height: 500px;
   margin: 0 auto;
@@ -296,6 +298,7 @@ p.contact_thanks{ margin-top: 7rem; font-size: 3.2rem; color: #ffffff; }
 
 footer {
   max-width: 1200px;
+  min-width: 370px;
   padding: 4rem 1.6rem 0 1.6rem;
   min-height: 50px;
   margin: 0 auto;
@@ -305,6 +308,14 @@ footer {
   font-weight: bold;
 }
 
+@media screen and (max-width: 620px) {
+  nav#navigation { flex: 1 100%;  }
+  nav { justify-content: flex-start; margin: 0.8rem 0 0.8rem 0.8rem; }
+  nav ul { justify-content: flex-start; width: auto; flex-wrap: wrap; }
+  nav ul li a { margin-left:0; margin-right: 3.2rem; }
+  .logo img { margin: 1rem; }
+}
+
 @media screen and (max-width: 1023px) {
   #message_send_btn, #contact_btn, #reg_btn { width: 70%; margin-left: 0; margin-top:1.6rem; line-height: 3rem;  }
   #message_input { padding: 1.1rem 3% !important; width: 90%; }
@@ -312,9 +323,6 @@ footer {
   #chat_reg input[type="text"], #chat_funcs input[type="text"]  { margin: 0.48rem 0 !important; padding: 1.1rem 3% !important; width: 94%;  }
   #reg_btn { display: block; margin: 1.6rem auto 0 auto;  }
   #email, #chat_name { clear:both; margin-top:1.6rem !important; width:90%; padding: 1.1rem !important; }
-  nav#navigation { float:left; clear:both; width:100%;  }
-  nav ul { float:left; }
-  nav ul li a { margin-left:0; margin-right: 3.2rem; }
   #contact_form input[type="text"], textarea{ padding: 1.1rem 3%; margin-left: 0; margin-right:0; !important; width: 94%;  }
 }
 
