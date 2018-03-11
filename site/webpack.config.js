@@ -15,16 +15,17 @@ var config = {
     publicPath: '/build/'
   },
   module: {
-    loaders: [
+    rules: [
       {
-        loader: 'babel-loader',
         test: /\.(js|jsx)$/,
-        include: APP_DIR
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader'
+        }
       }
     ]
   },
   devServer: {
-    /*contentBase: __dirname,*/
     open: true,
     historyApiFallback: true
   },
@@ -36,12 +37,10 @@ var config = {
 };
 
 if (process.env.NODE_ENV === 'production') {
-  config.devtool = 'source-map';
   config.devServer = {};
   config.bail = true;
   config.stats = 'verbose';
   config.plugins = config.plugins.concat([
-    new webpack.optimize.UglifyJsPlugin(),
     new GitRevisionPlugin()
   ]);
 }
