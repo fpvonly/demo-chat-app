@@ -63,7 +63,7 @@ a { text-decoration:none; border-bottom: 1px solid #b7b9bc; padding-bottom: 2px;
 a:hover { border-bottom: 1px solid #ffffff; color: #ffffff;}
 a.logo { text-decoration:none; border-bottom: 0; padding-bottom: 0; }
 a#logout_link { display: inline-block; margin: 0.8rem 0 0; }
-a.admin_login_link { border-bottom: 0 !important; box-shadow: none !important;}
+a.admin_login_link { border-bottom: 0 !important; box-shadow: none !important; margin-right: 0;}
 a.admin_login_link img { width: 1.6rem; border-bottom: 0; }
 
 p { font-size:4.8rem; }
@@ -134,8 +134,8 @@ nav {
 
 nav ul {
   display: flex;
-  justify-content: space-between;
-  width: 80%;
+  justify-content: space-evenly;
+  width: 100%;
 }
 
 nav ul li {
