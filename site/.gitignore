@@ -3,3 +3,6 @@ server/node_modules/
 server/database_config.json
 server/err.log
 server/out.log
+package-lock.json
+server/package-lock.json
+../restart_log.log
