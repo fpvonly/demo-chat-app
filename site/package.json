@@ -56,6 +56,10 @@
     "type": "git",
     "url": "git+https://github.com/fpvonly/personalSite.git"
   },
+  "engines": {
+    "node": ">=11.4.0",
+    "npm": ">=6.5.0"
+  },
   "author": "Ari Petäjäjärvi",
-  "license": "MIT"
+  "license": ""
 }
