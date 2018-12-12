@@ -27,6 +27,13 @@
 			"text":"e.spaceX",
 			"target":"_blank",
 			"class":"main_link ext"
+		},
+		{
+			"href":"http://146.185.148.22:32/",
+			"dataTarget":"",
+			"text":"Pirate's Oasis",
+			"target":"_blank",
+			"class":"main_link ext"
 		}
 	]
 }
