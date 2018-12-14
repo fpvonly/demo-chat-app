@@ -88,7 +88,7 @@ export default class ChatLogin extends React.Component {
             id="email"
             placeholder="E-mail (optional)"
             maxLength="40"
-            style={(this.state.emailError === true ? errorStyle : null)}
+            style={(this.state.emailError === true ? Object.assign(errorStyle, {'display': 'none'}) : {'display': 'none'})}
             onKeyUp={this.handleKeyUp} />
           <input ref={(c) => { this.reg_btn = c; }}
             type="button"

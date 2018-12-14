@@ -134,7 +134,7 @@ nav {
 
 nav ul {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   width: 100%;
 }
 
@@ -312,6 +312,7 @@ footer {
   nav#navigation { flex: 1 100%;  }
   nav { justify-content: flex-start; margin: 0.8rem 0 0.8rem 0.8rem; }
   nav ul { justify-content: flex-start; width: auto; flex-wrap: wrap; }
+  nav ul li { margin-top: 15px;}
   nav ul li a { margin-left:0; margin-right: 3.2rem; }
   .logo img { margin: 1rem; }
 }
