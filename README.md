@@ -110,8 +110,4 @@ Start a production server (uses forever)
 ``` js
 npm run prodbackend -- --gmail=<username,password>
 ```
-
-Note! It is not _necessary_ to run tests and make the production build manually when there are changes ready for the production.
-Codeship CI takes care of it via hook that automatically fetches newest code from GitHub after every commit to master-branch.
-Codeship runs the tests and creates the production build to production server.
 To avoid CI-process, use --skip-ci in the commit message (e.g. git commit -m "Message content --skip-ci")

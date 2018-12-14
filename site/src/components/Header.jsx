@@ -12,19 +12,11 @@ export default class Header extends React.Component {
   }
 
   static defaultProps = {
-    logIn: () => {},
-    loginStatus: false,
-    loginError: false
+    logIn: () => {}
   };
 
   static propTypes = {
-    logIn: PropTypes.func,
-    loginStatus: PropTypes.bool,
-    loginError: PropTypes.bool
-  };
-
-  static contextTypes = {
-    loginState: PropTypes.object
+    logIn: PropTypes.func
   };
 
   render() {
@@ -35,8 +27,8 @@ export default class Header extends React.Component {
             <img src="./assets/images/logo.png" alt="Click for Home Page - Web Development with Javascript" />
           </a>
         </div>
-        <Navigation loginStatus={this.props.loginStatus} />
-        <Login logIn={this.props.logIn} loginStatus={this.props.loginStatus} loginError={this.props.loginError} />
+        <Navigation />
+        <Login logIn={this.props.logIn} />
         <div className="clear"></div>
       </div>
     </header>

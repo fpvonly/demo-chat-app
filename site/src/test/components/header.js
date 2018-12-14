@@ -1,15 +1,15 @@
 const React = require('react');
+import { BrowserRouter as Router } from 'react-router-dom';
 const {expect} = require('chai');
 const assert = require('assert');
 const {mount} = require('enzyme');
-const ReactRouterEnzymeContext = require('react-router-enzyme-context');
 
 import Header from '../../components/Header.jsx';
 
 describe('<Header> component', function() {
-  const options = new ReactRouterEnzymeContext();
   let logInMock = () => {};
-  let wrapper = mount(<Header loginStatus={true} loginError={false} logIn={logInMock} />, options.get());
+  let ref = null;
+  let wrapper = mount(<Router><Header ref={(c) => {ref = c;}} logIn={logInMock} /></Router>);
 
   after(() => {
     wrapper.unmount();
@@ -23,9 +23,7 @@ describe('<Header> component', function() {
   });
 
   it('should have correct props', function() {
-    expect(wrapper.prop('loginStatus')).to.equal(true);
-    expect(wrapper.prop('loginError')).to.equal(false);
-    expect(wrapper.prop('logIn')).to.equal(logInMock);
+    expect(ref.props.logIn).to.equal(logInMock);
   });
 
 });

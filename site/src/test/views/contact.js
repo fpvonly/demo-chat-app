@@ -1,17 +1,15 @@
 const React = require('react');
 const {expect} = require('chai');
 const {mount} = require('enzyme');
-const ReactRouterEnzymeContext = require('react-router-enzyme-context');
 
 import {Contact} from '../../views/Contact.jsx';
 
 describe('<Contact> view', function() {
 
-  const options = new ReactRouterEnzymeContext();
   let action = false;
   let dispatchMock = (actionFunction) => { action = actionFunction; };
 
-  let wrapper = mount(<Contact contactFormState={ {inProgress: false, formSent: false, sendError: false} } dispatch={dispatchMock}/>, options.get());
+  let wrapper = mount(<Contact contactFormState={ {inProgress: false, formSent: false, sendError: false} } dispatch={dispatchMock}/>);
 
   it('should have correct html structure', function() {
     expect(wrapper.find('#contact_area').length).to.equal(1);

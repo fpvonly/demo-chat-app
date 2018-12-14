@@ -19,22 +19,10 @@ export default class Chat extends React.Component {
     this.ws = null;
     this.form = null;
     this.state = {
-      STATUS: LOGGEDOUT,
+      STATUS: LOGGEDOUT, // chat login status
       messages: [] // no redux for chat functionality to keep it easily detachable, so local state implementation for now
     }
   }
-
-  static defaultProps = {
-    siteLoginStatus: false
-  };
-
-  static propTypes = {
-    siteLoginStatus: PropTypes.bool
-  };
-
-  static contextTypes = {
-    loginState: PropTypes.object
-  };
 
   componentDidMount() {
     if (typeof window.WebSocket !== "undefined") {
@@ -180,7 +168,6 @@ export default class Chat extends React.Component {
             visible={(this.state.STATUS === LOGGEDOUT || this.state.STATUS === LOADING ? true : false)}
             openWSConnection={this.openWSConnection} />
           <ChatArea
-            siteLoginStatus={this.props.siteLoginStatus}
             loginStatus={this.state.STATUS}
             validateAndSendMessage={this.validateAndSendMessage}
             editMessage={this.editMessage}

@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import Utils from '../Utils.js';
 
@@ -18,7 +17,7 @@ export default class ChatAreaMessage extends React.Component {
   }
 
   static defaultProps = {
-    siteLoginStatus: false,
+    siteLoginState: {},
     allowSenderEdit: false,
     custom: false,
     messageId: '',
@@ -30,7 +29,7 @@ export default class ChatAreaMessage extends React.Component {
   };
 
   static propTypes = {
-    siteLoginStatus: PropTypes.bool,
+    siteLoginState: PropTypes.object,
     allowSenderEdit: PropTypes.bool,
     custom: PropTypes.bool,
     messageId: PropTypes.string,
@@ -41,14 +40,12 @@ export default class ChatAreaMessage extends React.Component {
     editCallback: PropTypes.func
   };
 
-  static contextTypes = {
-    loginState: PropTypes.object
-  };
-
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps, prevState) {
     // if the admin user has logged out from main site, reset edit state
-    if (nextProps.siteLoginStatus === false && this.props.siteLoginStatus === true) {
-      this.setState({editMode: ''});
+    if (this.props.siteLoginState.loginStatus === false && prevProps.siteLoginState.loginStatus === true) {
+      this.setState({
+        editMode: ''
+      });
     }
   }
 
@@ -88,12 +85,12 @@ export default class ChatAreaMessage extends React.Component {
     }, 1000); // timeout for more graceful loader animation
   }
 
-  getDeleteBtn = () => {
+  getDeleteBtn = (siteLoginState) => {
     let deleteBtn = null;
-    let isAdmin = (this.context.loginState.loginData && this.context.loginState.loginData.user_id) ? true : false;
+    let isAdmin = (siteLoginState.loginData && siteLoginState.loginData.user_id) ? true : false;
 
     if (isAdmin === true && this.state.editMode !== 'SAVING') {
-      deleteBtn = <div>
+      deleteBtn = <div key={'delete_' + this.props.messageId}>
         <a href="#"
           className="delete_btn"
           onClick={this.props.deleteCallback.bind(undefined, this.props.messageId)}>
@@ -105,9 +102,9 @@ export default class ChatAreaMessage extends React.Component {
     return deleteBtn;
   }
 
-  getEditBtn = () => {
+  getEditBtn = (siteLoginState) => {
     let editBtn = null;
-    let isAdmin = (this.context.loginState.loginData && this.context.loginState.loginData.user_id) ? true : false;
+    let isAdmin = (siteLoginState.loginData && siteLoginState.loginData.user_id) ? true : false;
 
     if (isAdmin === true || this.props.allowSenderEdit === true) {
       // if normal '' initial state
@@ -162,9 +159,8 @@ export default class ChatAreaMessage extends React.Component {
                 defaultValue={this.props.children.toString()}
                 autoFocus
                 style={errorStyle} />}
-
-        {this.getDeleteBtn()}
-        {this.getEditBtn()}
+          {this.getDeleteBtn(this.props.siteLoginState)}
+          {this.getEditBtn(this.props.siteLoginState)}
       </div>;
     }
 

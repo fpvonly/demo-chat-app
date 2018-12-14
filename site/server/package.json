@@ -4,21 +4,21 @@
   "main": "express_server.js",
   "dependencies": {
     "cookie-parser": "^1.4.3",
-    "express": "^4.16.2",
+    "express": "^4.16.4",
     "express-session": "^1.15.6",
     "http-auth": "^3.2.3",
-    "mongodb": "^3.0.1",
-    "multer": "^1.3.0",
-    "nodemailer": "^4.4.2",
+    "mongodb": "^3.1.10",
+    "multer": "^1.4.1",
+    "nodemailer": "^4.7.0",
     "password-hash": "^1.2.2",
-    "superagent": "^3.8.2",
-    "websocket": "^1.0.25",
+    "superagent": "^3.8.3",
+    "websocket": "^1.0.28",
     "yargs": "^10.1.2"
   },
   "devDependencies": {
-    "cross-env": "^5.1.3",
+    "cross-env": "^5.2.0",
     "forever": "^0.15.3",
-    "nodemon": "^1.14.11"
+    "nodemon": "^1.18.8"
   },
   "scripts": {
     "devbackend": "cross-env NODE_ENV=development nodemon express_server.js",
@@ -31,6 +31,10 @@
     "type": "git",
     "url": "git+https://github.com/fpvonly/personalSite.git"
   },
+  "engines": {
+    "node": ">=11.4.0",
+    "npm": ">=6.5.0"
+  },
   "author": "Ari Petäjäjärvi",
-  "license": "MIT"
+  "license": ""
 }

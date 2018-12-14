@@ -29,7 +29,7 @@ export default class ClockWidget extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     let widgetPosStorage = Utils.getlocalStorageItem('widgetClockPosition');
     if (widgetPosStorage !== '') {
       widgetPosStorage = JSON.parse(widgetPosStorage);
@@ -41,16 +41,14 @@ export default class ClockWidget extends React.Component {
 
     this.tickTock();
     window.addEventListener("resize", this.handleWindowResize, false);
+
+    this.storagePos = this.overridePositionIfNotVisible(this.storagePos);
+    this.interval = setInterval(this.tickTock, 1000);
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
     window.removeEventListener("resize", this.handleWindowResize, false);
-  }
-
-  componentDidMount() {
-    this.storagePos = this.overridePositionIfNotVisible(this.storagePos);
-    this.interval = setInterval(this.tickTock, 1000);
   }
 
   handleWindowResize = () => {

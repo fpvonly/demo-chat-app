@@ -1,26 +1,24 @@
 const initialState = {
     sendError: false,
-    formSent: false,
-    inProgress: false
+    formSent: false
 }
 
 const contactReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SEND_CONTACT_MESSAGE':
       return {
-        inProgress: false,
+        sendError: false,
         formSent: true
       };
     case 'SEND_CONTACT_MESSAGE_ERROR':
       return {
-        inProgress: false,
+        formSent: false,
         sendError: true
       };
     case 'RESET':
       return {
         sendError: false,
-        formSent: false,
-        inProgress: false
+        formSent: false
       };
     default:
       return state;

@@ -8,7 +8,9 @@ Enzyme.configure({ adapter: new Adapter() });
 
 // global window stuff..
 const { JSDOM } = require('jsdom');
-const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
+const jsdom = new JSDOM('<!doctype html><html><body></body></html>', {
+  'url': 'https://localhost/'
+});
 const { window } = jsdom;
 function copyProps(src, target) {
   const props = Object.getOwnPropertyNames(src)
