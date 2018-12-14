@@ -1,17 +1,31 @@
 const React = require('react');
 const {expect} = require('chai');
 const {mount} = require('enzyme');
-const ReactRouterEnzymeContext = require('react-router-enzyme-context');
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import Navigation from '../../components/Navigation/Navigation.jsx';
+import LoginContext from '../../views/LoginContext.js';
 
 describe('<Navigation> component', function() {
 
   let wrapper;
 
   before(() => {
-    const options = new ReactRouterEnzymeContext();
-    wrapper = mount(<Navigation loginStatus={false} />, options);
+    wrapper = mount(<Router>
+      <LoginContext.Provider
+        value={
+          {
+            loginData: {
+              username: null,
+              user_id: null
+            },
+            loginStatus: false,
+            loginError: false
+          }
+        }>
+          <Navigation />
+    </LoginContext.Provider>
+  </Router>);
   });
 
   describe('Logged out state', function() {
@@ -23,7 +37,7 @@ describe('<Navigation> component', function() {
       // internal link
       let link = wrapper.find('#navigation .navi_list_element').first().find('a');
       expect(link.instance().className).to.equal('main_link');
-      expect(link.instance().href).to.equal('/info');
+      expect(link.instance().href).to.equal('https://localhost/info');
       expect(link.instance().textContent).to.equal('Info');
 
       // external link
@@ -42,7 +56,21 @@ describe('<Navigation> component', function() {
   describe('Logged in state', function() {
 
     before(() => {
-      wrapper.setProps({loginStatus: true});
+      wrapper = mount(<Router>
+        <LoginContext.Provider
+          value={
+            {
+              loginData: {
+                username: 'test',
+                user_id: 'a12312313'
+              },
+              loginStatus: true,
+              loginError: false
+            }
+          }>
+            <Navigation />
+      </LoginContext.Provider>
+    </Router>);
     });
 
     after(() => {

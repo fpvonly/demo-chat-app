@@ -13,6 +13,7 @@ import Translate from '../components/Translate.jsx';
 import Header from '../components/Header.jsx'
 import Chat from '../components/Chat/Chat.jsx'
 import ClockWidget from '../components/ClockWidget.jsx'
+import LoginContext from './LoginContext.js';
 
 class App extends React.Component {
 
@@ -32,25 +33,14 @@ class App extends React.Component {
     loginState: PropTypes.object // from store
   };
 
-  static childContextTypes = {
-    loginState: PropTypes.object
-  };
-
-  getChildContext() {
-    return {loginState: this.props.loginState};
-  }
-
-  componentWillMount() {
+  componentDidMount() {
     this.logIn(null, null, 'login/status');
   }
 
   logIn = (uname = null, passw = null, action = 'login/admin', afterLoginFailureCallback = () => {}) => {
     let params = {};
     if (uname !== false && passw !== false) {
-      params = {
-        username: uname,
-        password: passw
-      }
+      params = { username: uname, password: passw }
     }
     this.props.dispatch(logIn(action, params));
   }
@@ -59,7 +49,9 @@ class App extends React.Component {
     const pathName = this.props.location.pathname;
 
     return <div>
-      <Header logIn={this.logIn} loginStatus={this.props.loginState.loginStatus} loginError={this.props.loginState.loginError} />
+      <LoginContext.Provider value={this.props.loginState}>
+        <Header logIn={this.logIn} />
+      </LoginContext.Provider>
       <section className="view">
         <div className="view_content">
           <ReactCSSTransitionGroup
@@ -73,7 +65,9 @@ class App extends React.Component {
           <p className="info_shout">
             <Translate id="index_chat_text"/>
           </p>
-          <Chat siteLoginStatus={this.props.loginState.loginStatus} />
+          <LoginContext.Provider value={this.props.loginState}>
+            <Chat />
+          </LoginContext.Provider>
         </div>
       </section>
       <footer>

@@ -24,18 +24,6 @@ export default class Chat extends React.Component {
     }
   }
 
-  static defaultProps = {
-    siteLoginStatus: false
-  };
-
-  static propTypes = {
-    siteLoginStatus: PropTypes.bool
-  };
-
-  static contextTypes = {
-    loginState: PropTypes.object
-  };
-
   componentDidMount() {
     if (typeof window.WebSocket !== "undefined") {
       if(Utils.getlocalStorageItem('chat_name') === '' && Utils.getlocalStorageItem('email') === '') {
@@ -180,7 +168,6 @@ export default class Chat extends React.Component {
             visible={(this.state.STATUS === LOGGEDOUT || this.state.STATUS === LOADING ? true : false)}
             openWSConnection={this.openWSConnection} />
           <ChatArea
-            siteLoginStatus={this.props.siteLoginStatus}
             loginStatus={this.state.STATUS}
             validateAndSendMessage={this.validateAndSendMessage}
             editMessage={this.editMessage}

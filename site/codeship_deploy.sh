@@ -1,6 +1,6 @@
 # Setup commands:
-/* read from package.json nvm install 9.5.0
-npm install -g npm@latest */
+nvm install 11.4.0
+npm install 6.4.1
 cd site
 npm install
 cd server

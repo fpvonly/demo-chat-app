@@ -5,6 +5,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import Message from './ChatAreaMessage.jsx';
 
 import Utils from '../Utils.js';
+import LoginContext from '../../views/LoginContext.js';
 
 export default class ChatArea extends React.Component {
 
@@ -22,7 +23,6 @@ export default class ChatArea extends React.Component {
   }
 
   static defaultProps = {
-    siteLoginStatus: false,
     loginStatus: '',
     validateAndSendMessage: () => {},
     deleteMessage: function() {},
@@ -31,7 +31,6 @@ export default class ChatArea extends React.Component {
   };
 
   static propTypes = {
-    siteLoginStatus: PropTypes.bool,
     loginStatus: PropTypes.string,
     validateAndSendMessage: PropTypes.func,
     deleteMessage: PropTypes.func,
@@ -39,11 +38,7 @@ export default class ChatArea extends React.Component {
     messages: PropTypes.array
   };
 
-  static contextTypes = {
-    loginState: PropTypes.object
-  };
-
-  drawMessages = () => {
+  getMessages = (loginContext) => {
     let messagesProps = Array.isArray(this.props.messages) === true ? this.props.messages.slice() : [];
     let messages = [];
     let align_class = '';
@@ -54,13 +49,19 @@ export default class ChatArea extends React.Component {
       align_class = (i % 2 === 0 ? 'msg_right' : 'msg_left');
 
       if (msg.custom) {
-        messages.push(<Message className={'message ' + align_class} custom key={(msg._id ? msg._id : i)}>{msg.custom}</Message>);
+        messages.push(<Message
+          className={'message ' + align_class}
+          custom
+          siteLoginState={loginContext}
+          key={(msg._id ? msg._id : i)}>
+            {msg.custom}
+          </Message>);
       } else {
         messages.push(
           <Message
             className={'message ' + align_class}
             allowSenderEdit={(msg.uid === Utils.getlocalStorageItem('uid'))}
-            siteLoginStatus={this.props.siteLoginStatus}
+            siteLoginState={loginContext}
             timestamp={msg.timestamp}
             userName={msg.user_name}
             messageId={msg._id}
@@ -93,11 +94,10 @@ export default class ChatArea extends React.Component {
   }
 
   render() {
-    let messages = this.drawMessages();
     let chatArea = null;
 
     if(this.props.loginStatus === 'LOGGEDIN') {
-      chatArea = <div>
+      return <div>
             <div ref={(c) => { this.chat_funcs_area = c; }} id="chat_funcs">
               <input
                 ref={(c) => { this.message_input = c; }}
@@ -114,35 +114,45 @@ export default class ChatArea extends React.Component {
                 onClick={this.validateAndSendMessage} />
             </div>
             <div ref={(c) => { this.message_area = c; }} id="message_area">
-              <ReactCSSTransitionGroup
-                transitionName="fade"
-                transitionAppear={true}
-                transitionAppearTimeout={500}
-                transitionEnterTimeout={500}
-                transitionLeaveTimeout={500}>
-                  {messages}
-              </ReactCSSTransitionGroup>
+            <LoginContext.Consumer>
+              {(loginContext) => (
+                  <ReactCSSTransitionGroup
+                    transitionName="fade"
+                    transitionAppear={true}
+                    transitionAppearTimeout={500}
+                    transitionEnterTimeout={500}
+                    transitionLeaveTimeout={500}>
+                      {this.getMessages(loginContext)}
+                  </ReactCSSTransitionGroup>
+                )}
+              </LoginContext.Consumer>
               <div className="clear"></div>
             </div>
           </div>;
     } else if (this.props.messages.length === 1 && this.props.messages[0].custom) {
-      chatArea = <div>
+      return <div>
           <div ref={(c) => { this.message_area = c; }} id="message_area">
-            <ReactCSSTransitionGroup
-              transitionName="fade"
-              transitionEnterTimeout={500}
-              transitionLeaveTimeout={500}>
-                {messages}
-            </ReactCSSTransitionGroup>
+          <LoginContext.Consumer>
+              {(loginContext) => (
+                <ReactCSSTransitionGroup
+                  transitionName="fade"
+                  transitionEnterTimeout={500}
+                  transitionLeaveTimeout={500}>
+                    {this.getMessages(loginContext)}
+                </ReactCSSTransitionGroup>
+              )}
+            </LoginContext.Consumer>
             <div className="clear"></div>
           </div>
         </div>;
     } else if (this.props.loginStatus === 'LOADING') {
-      chatArea = <div>
+      return <div>
         <img className='chat_message_loader' src="./assets/images/loader.svg" alt="Logging in..." width="50" />;
       </div>;
+    } else {
+      return null;
     }
 
-    return chatArea;
+
   }
 }

@@ -27,7 +27,6 @@ class Contact extends React.Component {
 
   static defaultProps = {
     contactFormState: {
-      inProgress: false,
       formSent: false,
       sendError: false
     } // from store
@@ -37,9 +36,16 @@ class Contact extends React.Component {
     contactFormState: PropTypes.object, // from store
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.contactFormState.inProgress === false && this.state.inProgress === true) {
-      this.setState({inProgress: false});
+  static getDerivedStateFromProps(props, state) {
+    if (props.contactFormState.formSent === true && state.inProgress === true) {
+      return {inProgress: false};
+    }
+    return null;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.contactFormState.formSent === true && this.state.inProgress === false) {
+      setTimeout(() => {this.props.dispatch(resetContactFormState({}))}, 3500);
     }
   }
 

@@ -1,30 +1,34 @@
 const React = require('react');
 const {expect} = require('chai');
 const {mount} = require('enzyme');
-const ReactRouterEnzymeContext = require('react-router-enzyme-context');
 
 import {Login} from '../../components/Login.jsx';
+import LoginContext from '../../views/LoginContext.js';
 
 describe('<Login> component', function() {
 
   let wrapper;
   let loginStatus;
+  let LogInMock = (a, b, status) => {
+    loginStatus= status;
+  }
 
   before(() => {
-    const options = new ReactRouterEnzymeContext();
-    let LogInMock = (a, b, status) => {
-      loginStatus= status;
-    }
 
-    wrapper = mount(<Login logIn={LogInMock} loginStatus={false} loginError={false} location={ {pathname: '/admin'} } />, options.get());
-    wrapper.setContext({
-      loginState: {
-        loginData: {
-          username: 'John Doe',
-          user_id: 9990
+    wrapper = mount(<LoginContext.Provider
+      value={
+        {
+          loginData: {
+            username: null,
+            user_id: null
+          },
+          loginStatus: false,
+          loginError: false
         }
-      }
-    });
+      }>
+        <Login logIn={LogInMock} location={ {pathname: '/admin'} } />
+    </LoginContext.Provider>);
+
   }); // ENDS before
 
   describe('Logged out state', function() {
@@ -53,12 +57,22 @@ describe('<Login> component', function() {
 
   }); // ENDS Logging in
 
-  describe('Logged in state', function() {
+  describe('Logged-in state', function() {
 
     before(() => {
-      wrapper.setProps({
-        loginStatus: true
-      });
+      wrapper = mount(<LoginContext.Provider
+        value={
+          {
+            loginData: {
+              username: 'John Doe',
+              user_id: 9990
+            },
+            loginStatus: true,
+            loginError: false
+          }
+        }>
+          <Login logIn={LogInMock} location={ {pathname: '/admin'} } />
+      </LoginContext.Provider>);
     });
 
     it('should have welcome text and a log out -link visible', function() {

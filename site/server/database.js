@@ -11,7 +11,7 @@ function database(db = 'site') {
     const url = 'mongodb://' + config.db_username + ':' + config.db_password + '@' + config.db_domain + ':' + config.db_port;
     this.db;
 
-    MongoClient.connect(url, function(err, mongo) {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, mongo) {
       assert.equal(null, err);
       this.db = mongo.db(db);
       var collection = this.db.collection('messages');

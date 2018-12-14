@@ -1,7 +1,6 @@
 const React = require('react');
 const {expect} = require('chai');
 const {mount} = require('enzyme');
-const ReactRouterEnzymeContext = require('react-router-enzyme-context');
 const TestServer = require('../test-server.js');
 
 import Utils from '../../components/Utils.js';
@@ -9,6 +8,7 @@ import Chat from '../../components/Chat/Chat.jsx';
 import ChatArea from '../../components/Chat/ChatArea.jsx';
 import ChatLogin from '../../components/Chat/ChatLogin.jsx';
 import ChatAreaMessage from '../../components/Chat/ChatAreaMessage.jsx';
+import LoginContext from '../../views/LoginContext.js';
 
 // start chat test server (not the actual production server)
 let server = TestServer();
@@ -17,11 +17,14 @@ setTimeout(() => {
   describe('<Chat> component and sub-components', function() {
 
     //Utils.setlocalStorageItem('chat_name', '', 86400); // set chat login credentials
-    const options = new ReactRouterEnzymeContext();
-    let wrapper = mount(<Chat siteLoginStatus={false} />, options.get());
-    wrapper.setContext({
-      loginState: {}
-    });
+    let wrapper = mount(<LoginContext.Provider
+      value={{
+        loginData: null,
+        loginStatus: false,
+        loginError: false
+      }}>
+        <Chat />
+    </LoginContext.Provider>);
 
     after(() => {
       TestServer.stop();
