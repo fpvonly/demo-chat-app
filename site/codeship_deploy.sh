@@ -1,6 +1,6 @@
 # Setup commands:
 nvm install 11.4.0
-npm install 6.4.1
+npm install -g npm@latest
 cd site
 npm install
 cd server
