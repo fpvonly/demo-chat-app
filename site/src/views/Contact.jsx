@@ -38,7 +38,12 @@ class Contact extends React.Component {
 
   static getDerivedStateFromProps(props, state) {
     if (props.contactFormState.formSent === true && state.inProgress === true) {
-      return {inProgress: false};
+      return {
+        inProgress: false,
+        nameInputError: false,
+        emailInputError: false,
+        messageInputError: false
+      };
     }
     return null;
   }
